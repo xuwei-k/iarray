@@ -13,7 +13,7 @@ https://bintray.com/xuwei-k/maven/iarray
 ```scala
 resolvers += "bintray" at "http://dl.bintray.com/xuwei-k/maven"
 
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1.0"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1"
 ```
 
 I'm not good at English. Documentatin pull requests are welcome.
