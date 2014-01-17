@@ -233,19 +233,11 @@ object IArrayTest extends SpecLite {
     (b +: a).toList must_=== (b +: a.toList)
   }
 
-  property("+:") = forAll { (a: IArray[String], b: String) =>
-    (b +: a).toList must_=== (b +: a.toList)
-  }
-
   property(":+ Int") = forAll { (a: IArray[Int], b: Int) =>
     (a :+ b).toList must_=== (a.toList :+ b)
   }
 
   property(":+ String") = forAll { (a: IArray[String], b: String) =>
-    (a :+ b).toList must_=== (a.toList :+ b)
-  }
-
-  property(":+") = forAll { (a: IArray[Int], b: Int) =>
     (a :+ b).toList must_=== (a.toList :+ b)
   }
 
