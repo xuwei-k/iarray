@@ -1,6 +1,7 @@
 package iarray
 
 import scalaz._
+import Isomorphism._
 import std.tuple._, std.anyVal._, std.string._
 import std.vector._, std.list._, std.option._, std.either._
 import org.scalacheck._
@@ -32,6 +33,23 @@ object IArrayTest extends SpecLite {
 
   implicit def iarrayShow[A: Show]: Show[IArray[A]] =
     Show.showA
+
+  val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
+    new IsoFunctorTemplate[({type λ[α] = Throwable \/ α})#λ, scala.util.Try] {
+      def from[A](ga: scala.util.Try[A]) = ga match {
+        case scala.util.Success(a) => \/-(a)
+        case scala.util.Failure(e) => -\/(e)
+      }
+      def to[A](fa: Throwable \/ A) = fa match {
+        case \/-(a) => scala.util.Success(a)
+        case -\/(e) => scala.util.Failure(e)
+      }
+    }
+
+  implicit def tryArb[A: Arbitrary]: Arbitrary[scala.util.Try[A]] =
+    Functor[Arbitrary].map(
+      implicitly[Arbitrary[Throwable \/ A]]
+    )(tryEitherIso.to(_))
 
   checkAll(monadPlus.strongLaws[IArray])
   checkAll(isEmpty.laws[IArray])
@@ -477,6 +495,12 @@ object IArrayTest extends SpecLite {
     MonadPlus[IArray].separate(validations).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(validations.toList)
     val stdEithers = eithers.map(_.toEither)
     MonadPlus[IArray].separate(stdEithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(stdEithers.toList)
+  }
+
+  property("partitionTry") = forAll { xs: IArray[scala.util.Try[Int]] =>
+    import std.java.throwable._
+    implicit val throwableEq = Equal.equalRef[Throwable]
+    IArray.partitionTry(xs) must_=== IArray.partitionEithers(xs.map(tryEitherIso.from(_)))
   }
 
   property("separate Tuple2, LazyTuple2") = forAll { tuples: IArray[(Int, String)] =>

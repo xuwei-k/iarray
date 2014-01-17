@@ -39,6 +39,19 @@ private[iarray] abstract class IArrayFunctions{
     (new IArray(left.result), new IArray(right.result))
   }
 
+  final def partitionTry[A](array: IArray[scala.util.Try[A]]): (IArray[Throwable], IArray[A]) = {
+    var i = 0
+    val errors, values = new ArrayBuilder.ofRef[AnyRef]
+    while(i < array.length){
+      array(i).asInstanceOf[util.Try[A]] match {
+        case scala.util.Success(a) => values += a.asInstanceOf[AnyRef]
+        case scala.util.Failure(e) => errors += e.asInstanceOf[AnyRef]
+      }
+      i += 1
+    }
+    (new IArray(errors.result), new IArray(values.result))
+  }
+
   final def partitionValidations[E, A](validations: IArray[Validation[E, A]]): (IArray[E], IArray[A]) = {
     var i = 0
     val success, failure = new ArrayBuilder.ofRef[AnyRef]
