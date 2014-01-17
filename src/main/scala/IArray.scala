@@ -532,6 +532,19 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     acc
   }
 
+  def fold1Opt[AA >: A](implicit A: Semigroup[AA]): Option[AA] =
+    if(isEmpty){
+      None
+    }else{
+      var acc: AA = self(0).asInstanceOf[A]
+      var i = 1
+      while(i < self.length){
+        acc = A.append(acc, self(i).asInstanceOf[A])
+        i += 1
+      }
+      Some(acc)
+    }
+
   def foldMap1Opt[B](f: A => B)(implicit B: Semigroup[B]): Option[B] =
     if(isEmpty){
       None
