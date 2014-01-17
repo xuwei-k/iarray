@@ -280,14 +280,6 @@ object IArrayTest extends SpecLite {
     a.indexOfR(z) must_=== Option(a.toList.lastIndexOf(z)).filter(_ >= 0)
   }
 
-/*
-
-  property("sum") = forAll { a: IArray[Int] =>
-    a.sum must_=== a.toList.sum
-  }
-
-*/
-
   property("sorted Int") = forAll { a: IArray[Int] =>
     a.sorted.toList must_=== a.toList.sorted
   }
