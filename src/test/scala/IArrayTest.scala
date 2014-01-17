@@ -306,6 +306,10 @@ object IArrayTest extends SpecLite {
     a.slice(from, until).toList must_=== a.toList.slice(from, until)
   }
 
+  property("fold") = forAll { a: IArray[List[Int]] =>
+    Foldable[IArray].fold(a) must_=== Foldable[List].fold(a.toList)
+  }
+
   property("foldl foldl1") = forAll { (a: IArray[Int], z: Int) =>
     a.foldl(z)(_ - _) must_=== a.toList.foldLeft(z)(_ - _)
     a.foldl1(_ - _) must_=== a.toList.reduceLeftOption(_ - _)

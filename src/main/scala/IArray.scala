@@ -522,6 +522,16 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
   }
 
+  def fold[AA >: A](implicit A: Monoid[AA]): AA = {
+    var i = 0
+    var acc = A.zero
+    while(i < self.length){
+      acc = A.append(acc, self(i).asInstanceOf[AA])
+      i += 1
+    }
+    acc
+  }
+
   def foldMap1Opt[B](f: A => B)(implicit B: Semigroup[B]): Option[B] =
     if(isEmpty){
       None

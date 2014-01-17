@@ -195,6 +195,8 @@ private[iarray] abstract class IArrayFunctions{
         fa.isEmpty
       def plus[A](a: IArray[A], b: => IArray[A]) =
         a ++ b
+      override def fold[A: Monoid](fa: IArray[A]) =
+        fa.fold
       override def foldMap1Opt[A, B: Semigroup](fa: IArray[A])(f: A => B) =
         fa foldMap1Opt f
       override def foldMapRight1Opt[A, B](fa: IArray[A])(z: A => B)(f: (A, => B) => B) =
