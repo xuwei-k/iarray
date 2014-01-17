@@ -11,6 +11,8 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 https://bintray.com/xuwei-k/maven/iarray
 
 ```scala
+scalaVersion := "2.11.0-M7"
+
 resolvers += "bintray" at "http://dl.bintray.com/xuwei-k/maven"
 
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1"
