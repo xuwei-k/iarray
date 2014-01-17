@@ -18,4 +18,4 @@ resolvers += "bintray" at "http://dl.bintray.com/xuwei-k/maven"
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1"
 ```
 
-I'm not good at English. Documentatin pull requests are welcome.
+I'm not good at English. Documentation pull requests are welcome.
