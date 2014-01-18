@@ -13,7 +13,7 @@ https://bintray.com/xuwei-k/maven/iarray
 ```scala
 scalaVersion := "2.11.0-M7"
 
-resolvers += "bintray" at "http://dl.bintray.com/xuwei-k/maven"
+resolvers += "bintray" at "http://jcenter.bintray.com/"
 
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1"
 ```
