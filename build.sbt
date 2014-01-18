@@ -67,3 +67,8 @@ sourceGenerators in Test += task{
   Seq(specLiteFile((sourceManaged in Test).value, specLite.value))
 }
 
+val showDoc = TaskKey[Unit]("showDoc")
+
+showDoc in Compile <<= (doc in Compile, target in doc in Compile) map { (_, out) =>
+  java.awt.Desktop.getDesktop.open(out / "index.html")
+}
