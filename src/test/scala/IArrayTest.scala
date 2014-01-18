@@ -103,6 +103,15 @@ object IArrayTest extends SpecLite {
     a.zipWith(b)(f).toList must_=== (a.toList, b.toList).zipped.map(f)
   }
 
+  property("zip3 zipWith3") = forAll { (a: IArray[Int], b: IArray[String], c: IArray[Long]) =>
+    IArray.zip3(a, b, c) must_=== (a.toList, b.toList, c.toList).zipped.to[IArray]
+
+    case class Foo(a: Int, b: String, c: Long)
+    implicit val e = Equal.equalA[Foo]
+    implicit val s = Show.showA[Foo]
+    IArray.zipWith3(a, b, c)(Foo) must_=== (a.toList, b.toList, c.toList).zipped.map(Foo).to[IArray]
+  }
+
   property("unzip") = forAll { a: IArray[(Int, String)] =>
     val (left1, right1) = a.unzip
     val (left2, right2) = a.toList.unzip

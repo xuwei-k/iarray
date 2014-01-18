@@ -369,6 +369,28 @@ private[iarray] abstract class IArrayFunctions{
     }
   }
 
+  final def zip3[A, B, C](a: IArray[A], b: IArray[B], c: IArray[C]): IArray[(A, B, C)] = {
+    val len = math.min(math.min(a.length, b.length), c.length)
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = (a(i), b(i), c(i))
+      i += 1
+    }
+    new IArray(array)
+  }
+
+  final def zipWith3[A, B, C, D](a: IArray[A], b: IArray[B], c: IArray[C])(f: (A, B, C) => D): IArray[D] = {
+    val len = math.min(math.min(a.length, b.length), c.length)
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = f(a(i), b(i), c(i)).asInstanceOf[AnyRef]
+      i += 1
+    }
+    new IArray(array)
+  }
+
   private def copyAnyValArray(xs: Array[_]): Array[AnyRef] = {
     var i = xs.length - 1
     val array = new Array[AnyRef](xs.length)
