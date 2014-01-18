@@ -17,6 +17,15 @@ scmInfo := Some(ScmInfo(
 
 description := "Immutable array wrapper. does not use ClassTag. scalaz friendly"
 
+scalacOptions in (Compile, doc) ++= {
+  val v = version.value
+  val tag = if(v endsWith "SNAPSHOT") "master" else { "v" + v }
+  Seq(
+    "-sourcepath", baseDirectory.value.getAbsolutePath,
+    "-doc-source-url", s"https://github.com/xuwei-k/iarray/tree/${tag}€{FILE_PATH}.scala"
+  )
+}
+
 pomExtra := (
 <developers>
   <developer>
