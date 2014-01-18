@@ -101,10 +101,25 @@ object IArrayTest extends SpecLite {
     a.zip(b) must_=== a.toList.zip(b.toList).to[IArray]
     val f = (aa: Int, bb: String) => if(aa % 2 == 0) \/-(aa) else -\/(bb)
     a.zipWith(b)(f).toList must_=== (a.toList, b.toList).zipped.map(f)
+    a.zip(b) must_=== IArray.zipApply.tuple2(a, b)
+  }
+
+  property("zipApply") = {
+    def undefined[A]: IArray[A] = sys.error("error")
+    // TODO https://github.com/scalaz/scalaz/commit/b24d595957
+    // IArray.zipApply.tuple3(IArray.empty[Int], sys.error(""): Int, sys.error(""): Int) must_=== IArray.empty[(Int, Int, Int)]
+
+    IArray.zipApply.tuple2(IArray.empty[Int], undefined[Int]) must_=== IArray.empty[(Int, Int)]
+    IArray.zipApply.tuple3(IArray.empty[Int], undefined[Int], IArray(1)) must_=== IArray.empty[(Int, Int, Int)]
+
+    IArray.zipApply.apply2(IArray.empty[Int], undefined[Int])(Tuple2.apply) must_=== IArray.empty[(Int, Int)]
+    IArray.zipApply.apply3(IArray.empty[Int], undefined[Int], undefined[Int])(Tuple3.apply) must_=== IArray.empty[(Int, Int, Int)]
+    IArray.zipApply.apply3(IArray(1), IArray.empty[Int], undefined[Int])(Tuple3.apply) must_=== IArray.empty[(Int, Int, Int)]
   }
 
   property("zip3 zipWith3") = forAll { (a: IArray[Int], b: IArray[String], c: IArray[Long]) =>
     IArray.zip3(a, b, c) must_=== (a.toList, b.toList, c.toList).zipped.to[IArray]
+    IArray.zipApply.tuple3(a, b, c) must_=== (a.toList, b.toList, c.toList).zipped.to[IArray]
 
     case class Foo(a: Int, b: String, c: Long)
     implicit val e = Equal.equalA[Foo]

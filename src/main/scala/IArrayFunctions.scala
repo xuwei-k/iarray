@@ -284,6 +284,47 @@ private[iarray] abstract class IArrayFunctions{
         fa forall f
       override def any[A](fa: IArray[A])(f: A => Boolean) =
         fa exists f
+      override def ap(implicit F: Functor[IArray]) =
+        if(F eq (this: Functor[IArray])) zipApply
+        else super.ap
+    }
+
+  final val zipApply: Apply[IArray] =
+    new Apply[IArray] {
+      override val applyApplicative = super.applyApplicative
+      def map[A, B](fa: IArray[A])(f: A => B) =
+        fa map f
+      def ap[A, B](fa: => IArray[A])(f: => IArray[A => B]) =
+        fa.zipWith(f)((a, g) => g(a))
+      override def apply2[A, B, C](fa: => IArray[A], fb: => IArray[B])(f: (A, B) => C) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else _fa.zipWith(fb)(f)
+      }
+      override def apply3[A, B, C, D](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C])(f: (A, B, C) => D) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else{
+          val _fb = fb
+          if(_fb.isEmpty) empty
+          else zipWith3(_fa, _fb, fc)(f)
+        }
+      }
+      override def tuple2[A, B](fa: => IArray[A], fb: => IArray[B]) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else _fa.zip(fb)
+      }
+      // TODO https://github.com/scalaz/scalaz/commit/b24d595957
+      override def tuple3[A, B, C](fa: => IArray[A], fb: => IArray[B], fc: IArray[C]) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else{
+          val _fb = fb
+          if(_fb.isEmpty) empty
+          else zip3(_fa, _fb, fc)
+        }
+      }
     }
 
   final def empty[A]: IArray[A] =
