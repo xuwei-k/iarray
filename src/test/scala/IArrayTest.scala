@@ -178,6 +178,11 @@ object IArrayTest extends SpecLite {
     a.collect(f).toList must_=== a.toList.collect(f)
   }
 
+  property("collect String") = forAll { a: IArray[Alpha] =>
+    val f: PartialFunction[String, Int] = {case s if s.sum % 2 == 0 => s.length}
+    a.collect(f).toList must_=== a.toList.collect(f)
+  }
+
   property("collectFirst") = forAll { a: IArray[Int] =>
     val f: PartialFunction[Int, String] = {case i if i % 2 == 0 => (i * 3).toString}
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
