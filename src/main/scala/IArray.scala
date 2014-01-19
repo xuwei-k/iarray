@@ -344,16 +344,45 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray[(A, B)](array)
   }
 
-  def unzip[B, C](implicit e: A <:< (B, C)): (IArray[B], IArray[C]) = {
+  def unzip[B, C](implicit e: A <:< Product2[B, C]): (IArray[B], IArray[C]) = {
     var i = 0
-    val left, right = new Array[AnyRef](self.length)
+    val _1, _2 = new Array[AnyRef](self.length)
     while(i < self.length){
-      val (l, r) = self(i).asInstanceOf[(AnyRef, AnyRef)]
-      left(i) = l
-      right(i) = r
+      val x = self(i).asInstanceOf[Product2[AnyRef, AnyRef]]
+      _1(i) = x._1
+      _2(i) = x._2
       i += 1
     }
-    (new IArray(left), new IArray(right))
+    (new IArray(_1), new IArray(_2))
+  }
+
+  def unzip2[B, C](implicit e: A <:< Product2[B, C]): (IArray[B], IArray[C]) = unzip[B, C]
+
+  def unzip3[B, C, D](implicit e: A <:< Product3[B, C, D]): (IArray[B], IArray[C], IArray[D]) = {
+    var i = 0
+    val _1, _2, _3 = new Array[AnyRef](self.length)
+    while(i < self.length){
+      val x = self(i).asInstanceOf[Product3[AnyRef, AnyRef, AnyRef]]
+      _1(i) = x._1
+      _2(i) = x._2
+      _3(i) = x._3
+      i += 1
+    }
+    (new IArray(_1), new IArray(_2), new IArray(_3))
+  }
+
+  def unzip4[B, C, D, E](implicit e: A <:< Product4[B, C, D, E]): (IArray[B], IArray[C], IArray[D], IArray[E]) = {
+    var i = 0
+    val _1, _2, _3, _4 = new Array[AnyRef](self.length)
+    while(i < self.length){
+      val x = self(i).asInstanceOf[Product4[AnyRef, AnyRef, AnyRef, AnyRef]]
+      _1(i) = x._1
+      _2(i) = x._2
+      _3(i) = x._3
+      _4(i) = x._4
+      i += 1
+    }
+    (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4))
   }
 
   def firsts[B, C](implicit e: A <:< (B, C)): IArray[B] = {
