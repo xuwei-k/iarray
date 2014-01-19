@@ -1,64 +1,12 @@
 package iarray
 
 import scalaz._
-import Isomorphism._
 import std.tuple._, std.anyVal._, std.string._
 import std.vector._, std.list._, std.option._, std.either._
-import org.scalacheck._
 import org.scalacheck.Prop.forAll
-import scalaz.scalacheck.ScalaCheckBinding._
 import scalaz.scalacheck.ScalazArbitrary._
-import scalaz.scalacheck.ScalazProperties._
 
-object IArrayTraverseTest extends SpecLite {
-  import IArrayTest._
-
-  for ((name, prop) <- traverse.laws[IArray].properties) yield {
-    property(name) = prop.check(new Test.Parameters.Default{
-      override val maxSize = 5
-    })
-  }
-}
-
-object IArrayTest extends SpecLite {
-
-  sealed trait AlphaTag
-  type Alpha = String @@ AlphaTag
-
-  implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
-  implicit val alphaShow: Show[Alpha] = Show.showA
-  implicit val alphaEqual: Equal[Alpha] = Equal.equalA
-
-  implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =
-    Functor[Arbitrary].map(implicitly[Arbitrary[List[A]]])(IArray.fromList[A])
-
-  implicit def iarrayShow[A: Show]: Show[IArray[A]] =
-    Show.showA
-
-  val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
-    new IsoFunctorTemplate[({type λ[α] = Throwable \/ α})#λ, scala.util.Try] {
-      def from[A](ga: scala.util.Try[A]) = ga match {
-        case scala.util.Success(a) => \/-(a)
-        case scala.util.Failure(e) => -\/(e)
-      }
-      def to[A](fa: Throwable \/ A) = fa match {
-        case \/-(a) => scala.util.Success(a)
-        case -\/(e) => scala.util.Failure(e)
-      }
-    }
-
-  implicit def tryArb[A: Arbitrary]: Arbitrary[scala.util.Try[A]] =
-    Functor[Arbitrary].map(
-      implicitly[Arbitrary[Throwable \/ A]]
-    )(tryEitherIso.to(_))
-
-  checkAll(monadPlus.strongLaws[IArray])
-  checkAll(isEmpty.laws[IArray])
-  checkAll(foldable.laws[IArray])
-  checkAll(zip.laws[IArray])
-  checkAll(align.laws[IArray])
-  checkAll(cobind.laws[IArray])
-  checkAll(monoid.laws[IArray[String]])
+object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
