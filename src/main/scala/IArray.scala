@@ -385,23 +385,21 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4))
   }
 
-  def firsts[B, C](implicit e: A <:< (B, C)): IArray[B] = {
+  def firsts[B, C](implicit e: A <:< Product2[B, C]): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
     while(i < self.length){
-      val (l, _) = self(i).asInstanceOf[(AnyRef, AnyRef)]
-      array(i) = l
+      array(i) = self(i).asInstanceOf[Product2[AnyRef, AnyRef]]._1
       i += 1
     }
     new IArray(array)
   }
 
-  def seconds[B, C](implicit e: A <:< (B, C)): IArray[C] = {
+  def seconds[B, C](implicit e: A <:< Product2[B, C]): IArray[C] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
     while(i < self.length){
-      val (_, r) = self(i).asInstanceOf[(AnyRef, AnyRef)]
-      array(i) = r
+      array(i) = self(i).asInstanceOf[Product2[AnyRef, AnyRef]]._2
       i += 1
     }
     new IArray(array)
