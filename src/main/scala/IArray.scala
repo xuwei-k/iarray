@@ -767,6 +767,18 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
+  def collectBy[B](implicit B: reflect.ClassTag[B]): IArray[B] = {
+    val builder = new ArrayBuilder.ofRef[AnyRef]()
+    var i = 0
+    while(i < self.length){
+      if(B.runtimeClass.isInstance(self(i))){
+        builder += self(i)
+      }
+      i += 1
+    }
+    new IArray[B](builder.result)
+  }
+
   def collect[B](f: PartialFunction[A, B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0

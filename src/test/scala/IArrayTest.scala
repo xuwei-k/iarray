@@ -121,6 +121,11 @@ object IArrayTest extends TestCommon{
     a.filter(f).toList must_=== a.toList.filter(f)
   }
 
+  property("collectBy") = forAll { a: IArray[Int \/ String] =>
+    implicit val (s, e) = (Show.showA[\/-[String]], Equal.equalA[\/-[String]])
+    a.collectBy[\/-[String]] must_=== a.collect{case r @ \/-(_) => r}
+  }
+
   property("collect") = forAll { a: IArray[Int] =>
     var sideEffect = 0
     val f: PartialFunction[Int, String] = {case i if { sideEffect += 1; i % 2 == 0} => (i * 3).toString}
