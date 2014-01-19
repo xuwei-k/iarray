@@ -770,11 +770,9 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   def collect[B](f: PartialFunction[A, B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
-    val f0 = f.asInstanceOf[PartialFunction[AnyRef, AnyRef]]
+    val f0 = f.asInstanceOf[PartialFunction[AnyRef, AnyRef]].runWith(builder += _)
     while(i < self.length){
-      if(f0 isDefinedAt self(i)){
-        builder += f0(self(i))
-      }
+      f0(self(i))
       i += 1
     }
     new IArray[B](builder.result)
