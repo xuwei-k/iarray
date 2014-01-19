@@ -133,9 +133,10 @@ object IArrayTest extends TestCommon{
     a.collect(f).toList must_=== a.toList.collect(f)
   }
 
-  property("collectFirst") = forAll { a: IArray[Int] =>
+  property("collectFirst collectLast") = forAll { a: IArray[Int] =>
     val f: PartialFunction[Int, String] = {case i if i % 2 == 0 => (i * 3).toString}
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
+    a.collectLast(f) must_=== a.reverse.collectFirst(f)
   }
 
   property("find") = forAll { a: IArray[Int] =>

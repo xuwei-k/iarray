@@ -802,6 +802,18 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     None
   }
 
+  def collectLast[B](f: PartialFunction[A, B]): Option[B] = {
+    var i = self.length - 1
+    val f0 = f.asInstanceOf[PartialFunction[AnyRef, B]]
+    while(0 <= i){
+      if(f0 isDefinedAt self(i)){
+        return Some(f0(self(i)))
+      }
+      i -= 1
+    }
+    None
+  }
+
   def indexOfL[AA >: A](a: AA)(implicit E: Equal[AA]): Option[Int] = {
     var i = 0
     while(i < self.length){
