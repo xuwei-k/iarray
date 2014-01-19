@@ -80,11 +80,14 @@ object IArrayTest extends TestCommon{
     IArray.zipApply.tuple4(a, b, c, d) must_=== x
   }
 
-  property("unzip") = forAll { a: IArray[(Int, String)] =>
+  property("unzip firsts seconds") = forAll { a: IArray[(Int, String)] =>
     val (left1, right1) = a.unzip
     val (left2, right2) = a.toList.unzip
     left1.toList  must_=== left2
     right1.toList must_=== right2
+
+    left1  must_=== a.firsts
+    right1 must_=== a.seconds
   }
 
   final case class T2(_1: Int, _2: String) extends Product2[Int, String]
