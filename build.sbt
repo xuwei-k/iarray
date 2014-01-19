@@ -26,6 +26,8 @@ scalacOptions in (Compile, doc) ++= {
   )
 }
 
+logBuffered in Test := false
+
 pomExtra := (
 <developers>
   <developer>
