@@ -11,6 +11,11 @@ trait TestCommon extends SpecLite {
   sealed trait AlphaTag
   type Alpha = String @@ AlphaTag
 
+  trait ShowAndEq[A] {
+    implicit val e: Equal[A] = Equal.equalA[A]
+    implicit val s: Show[A] = Show.showA[A]
+  }
+
   implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
   implicit val alphaShow: Show[Alpha] = Show.showA
   implicit val alphaEqual: Equal[Alpha] = Equal.equalA

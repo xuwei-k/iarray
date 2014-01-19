@@ -4,7 +4,9 @@ import scalaz._
 import std.tuple._, std.anyVal._, std.string._
 import std.vector._, std.list._, std.option._, std.either._
 import org.scalacheck.Prop.forAll
+import org.scalacheck.Arbitrary
 import scalaz.scalacheck.ScalazArbitrary._
+import scalaz.scalacheck.ScalaCheckBinding._
 
 object IArrayTest extends TestCommon{
 
@@ -69,11 +71,7 @@ object IArrayTest extends TestCommon{
   property("zip3 zipWith3") = forAll { (a: IArray[Int], b: IArray[String], c: IArray[Long]) =>
     IArray.zip3(a, b, c) must_=== (a.toList, b.toList, c.toList).zipped.to[IArray]
     IArray.zipApply.tuple3(a, b, c) must_=== (a.toList, b.toList, c.toList).zipped.to[IArray]
-
-    case class Foo(a: Int, b: String, c: Long)
-    implicit val e = Equal.equalA[Foo]
-    implicit val s = Show.showA[Foo]
-    IArray.zipWith3(a, b, c)(Foo) must_=== (a.toList, b.toList, c.toList).zipped.map(Foo).to[IArray]
+    IArray.zipWith3(a, b, c)(T3) must_=== (a.toList, b.toList, c.toList).zipped.map(T3).to[IArray]
   }
 
   property("zip4 zipWith4") = forAll { (a: IArray[Int], b: IArray[Alpha], c: IArray[Long], d: IArray[List[Int]]) =>
@@ -87,6 +85,51 @@ object IArrayTest extends TestCommon{
     val (left2, right2) = a.toList.unzip
     left1.toList  must_=== left2
     right1.toList must_=== right2
+  }
+
+  final case class T2(_1: Int, _2: String) extends Product2[Int, String]
+  object T2 extends Function2[Int, String, T2] with ShowAndEq[T2]{
+    implicit val a = Functor[Arbitrary].map(implicitly[Arbitrary[(Int, String)]])(T2.tupled)
+  }
+  final case class T3(_1: Int, _2: String, _3: Long) extends Product3[Int, String, Long]
+  object T3 extends Function3[Int, String, Long, T3] with ShowAndEq[T3]{
+    implicit val a = Functor[Arbitrary].map(implicitly[Arbitrary[(Int, String, Long)]])(T3.tupled)
+  }
+  final case class T4(_1: String, _2: Int, _3: Long, _4: List[Int]) extends Product4[String, Int, Long, List[Int]]
+  object T4 extends Function4[String, Int, Long, List[Int], T4] with ShowAndEq[T4]{
+    implicit val a = Functor[Arbitrary].map(implicitly[Arbitrary[(String, Int, Long, List[Int])]])(T4.tupled)
+  }
+
+  property("unzip3") = forAll { a: IArray[T3] =>
+    val (_1, _2, _3) = a.unzip3
+    (_1.toList, _2.toList, _3.toList) must_=== a.toList.map(x => (x._1, x._2, x._3)).unzip3
+    _1 must_=== a.map(_._1)
+    _2 must_=== a.map(_._2)
+    _3 must_=== a.map(_._3)
+  }
+
+  property("unzip3") = forAll { a: IArray[(Int, String, Long)] =>
+    val (_1, _2, _3) = a.unzip3
+    (_1.toList, _2.toList, _3.toList) must_=== a.toList.unzip3
+    _1 must_=== a.map(_._1)
+    _2 must_=== a.map(_._2)
+    _3 must_=== a.map(_._3)
+  }
+
+  property("unzip4") = forAll { a: IArray[T4] =>
+    val (_1, _2, _3, _4) = a.unzip4
+    _1 must_=== a.map(_._1)
+    _2 must_=== a.map(_._2)
+    _3 must_=== a.map(_._3)
+    _4 must_=== a.map(_._4)
+  }
+
+  property("unzip4") = forAll { a: IArray[(Int, String, Long, List[Int])] =>
+    val (_1, _2, _3, _4) = a.unzip4
+    _1 must_=== a.map(_._1)
+    _2 must_=== a.map(_._2)
+    _3 must_=== a.map(_._3)
+    _4 must_=== a.map(_._4)
   }
 
   property("zipWithIndex") = forAll { a: IArray[Int] =>
