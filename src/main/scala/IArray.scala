@@ -176,7 +176,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }else if(from <= 0 && self.length <= until){
       this
     }else{
-      new IArray(copyOfRange(self, from max 0, until min self.length))
+      new IArray(copyOfRange(self, Math.max(from, 0), Math.min(until, self.length)))
     }
   }
 
@@ -228,7 +228,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
 
   def takeWhileL(f: A => Boolean): IArray[A] = {
-    val len = index(!f(_))
+    val len = indexNot(f)
     if(len < 0){
       this
     }else if(len == 0){
@@ -250,7 +250,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   def dropWhileL(f: A => Boolean): IArray[A] = {
-    val len = index(!f(_))
+    val len = indexNot(f)
     if(len < 0){
       empty[A]
     }else if(len == 0){
@@ -286,8 +286,8 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
 
   def alignWith[B, C](that: IArray[B])(f: A \&/ B => C): IArray[C] = {
     import \&/._
-    val max = math.max(length, that.length)
-    val min = math.min(length, that.length)
+    val max = Math.max(length, that.length)
+    val min = Math.min(length, that.length)
     var i = 0
     val array = new Array[AnyRef](max)
     while(i < min){
@@ -322,7 +322,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   def zipWith[B, C](that: IArray[B])(f: (A, B) => C): IArray[C] = {
-    val len = math.min(length, that.length)
+    val len = Math.min(length, that.length)
     var i = 0
     val array = new Array[AnyRef](len)
     val f0 = f.asInstanceOf[(AnyRef, AnyRef) => AnyRef]
@@ -334,7 +334,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   def zip[B](that: IArray[B]): IArray[(A, B)] = {
-    val len = math.min(length, that.length)
+    val len = Math.min(length, that.length)
     var i = 0
     val array = new Array[AnyRef](len)
     while(i < len){
@@ -735,7 +735,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   def span(f: A => Boolean): (IArray[A], IArray[A]) = {
-    val n = index(!f(_))
+    val n = indexNot(f)
     if(n < 0){
       (this, empty[A])
     }else if(n >= self.length){
@@ -965,10 +965,10 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       true
     }
 
-  @inline private def index(f: A => Boolean): Int = {
+  @inline private def indexNot(f: A => Boolean): Int = {
     var i = 0
     while(i < self.length){
-      if(f(this(i))){
+      if(! f(this(i))){
         return i
       }
       i += 1

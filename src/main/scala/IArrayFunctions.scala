@@ -411,7 +411,7 @@ private[iarray] abstract class IArrayFunctions{
   }
 
   final def zip3[A, B, C](a: IArray[A], b: IArray[B], c: IArray[C]): IArray[(A, B, C)] = {
-    val len = math.min(math.min(a.length, b.length), c.length)
+    val len = Math.min(Math.min(a.length, b.length), c.length)
     var i = 0
     val array = new Array[AnyRef](len)
     while(i < len){
@@ -422,7 +422,7 @@ private[iarray] abstract class IArrayFunctions{
   }
 
   final def zipWith3[A, B, C, D](a: IArray[A], b: IArray[B], c: IArray[C])(f: (A, B, C) => D): IArray[D] = {
-    val len = math.min(math.min(a.length, b.length), c.length)
+    val len = Math.min(Math.min(a.length, b.length), c.length)
     var i = 0
     val array = new Array[AnyRef](len)
     while(i < len){
