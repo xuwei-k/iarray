@@ -174,8 +174,10 @@ object IArrayTest extends SpecLite {
   }
 
   property("collect") = forAll { a: IArray[Int] =>
-    val f: PartialFunction[Int, String] = {case i if i % 2 == 0 => (i * 3).toString}
+    var sideEffect = 0
+    val f: PartialFunction[Int, String] = {case i if { sideEffect += 1; i % 2 == 0} => (i * 3).toString}
     a.collect(f).toList must_=== a.toList.collect(f)
+    sideEffect must_=== (a.length * 2)
   }
 
   property("collect String") = forAll { a: IArray[Alpha] =>
