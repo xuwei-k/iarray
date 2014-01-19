@@ -15,7 +15,7 @@ scalaVersion := "2.11.0-M7"
 
 resolvers += "bintray" at "http://jcenter.bintray.com/"
 
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.1"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2"
 ```
 
 I'm not good at English. Documentation pull requests are welcome.
