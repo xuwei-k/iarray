@@ -310,6 +310,19 @@ private[iarray] abstract class IArrayFunctions{
           else zipWith3(_fa, _fb, fc)(f)
         }
       }
+      override def apply4[A, B, C, D, E](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C], fd: => IArray[D])(f: (A, B, C, D) => E) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else{
+          val _fb = fb
+          if(_fb.isEmpty) empty
+          else{
+            val _fc = fc
+            if(_fc.isEmpty) empty
+            else zipWith4(_fa, _fb, _fc, fd)(f)
+          }
+        }
+      }
       override def tuple2[A, B](fa: => IArray[A], fb: => IArray[B]) = {
         val _fa = fa
         if(_fa.isEmpty) empty
@@ -323,6 +336,19 @@ private[iarray] abstract class IArrayFunctions{
           val _fb = fb
           if(_fb.isEmpty) empty
           else zip3(_fa, _fb, fc)
+        }
+      }
+      override def tuple4[A, B, C, D](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C], fd: => IArray[D]) = {
+        val _fa = fa
+        if(_fa.isEmpty) empty
+        else{
+          val _fb = fb
+          if(_fb.isEmpty) empty
+          else{
+            val _fc = fc
+            if(_fc.isEmpty) empty
+            else zip4(_fa, _fb, _fc, fd)
+          }
         }
       }
     }
@@ -421,12 +447,34 @@ private[iarray] abstract class IArrayFunctions{
     new IArray(array)
   }
 
+  final def zip4[A, B, C, D](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D]): IArray[(A, B, C, D)] = {
+    val len = Math.min(Math.min(a.length, b.length), Math.min(c.length, d.length))
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = (a(i), b(i), c(i), d(i))
+      i += 1
+    }
+    new IArray(array)
+  }
+
   final def zipWith3[A, B, C, D](a: IArray[A], b: IArray[B], c: IArray[C])(f: (A, B, C) => D): IArray[D] = {
     val len = Math.min(Math.min(a.length, b.length), c.length)
     var i = 0
     val array = new Array[AnyRef](len)
     while(i < len){
       array(i) = f(a(i), b(i), c(i)).asInstanceOf[AnyRef]
+      i += 1
+    }
+    new IArray(array)
+  }
+
+  final def zipWith4[A, B, C, D, E](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D])(f: (A, B, C, D) => E): IArray[E] = {
+    val len = Math.min(Math.min(a.length, b.length), Math.min(c.length, d.length))
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = f(a(i), b(i), c(i), d(i)).asInstanceOf[AnyRef]
       i += 1
     }
     new IArray(array)

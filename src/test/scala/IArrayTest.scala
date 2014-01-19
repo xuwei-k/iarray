@@ -25,8 +25,9 @@ object IArrayTest extends SpecLite {
   sealed trait AlphaTag
   type Alpha = String @@ AlphaTag
 
-  implicit val alpha: Arbitrary[Alpha] =
-    Tag.subst(Arbitrary(Gen.alphaStr))
+  implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
+  implicit val alphaShow: Show[Alpha] = Show.showA
+  implicit val alphaEqual: Equal[Alpha] = Equal.equalA
 
   implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =
     Functor[Arbitrary].map(implicitly[Arbitrary[List[A]]])(IArray.fromList[A])
@@ -125,6 +126,12 @@ object IArrayTest extends SpecLite {
     implicit val e = Equal.equalA[Foo]
     implicit val s = Show.showA[Foo]
     IArray.zipWith3(a, b, c)(Foo) must_=== (a.toList, b.toList, c.toList).zipped.map(Foo).to[IArray]
+  }
+
+  property("zip4 zipWith4") = forAll { (a: IArray[Int], b: IArray[Alpha], c: IArray[Long], d: IArray[List[Int]]) =>
+    val x = Zip[List].ap.tuple4(a.toList, b.toList, c.toList, d.toList).to[IArray]
+    IArray.zipApply.apply4(a, b, c, d)(Tuple4.apply) must_=== x
+    IArray.zipApply.tuple4(a, b, c, d) must_=== x
   }
 
   property("unzip") = forAll { a: IArray[(Int, String)] =>
