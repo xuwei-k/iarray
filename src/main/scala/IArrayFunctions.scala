@@ -233,9 +233,9 @@ private[iarray] abstract class IArrayFunctions{
       override def length[A](fa: IArray[A]) =
         fa.length
       def zip[A, B](a: => IArray[A], b: => IArray[B]) =
-        a zip b
+        zipApply.tuple2(a, b)
       override def zipWith[A, B, C](a: => IArray[A], b: => IArray[B])(f: (A, B) => C)(implicit F: Functor[IArray]) =
-        a.zipWith(b)(f)
+        zipApply.apply2(a, b)(f)
       override def element[A: Equal](fa: IArray[A], a: A) =
         fa contains a
       override def intercalate[A: Monoid](fa: IArray[A], a: A) =
