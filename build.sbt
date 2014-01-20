@@ -29,6 +29,7 @@ scalacOptions in (Compile, doc) ++= {
 logBuffered in Test := false
 
 pomExtra := (
+<url>https://github.com/xuwei-k/iarray</url>
 <developers>
   <developer>
     <id>xuwei-k</id>
