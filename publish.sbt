@@ -1,5 +1,6 @@
 import sbtrelease._
 import ReleaseStateTransformations._
+import com.typesafe.sbt.pgp.PgpKeys
 
 bintrayPublishSettings
 
@@ -31,6 +32,10 @@ val updateReadmeProcess: ReleaseStep = { state: State =>
   updateReadme(state, v)
 }
 
+val publishSignedStep: ReleaseStep = ReleaseStep{ state =>
+  Project.extract(state).runTask(PgpKeys.publishSigned, state)._1
+}
+
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
@@ -40,7 +45,7 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   commitReleaseVersion,
   updateReadmeProcess,
   tagRelease,
-  publishArtifacts,
+  publishSignedStep,
   setNextVersion,
   commitNextVersion,
   pushChanges
