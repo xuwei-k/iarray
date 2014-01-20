@@ -129,6 +129,21 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     else
       Some(NonEmptyList.nel(self(0).asInstanceOf[A], toList.tail))
 
+  def zipperEnd: Option[Zipper[A]] =
+    if(isEmpty){
+      None
+    }else{
+      var i = 0
+      var acc: Stream[A] = Stream.Empty
+      val len = self.length - 1
+      while(i < len){
+        val x = acc
+        acc = new Stream.Cons(self(i).asInstanceOf[A], x)
+        i += 1
+      }
+      Some(Zipper(acc, self(len).asInstanceOf[A], Stream.Empty))
+    }
+
   def oneAnd[AA >: A]: Option[OneAnd[IArray, AA]] =
     if(isEmpty)
       None

@@ -613,5 +613,10 @@ object IArrayTest extends TestCommon{
     }
   }
 
+  property("zipperEnd") = forAll { xs: IArray[Alpha] =>
+    import syntax.std.list._
+    xs.zipperEnd must_=== xs.toList.zipperEnd
+  }
+
 }
 
