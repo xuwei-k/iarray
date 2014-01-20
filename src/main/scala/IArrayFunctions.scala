@@ -356,7 +356,7 @@ private[iarray] abstract class IArrayFunctions{
   final def empty[A]: IArray[A] =
     _empty.asInstanceOf[IArray[A]]
 
-  private val _empty: IArray[AnyRef] =
+  private[this] val _empty: IArray[AnyRef] =
     new IArray[AnyRef](new Array[AnyRef](0))
 
   final def single[A](a: A): IArray[A] =
