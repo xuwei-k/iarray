@@ -60,3 +60,10 @@ checkPackage := {
     IO.unzip((packageSrc in Compile).value, dir).map(f => f.getName -> f.length) foreach println
   }
 }
+
+publishTo := {
+  if(version.value endsWith "SNAPSHOT")
+    Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
+  else
+    publishTo.value
+}
