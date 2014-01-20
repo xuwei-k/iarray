@@ -7,6 +7,24 @@ import collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions{
 
+  def toNelK[A]: Kleisli[Option, IArray[A], NonEmptyList[A]] =
+    kleisli.toNel.asInstanceOf[Kleisli[Option, IArray[A], NonEmptyList[A]]]
+  def oneAndK[A]: Kleisli[Option, IArray[A], OneAnd[IArray, A]] =
+    kleisli.oneAnd.asInstanceOf[Kleisli[Option, IArray[A], OneAnd[IArray, A]]]
+  def headOptionK[A]: Kleisli[Option, IArray[A], A] =
+    kleisli.headOption.asInstanceOf[Kleisli[Option, IArray[A], A]]
+  def lastOptionK[A]: Kleisli[Option, IArray[A], A] =
+    kleisli.lastOption.asInstanceOf[Kleisli[Option, IArray[A], A]]
+  def tailOptionK[A]: Kleisli[Option, IArray[A], IArray[A]] =
+    kleisli.tailOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
+  def initOptionK[A]: Kleisli[Option, IArray[A], IArray[A]] =
+    kleisli.initOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
+
+  def tailOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
+    kleisli.tailOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
+  def initOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
+    kleisli.initOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
+
   private[this] val _single: AnyRef => IArray[AnyRef] =
     single(_)
 
