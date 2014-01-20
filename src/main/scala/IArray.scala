@@ -549,6 +549,32 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
   }
 
+  def mapAccumL[S, B](z: S)(f: (S, A) => (S, B)): (S, IArray[B]) = {
+    var i = 0
+    val array = new Array[AnyRef](self.length)
+    var acc = z
+    while(i < self.length){
+      val x = f(acc, self(i).asInstanceOf[A])
+      acc = x._1
+      array(i) = x._2.asInstanceOf[AnyRef]
+      i += 1
+    }
+    (acc, new IArray(array))
+  }
+
+  def mapAccumR[S, B](z: S)(f: (S, A) => (S, B)): (S, IArray[B]) = {
+    var i = self.length - 1
+    val array = new Array[AnyRef](self.length)
+    var acc = z
+    while(0 <= i){
+      val x = f(acc, self(i).asInstanceOf[A])
+      acc = x._1
+      array(i) = x._2.asInstanceOf[AnyRef]
+      i -= 1
+    }
+    (acc, new IArray(array))
+  }
+
   def fold[AA >: A](implicit A: Monoid[AA]): AA = {
     var i = 0
     var acc = A.zero

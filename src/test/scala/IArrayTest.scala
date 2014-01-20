@@ -362,6 +362,14 @@ object IArrayTest extends TestCommon{
     a.slice(from, until).toList must_=== a.toList.slice(from, until)
   }
 
+  property("mapAccumL mapAccumR") = forAll { a: IArray[List[Int]] =>
+    import syntax.bifunctor._
+    val f = (acc: List[Int], x: List[Int]) => (x.sum :: x ::: acc, acc.sum)
+    val F = Traverse[List]
+    a.mapAccumL(List[Int]())(f).rightMap(_.toList) must_=== F.mapAccumL(a.toList, List[Int]())(f)
+    a.mapAccumR(List[Int]())(f).rightMap(_.toList) must_=== F.mapAccumR(a.toList, List[Int]())(f)
+  }
+
   property("fold") = forAll { a: IArray[List[Int]] =>
     Foldable[IArray].fold(a) must_=== Foldable[List].fold(a.toList)
   }
