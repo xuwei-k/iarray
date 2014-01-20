@@ -4,7 +4,7 @@ import scalaz._
 import std.tuple._, std.anyVal._, std.string._
 import std.vector._, std.list._, std.option._, std.either._
 import org.scalacheck.Prop.forAll
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.scalacheck.ScalaCheckBinding._
 
@@ -592,6 +592,25 @@ object IArrayTest extends TestCommon{
     }
 
     x must_=== G.traverseS(xs)(f)(z)
+  }
+
+  property("tailOptionEodo initOptionEndo") = forAll(
+    implicitly[Arbitrary[IArray[Int]]].arbitrary,
+    Gen.choose(-10, 10),
+    Gen.choose(-10, 10)
+  ){
+    (xs, a, b) =>
+
+    import syntax.monoid._
+    val i = IArray.initOptionEndo[Int].multiply(b)
+    val t = IArray.tailOptionEndo[Int].multiply(a)
+
+    (i |+| t).run(xs) match {
+      case Some(x) =>
+        x must_=== xs.dropR(b).dropL(a)
+      case None =>
+        xs.length mustBe_< ((a max 0) + (b max 0))
+    }
   }
 
 }
