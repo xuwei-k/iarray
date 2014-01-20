@@ -108,7 +108,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   def forall(f: A => Boolean): Boolean =
-    !exists(!f(_))
+    indexNot(f) < 0
 
   def toIterator: Iterator[A] =
     new IArrayIterator[A](this)
