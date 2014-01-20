@@ -2,7 +2,7 @@ package iarray
 
 import collection.mutable.ArrayBuilder
 
-private[iarray] final class WithFilter[A](self: Array[AnyRef], f: A => Boolean){
+final class WithFilter[A] private[iarray] (self: Array[AnyRef], f: A => Boolean){
   def map[B](g: A => B): IArray[B] = {
     val buf = new ArrayBuilder.ofRef[AnyRef]
     var i = 0
