@@ -18,4 +18,8 @@ resolvers += "bintray" at "http://jcenter.bintray.com/"
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.1"
 ```
 
+
+[API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.11.0-M7/0.2.1/iarray_2.11.0-M7-0.2.1-javadoc.jar/!/index.html#iarray.IArray)
+
+
 I'm not good at English. Documentation pull requests are welcome.
