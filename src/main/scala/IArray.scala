@@ -111,7 +111,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     indexNot(f) < 0
 
   def toIterator: Iterator[A] =
-    new IArrayIterator[A](this)
+    new IArrayIterator[A](self)
 
   def toList: List[A] = {
     var i = self.length - 1

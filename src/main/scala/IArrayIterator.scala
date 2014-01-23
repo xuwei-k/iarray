@@ -1,13 +1,14 @@
 package iarray
 
-private final class IArrayIterator[+A](array: IArray[A]) extends Iterator[A]{
+private final class IArrayIterator[+A](array: Array[AnyRef]) extends Iterator[A]{
 
   private[this] var i = 0
   def hasNext = i < array.length
-  def next(): A = {
-    val r = array(i)
-    i += 1
-    r
-  }
+  def next(): A =
+    if(hasNext){
+      val r = array(i).asInstanceOf[A]
+      i += 1
+      r
+    }else Iterator.empty.next
 }
 
