@@ -2,16 +2,19 @@ package iarray
 
 import scalaz._
 import std.anyVal._, std.string._
-import org.scalacheck._
 import scalaz.scalacheck.ScalazProperties._
 
-object IArrayTraverseTest extends TestCommon {
+object IArrayTraverseTest extends TestCommon with ScalacheckOps {
 
   for ((name, prop) <- traverse.laws[IArray].properties) yield {
-    property(name) = prop.check(new Test.Parameters.Default{
-      override val maxSize = 5
-    })
+    property(name) = {
+      if(name contains "sequential fusion")
+        prop.contramap(p => p.resize(p.size % 6))
+      else
+        prop
+    }
   }
+
 }
 
 object TypeclassLawTest extends TestCommon {
