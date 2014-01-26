@@ -278,6 +278,22 @@ private[iarray] abstract class IArrayFunctions{
         (a, b) => a.alignWith(b)(f)
       override def align[A, B](a: IArray[A], b: IArray[B]) =
         a.alignWith(b)(conforms)
+      override def merge[A](a1: IArray[A], a2: IArray[A])(implicit A: Semigroup[A]) = {
+        val min = Math.min(a1.length, a2.length)
+        val len = Math.max(a1.length, a2.length)
+        val array = new Array[AnyRef](len)
+        var i = 0
+        while(i < min){
+          array(i) = A.append(a1(i), a2(i)).asInstanceOf[AnyRef]
+          i += 1
+        }
+        if(min == a1.length){
+          System.arraycopy(a2.self, i, array, min, len - min)
+        }else{
+          System.arraycopy(a1.self, i, array, min, len - min)
+        }
+        new IArray(array)
+      }
       def cobind[A, B](fa: IArray[A])(f: IArray[A] => B) =
         fa cobind f
       override def cojoin[A](fa: IArray[A]) =

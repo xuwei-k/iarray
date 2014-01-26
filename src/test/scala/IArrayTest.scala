@@ -48,6 +48,10 @@ object IArrayTest extends TestCommon{
     b.to[IArray].toList must_=== b
   }
 
+  property("merge") = forAll { (a: IArray[Int], b: IArray[Int]) =>
+    Align[IArray].merge(a, b).toList must_=== Align[List].merge(a.toList, b.toList)
+  }
+
   property("zip zipWith") = forAll { (a: IArray[Int], b: IArray[String]) =>
     a.zip(b) must_=== a.toList.zip(b.toList).to[IArray]
     val f = (aa: Int, bb: String) => if(aa % 2 == 0) \/-(aa) else -\/(bb)
