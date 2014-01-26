@@ -348,6 +348,29 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
+  def zipAll[B, AA >: A](that: IArray[B], a: AA, b: B): IArray[(AA, B)] = {
+    val len = Math.max(self.length, that.length)
+    val min = Math.min(self.length, that.length)
+    val array = new Array[AnyRef](len)
+    var i = 0
+    while(i < min){
+      array(i) = (self(i).asInstanceOf[A], that.self(i).asInstanceOf[B])
+      i += 1
+    }
+    if(min == self.length){
+      while(i < len){
+        array(i) = (a, that.self(i).asInstanceOf[B])
+        i += 1
+      }
+    }else{
+      while(i < len){
+        array(i) = (self(i).asInstanceOf[A], b)
+        i += 1
+      }
+    }
+    new IArray(array)
+  }
+
   def zip[B](that: IArray[B]): IArray[(A, B)] = {
     val len = Math.min(length, that.length)
     var i = 0

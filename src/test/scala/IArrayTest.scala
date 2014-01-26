@@ -55,6 +55,10 @@ object IArrayTest extends TestCommon{
     a.zip(b) must_=== IArray.zipApply.tuple2(a, b)
   }
 
+  property("zipAll") = forAll { (as: IArray[Int], bs: IArray[String], a: Int, b: String) =>
+    as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
+  }
+
   property("zipApply") = {
     def undefined[A]: IArray[A] = sys.error("error")
     // TODO https://github.com/scalaz/scalaz/commit/b24d595957
