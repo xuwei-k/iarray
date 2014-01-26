@@ -926,9 +926,18 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     acc
   }
 
-  def sorted[AA >: A](implicit O: Order[AA]): IArray[AA] = {
+  def sorted[AA >: A](implicit O: Order[AA]): IArray[AA] =
+    sort0(O.toScalaOrdering)
+
+  def sortWith(f: (A, A) => Boolean): IArray[A] =
+    sort0(comparatorFromFunction(f))
+
+  def sortBy[B](f: A => B)(implicit O: Order[B]): IArray[A] =
+    sort0((O contramap f).toScalaOrdering)
+
+  private def sort0[B](c: java.util.Comparator[B]): IArray[B] = {
     val array = self.clone
-    Arrays.sort(array, O.toScalaOrdering.asInstanceOf[java.util.Comparator[AnyRef]])
+    Arrays.sort(array, c.asInstanceOf[java.util.Comparator[AnyRef]])
     new IArray(array)
   }
 

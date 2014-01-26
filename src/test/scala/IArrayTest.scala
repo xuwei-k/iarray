@@ -344,6 +344,15 @@ object IArrayTest extends TestCommon{
     a.sorted.toList must_=== a.toList.sorted
   }
 
+  property("sortBy") = forAll { a: IArray[Int] =>
+    a.sortBy(- _).toList must_=== a.toList.sortBy(- _)
+    a.sortBy(_.toHexString).toList must_=== a.toList.sortBy(_.toHexString)
+  }
+
+  property("sortWith") = forAll { a: IArray[Int] =>
+    a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _)
+  }
+
   property("from") = forAll { a: List[Int] =>
     IArray.from(a).toList must_=== a
     IArray.fromList(a).toList must_=== a

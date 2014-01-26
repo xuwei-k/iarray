@@ -28,6 +28,12 @@ private[iarray] abstract class IArrayFunctions{
   private[this] val _single: AnyRef => IArray[AnyRef] =
     single(_)
 
+  private[iarray] def comparatorFromFunction[A](f: (A, A) => Boolean): java.util.Comparator[A] =
+    new java.util.Comparator[A]{
+      def compare(x: A, y: A) =
+        if(f(x, y)) -1 else if(f(y, x)) 1 else 0
+    }
+
   final def singleF[A]: A => IArray[A] =
     _single.asInstanceOf[A => IArray[A]]
 
