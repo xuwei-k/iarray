@@ -19,7 +19,7 @@ val updateReadme = { state: State =>
     if(line.startsWith("libraryDependencies")){
       s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
     }else if(line contains sonatypeURL){
-      s"[API Documentation](${sonatypeURL}${org.replace('.','/')}/${n}_${scalaV}/${v}/${n}_${scalaV}-${v}-javadoc.jar/!/index.html#iarray.IArray)"
+      s"- [API Documentation](${sonatypeURL}${org.replace('.','/')}/${n}_${scalaV}/${v}/${n}_${scalaV}-${v}-javadoc.jar/!/index.html#iarray.IArray)"
     }else line
   }.mkString("", "\n", "\n")
   IO.write(readmeFile, newReadme)
