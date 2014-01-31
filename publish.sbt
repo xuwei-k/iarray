@@ -2,12 +2,6 @@ import sbtrelease._
 import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
 
-bintrayPublishSettings
-
-bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("array", "collection", "scala")
-
-bintray.Keys.whoami := "xuwei-k"
-
 releaseSettings
 
 val sonatypeURL =
@@ -72,5 +66,7 @@ publishTo := {
   if(version.value endsWith "SNAPSHOT")
     Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
   else
-    publishTo.value
+    Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
 }
+
+sonatypeSettings
