@@ -61,29 +61,33 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
 
 
+  private[iarray] def unsafeMax[AA >: A](implicit O: Order[AA]): AA = {
+    var i = 1
+    var a: AA = self(0).asInstanceOf[AA]
+    while(i < length){
+      a = O.max(a, self(i).asInstanceOf[A])
+      i += 1
+    }
+    a
+  }
+
   def max[AA >: A](implicit O: Order[AA]): Option[AA] =
     if(isEmpty) None
-    else {
-      var i = 1
-      var a: AA = self(0).asInstanceOf[AA]
-      while(i < length){
-        a = O.max(a, self(i).asInstanceOf[A])
-        i += 1
-      }
-      Some(a)
+    else Some(unsafeMax[AA])
+
+  private[iarray] def unsafeMin[AA >: A](implicit O: Order[AA]): AA = {
+    var i = 1
+    var a: AA = self(0).asInstanceOf[AA]
+    while(i < length){
+      a = O.min(a, self(i).asInstanceOf[A])
+      i += 1
     }
+    a
+  }
 
   def min[AA >: A](implicit O: Order[AA]): Option[AA] =
     if(isEmpty) None
-    else {
-      var i = 1
-      var a: AA = self(0).asInstanceOf[AA]
-      while(i < length){
-        a = O.min(a, self(i).asInstanceOf[A])
-        i += 1
-      }
-      Some(a)
-    }
+    else Some(unsafeMin[AA])
 
   def find(f: A => Boolean): Option[A] = {
     var i = 0
@@ -169,9 +173,20 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   def nonEmpty: Boolean =
     self.length != 0
 
+  // unsafe
+  private[iarray] def head: A =
+    self(0).asInstanceOf[A]
+
+  // unsafe
+  private[iarray] def tail: IArray[A] =
+    dropL(1)
+
   def headOption: Option[A] =
     if(isEmpty) None
     else Some(this(0))
+
+  private[iarray] def unsafeLast: A =
+    self(self.length - 1).asInstanceOf[A]
 
   def lastOption: Option[A] =
     if(isEmpty) None
@@ -636,17 +651,22 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       Some(acc)
     }
 
+  // unsafe
+  private[iarray] def foldMap1[B](f: A => B)(implicit B: Semigroup[B]): B = {
+    var acc = f(self(0).asInstanceOf[A])
+    var i = 1
+    while(i < self.length){
+      acc = B.append(acc, f(self(i).asInstanceOf[A]))
+      i += 1
+    }
+    acc
+  }
+
   def foldMap1Opt[B](f: A => B)(implicit B: Semigroup[B]): Option[B] =
     if(isEmpty){
       None
     }else{
-      var acc = f(self(0).asInstanceOf[A])
-      var i = 1
-      while(i < self.length){
-        acc = B.append(acc, f(self(i).asInstanceOf[A]))
-        i += 1
-      }
-      Some(acc)
+      Some(foldMap1(f))
     }
 
   def flatMap[B](f: A => IArray[B]): IArray[B] = {
@@ -664,17 +684,22 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(builder.result)
   }
 
-  def foldMapR1[B](z: A => B)(f: (A, B) => B): Option[B] =
+  // unsafe
+  private[iarray] def foldMapR1[B](z: A => B)(f: (A, B) => B): B = {
+    var acc = z(self(self.length - 1).asInstanceOf[A])
+    var i = self.length - 2
+    while(i >= 0){
+      acc = f(self(i).asInstanceOf[A], acc)
+      i -= 1
+    }
+    acc
+  }
+
+  def foldMapR1Opt[B](z: A => B)(f: (A, B) => B): Option[B] =
     if(self.length == 0){
       None
     }else{
-      var acc = z(self(self.length - 1).asInstanceOf[A])
-      var i = self.length - 2
-      while(i >= 0){
-        acc = f(self(i).asInstanceOf[A], acc)
-        i -= 1
-      }
-      Some(acc)
+      Some(foldMapR1(z)(f))
     }
 
   def foldMapL1[B](z: A => B)(f: (B, A) => B): Option[B] =
@@ -984,7 +1009,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
-  def groupBy1[B, AA >: A](f: AA => B)(implicit O: Order[B]): B ==>> OneAnd[IArray, AA] =
+  def groupBy1[B, AA >: A](f: AA => B)(implicit O: Order[B]): B ==>> IArray1[AA] =
     foldl(==>>.empty[B, OneAnd[List, AA]]) { (m, a) =>
       m.alter(f(a), {
         case Some(OneAnd(h, t)) => Some(OneAnd(a, h :: t))
@@ -992,15 +1017,15 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       })
     }.map{ case OneAnd(h, t) =>
       if(t.isEmpty){
-        OneAnd(h, empty)
+        IArray1(h, empty)
       }else{
         val len = t.size
         val array = new Array[AnyRef](len)
         @tailrec
-        def go(i: Int, list: List[AA]): OneAnd[IArray, AA] = (list: @unchecked) match {
+        def go(i: Int, list: List[AA]): IArray1[AA] = (list: @unchecked) match {
           case a :: last :: Nil =>
             array(i) = a.asInstanceOf[AnyRef]
-            OneAnd(last, new IArray(array))
+            IArray1(last, new IArray(array))
           case a :: tail =>
             array(i) = a.asInstanceOf[AnyRef]
             go(i - 1, tail)

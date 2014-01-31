@@ -413,9 +413,9 @@ object IArrayTest extends TestCommon{
     }
   }
 
-  property("foldMapR1") = forAll { a: IArray[Int] =>
+  property("foldMapR1Opt") = forAll { a: IArray[Int] =>
     val z = (a: Int) => List(a)
-    a.foldMapR1(z)(_ :: _) must_=== {
+    a.foldMapR1Opt(z)(_ :: _) must_=== {
       if(a.isEmpty) None
       else Some(a.initOption.get.toList.foldRight(z(a.lastOption.get))(_ :: _))
     }
@@ -591,9 +591,7 @@ object IArrayTest extends TestCommon{
 
   property("groupBy1") = forAll { (xs: IArray[Int], x: Int) =>
     val f = (a: Int) => if(x == 0) a else a % x
-    xs.groupBy1[Int, Int](f).map{
-      case OneAnd(h, t) => NonEmptyList.nel(h, t.toList)
-    } must_=== ==>>.fromList(std.list.groupBy1(xs.toList)(f).toList)
+    xs.groupBy1(f).map(_.toNel) must_=== ==>>.fromList(std.list.groupBy1(xs.toList)(f).toList)
   }
 
   property("traverseS") = forAll { (xs: IArray[Int], n: Int, z: Int) =>
