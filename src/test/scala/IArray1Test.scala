@@ -6,6 +6,12 @@ import std.anyVal._, std.list._, std.option._, std.string._
 import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
+
+  property("cojoin cobind") = forAll{ a: IArray1[Int] =>
+    a.cojoin must_=== a.cobind(conforms)
+    a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
+  }
+
   property("max min") = forAll{ a: IArray1[Int] =>
     import syntax.foldable1._
     a.max must_=== a.toNel.maximum1

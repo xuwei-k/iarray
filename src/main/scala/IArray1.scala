@@ -150,7 +150,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     while(i < len){
       array(i) = f(IArray1(
         tail.self(i).asInstanceOf[A],
-        new IArray[A](copyOfRange(tail.self, i, len))
+        new IArray[A](copyOfRange(tail.self, i + 1, len))
       )).asInstanceOf[AnyRef]
       i += 1
     }
@@ -164,7 +164,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     while(i < len){
       array(i) = IArray1(
         tail.self(i),
-        new IArray(copyOfRange(tail.self, i, len))
+        new IArray(copyOfRange(tail.self, i + 1, len))
       ).asInstanceOf[AnyRef]
       i += 1
     }
