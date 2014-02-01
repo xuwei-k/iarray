@@ -9,6 +9,8 @@ object IArray1 {
 
   implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
 
+  val zipApply: Apply[IArray1] = IArray1ZipApply
+
   implicit def iarray1Equal[A: Equal]: Equal[IArray1[A]] =
     new Equal[IArray1[A]] {
       def equal(a: IArray1[A], b: IArray1[A]) = a === b
