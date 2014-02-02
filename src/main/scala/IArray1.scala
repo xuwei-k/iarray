@@ -32,11 +32,17 @@ object IArray1 {
   def zip4[A, B, C, D](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D]): IArray1[(A, B, C, D)] =
     IArray1((a.head, b.head, c.head, d.head), IArray.zip4(a.tail, b.tail, c.tail, d.tail))
 
+  def zip5[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E]): IArray1[(A, B, C, D, E)] =
+    IArray1((a.head, b.head, c.head, d.head, e.head), IArray.zip5(a.tail, b.tail, c.tail, d.tail, e.tail))
+
   def zipWith3[A, B, C, D](a: IArray1[A], b: IArray1[B], c: IArray1[C])(f: (A, B, C) => D): IArray1[D] =
     IArray1(f(a.head, b.head, c.head), IArray.zipWith3(a.tail, b.tail, c.tail)(f))
 
   def zipWith4[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D])(f: (A, B, C, D) => E): IArray1[E] =
     IArray1(f(a.head, b.head, c.head, d.head), IArray.zipWith4(a.tail, b.tail, c.tail, d.tail)(f))
+
+  def zipWith5[A, B, C, D, E, F](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E])(f: (A, B, C, D, E) => F): IArray1[F] =
+    IArray1(f(a.head, b.head, c.head, d.head, e.head), IArray.zipWith5(a.tail, b.tail, c.tail, d.tail, e.tail)(f))
 
 }
 

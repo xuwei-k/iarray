@@ -37,6 +37,23 @@ private object IArrayZipApply extends Apply[IArray] {
       }
     }
   }
+  override def apply5[A, B, C, D, E, F](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C], fd: => IArray[D], fe: => IArray[E])(f: (A, B, C, D, E) => F) = {
+    val _fa = fa
+    if(_fa.isEmpty) empty
+    else{
+      val _fb = fb
+      if(_fb.isEmpty) empty
+      else{
+        val _fc = fc
+        if(_fc.isEmpty) empty
+        else {
+          val _fd = fd
+          if(_fd.isEmpty) empty
+          else zipWith5(_fa, _fb, _fc, _fd, fe)(f)
+        }
+      }
+    }
+  }
   override def tuple2[A, B](fa: => IArray[A], fb: => IArray[B]) = {
     val _fa = fa
     if(_fa.isEmpty) empty
@@ -62,6 +79,23 @@ private object IArrayZipApply extends Apply[IArray] {
         val _fc = fc
         if(_fc.isEmpty) empty
         else zip4(_fa, _fb, _fc, fd)
+      }
+    }
+  }
+  override def tuple5[A, B, C, D, E](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C], fd: => IArray[D], fe: => IArray[E]) = {
+    val _fa = fa
+    if(_fa.isEmpty) empty
+    else{
+      val _fb = fb
+      if(_fb.isEmpty) empty
+      else{
+        val _fc = fc
+        if(_fc.isEmpty) empty
+        else{
+          val _fd = fd
+          if(_fd.isEmpty) empty
+          else zip5(_fa, _fb, _fc, _fd, fe)
+        }
       }
     }
   }

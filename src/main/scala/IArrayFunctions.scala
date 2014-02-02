@@ -301,6 +301,17 @@ private[iarray] abstract class IArrayFunctions{
     new IArray(array)
   }
 
+  final def zip5[A, B, C, D, E](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D], e: IArray[E]): IArray[(A, B, C, D, E)] = {
+    val len = Math.min(Math.min(Math.min(Math.min(a.length, b.length), c.length), d.length), e.length)
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = (a(i), b(i), c(i), d(i), e(i))
+      i += 1
+    }
+    new IArray(array)
+  }
+
   final def zipWith3[A, B, C, D](a: IArray[A], b: IArray[B], c: IArray[C])(f: (A, B, C) => D): IArray[D] = {
     val len = Math.min(Math.min(a.length, b.length), c.length)
     var i = 0
@@ -318,6 +329,17 @@ private[iarray] abstract class IArrayFunctions{
     val array = new Array[AnyRef](len)
     while(i < len){
       array(i) = f(a(i), b(i), c(i), d(i)).asInstanceOf[AnyRef]
+      i += 1
+    }
+    new IArray(array)
+  }
+
+  final def zipWith5[A, B, C, D, E, F](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D], e: IArray[E])(f: (A, B, C, D, E) => F): IArray[F] = {
+    val len = Math.min(Math.min(Math.min(Math.min(a.length, b.length), c.length), d.length), e.length)
+    var i = 0
+    val array = new Array[AnyRef](len)
+    while(i < len){
+      array(i) = f(a(i), b(i), c(i), d(i), e(i)).asInstanceOf[AnyRef]
       i += 1
     }
     new IArray(array)
