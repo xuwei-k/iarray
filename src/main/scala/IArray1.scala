@@ -93,6 +93,30 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       OneAnd.oneAndTraverse[IArray].traverse1(OneAnd(tail.head, tail.tail))(f)
     ){ (h, t) => IArray1(h, t.head +: t.tail) }
 
+  def scanRight[B](z: B)(f: (A, B) => B): IArray1[B] = {
+    var i = tail.self.length
+    val array = new Array[AnyRef](i + 1)
+    val f0 = f.asInstanceOf[(AnyRef, AnyRef) => AnyRef]
+    array(i) = z.asInstanceOf[AnyRef]
+    while(0 < i){
+      array(i - 1) = f0(tail.self(i - 1), array(i))
+      i -= 1
+    }
+    IArray1(f(head, array(0).asInstanceOf[B]), new IArray(array))
+  }
+
+  def scanLeft[B](z: B)(f: (B, A) => B): IArray1[B] = {
+    val array = new Array[AnyRef](tail.self.length + 1)
+    val f0 = f.asInstanceOf[(AnyRef, AnyRef) => AnyRef]
+    array(0) = f(z, head).asInstanceOf[AnyRef]
+    var i = 0
+    while(i < tail.length){
+      array(i + 1) = f0(array(i), tail.self(i))
+      i += 1
+    }
+    IArray1(z, new IArray(array))
+  }
+
   def foldr[B](z: B)(f: (A, B) => B): B =
     f(head, tail.foldr(z)(f))
 

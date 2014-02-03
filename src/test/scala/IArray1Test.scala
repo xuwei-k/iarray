@@ -92,5 +92,16 @@ object IArray1Test extends TestCommon {
     IArray1.fromNel(xs).toNel must_== xs
   }
 
+  property("scanLeft") = forAll { (xs: IArray1[Int], n: Int, z: List[Int]) =>
+    val f = (a: List[Int], b: Int) => (n + b) :: a
+    xs.scanLeft(z)(f).toList must_=== xs.toList.scanLeft(z)(f)
+  }
+
+  property("scanRight") = forAll { (xs: IArray1[Int], n: Int, z: List[Int]) =>
+    val f = (a: Int, b: List[Int]) => (n + a) :: b
+    xs.scanRight(z)(f).toList must_=== xs.toList.scanRight(z)(f)
+    xs.scanRight(z)(f) must_=== xs.reverse.scanLeft(z)((a, b) => f(b, a)).reverse
+  }
+
 }
 
