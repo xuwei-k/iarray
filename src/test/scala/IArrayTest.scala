@@ -88,6 +88,12 @@ object IArrayTest extends TestCommon{
     IArray.zipApply.tuple4(a, b, c, d) must_=== x
   }
 
+  property("zip5 zipWith5") = forAll { (a: IArray[Int], b: IArray[Alpha], c: IArray[Long], d: IArray[List[Int]], e: IArray[(Int, Int)]) =>
+    val x = Zip[List].ap.tuple5(a.toList, b.toList, c.toList, d.toList, e.toList).to[IArray]
+    IArray.zipApply.apply5(a, b, c, d, e)(Tuple5.apply) must_=== x
+    IArray.zipApply.tuple5(a, b, c, d, e) must_=== x
+  }
+
   property("unzip firsts seconds") = forAll { a: IArray[(Int, String)] =>
     val (left1, right1) = a.unzip
     val (left2, right2) = a.toList.unzip
