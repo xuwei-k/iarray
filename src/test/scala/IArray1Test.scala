@@ -7,6 +7,10 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("merge") = forAll{ (a: IArray1[Int], b: IArray1[Int]) =>
+    Align[IArray1].merge(a, b).toList must_=== Align[List].merge(a.toList, b.toList)
+  }
+
   property("cojoin cobind") = forAll{ a: IArray1[Int] =>
     a.cojoin must_=== a.cobind(conforms)
     a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
