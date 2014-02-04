@@ -22,8 +22,8 @@ object WrappedIArray extends generic.SeqFactory[WrappedIArray] {
     def apply(from: Nothing) = newBuilder
   }
 
-  implicit def canBuildFrom[A]: CanBuildFrom[Nothing, A, WrappedIArray[A]] =
-    cbf.asInstanceOf[CanBuildFrom[Nothing, A, WrappedIArray[A]]]
+  implicit def canBuildFrom[A]: CanBuildFrom[WrappedIArray[_], A, WrappedIArray[A]] =
+    cbf.asInstanceOf[CanBuildFrom[WrappedIArray[_], A, WrappedIArray[A]]]
 }
 
 final class WrappedIArray[A](val self: IArray[A])
