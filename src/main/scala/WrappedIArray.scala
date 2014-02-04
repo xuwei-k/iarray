@@ -1,14 +1,37 @@
 package iarray
 
-import scala.collection.{mutable, immutable}
+import scala.collection.{mutable, immutable, generic}
 import scala.collection.generic.CanBuildFrom
 import scala.annotation.unchecked.uncheckedVariance
 
+object WrappedIArray extends generic.SeqFactory[WrappedIArray] {
+  def newBuilder[A]: mutable.Builder[A, WrappedIArray[A]] =
+    new mutable.Builder[A, WrappedIArray[A]] {
+      val buf = IArray.canBuildFrom[A].apply
+      def +=(a: A) = {
+         buf += a
+         this
+      }
+      def clear(): Unit = buf.clear()
+
+      def result = new WrappedIArray(buf.result)
+    }
+
+  private[this] val cbf = new CanBuildFrom[Nothing, AnyRef, WrappedIArray[AnyRef]] {
+    def apply = newBuilder
+    def apply(from: Nothing) = newBuilder
+  }
+
+  implicit def canBuildFrom[A]: CanBuildFrom[Nothing, A, WrappedIArray[A]] =
+    cbf.asInstanceOf[CanBuildFrom[Nothing, A, WrappedIArray[A]]]
+}
+
 final class WrappedIArray[A](val self: IArray[A])
   extends immutable.IndexedSeq[A]
+  with generic.GenericTraversableTemplate[A, WrappedIArray]
   with collection.IndexedSeqOptimized[A, WrappedIArray[A]] {
 
-  override def newBuilder: mutable.Builder[A, WrappedIArray[A]] = ???
+  override def companion = WrappedIArray
 
   override def apply(i: Int): A =
     self(i)
