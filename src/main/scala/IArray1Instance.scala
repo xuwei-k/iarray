@@ -99,9 +99,10 @@ private object IArray1Instance extends
     if(F eq (this: Functor[IArray1])) IArray1ZipApply
     else super.ap
 
-  // TODO override intercalate1
-  // https://github.com/scalaz/scalaz/commit/45cf9ea991f6
   override def intercalate[A: Monoid](fa: IArray1[A], a: A) =
+    fa intercalate1 a
+
+  override def intercalate1[A: Semigroup](fa: IArray1[A], a: A) =
     fa intercalate1 a
 }
 
