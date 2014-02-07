@@ -65,11 +65,10 @@ object IArrayTest extends TestCommon{
 
   property("zipApply") = {
     def undefined[A]: IArray[A] = sys.error("error")
-    // TODO https://github.com/scalaz/scalaz/commit/b24d595957
-    // IArray.zipApply.tuple3(IArray.empty[Int], sys.error(""): Int, sys.error(""): Int) must_=== IArray.empty[(Int, Int, Int)]
 
     IArray.zipApply.tuple2(IArray.empty[Int], undefined[Int]) must_=== IArray.empty[(Int, Int)]
     IArray.zipApply.tuple3(IArray.empty[Int], undefined[Int], IArray(1)) must_=== IArray.empty[(Int, Int, Int)]
+    IArray.zipApply.tuple3(IArray.empty[Int], undefined[Int], undefined[Int]) must_=== IArray.empty[(Int, Int, Int)]
 
     IArray.zipApply.apply2(IArray.empty[Int], undefined[Int])(Tuple2.apply) must_=== IArray.empty[(Int, Int)]
     IArray.zipApply.apply3(IArray.empty[Int], undefined[Int], undefined[Int])(Tuple3.apply) must_=== IArray.empty[(Int, Int, Int)]
