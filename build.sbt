@@ -1,6 +1,6 @@
-scalaVersion := "2.11.0-M7"
+scalaVersion := "2.11.0-M8"
 
-crossScalaVersions := List("2.11.0-M7")
+crossScalaVersions := List("2.11.0-M8")
 
 incOptions := incOptions.value.withNameHashing(true)
 
@@ -43,14 +43,14 @@ licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked", "-language:_")
 
-val scalazV = "7.1.0-M4"
+val scalazV = "7.1.0-M5"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
   "org.scalaz" %% "scalaz-scalacheck-binding" % scalazV % "test"
 )
 
-val specLiteURL = "https://raw.github.com/scalaz/scalaz/v7.1.0-M4/tests/src/test/scala/scalaz/SpecLite.scala"
+val specLiteURL = s"https://raw.github.com/scalaz/scalaz/v${scalazV}/tests/src/test/scala/scalaz/SpecLite.scala"
 val specLite = SettingKey[List[String]]("specLite")
 
 specLite := {

@@ -27,8 +27,7 @@ private object IArray1ZipApply extends Apply[IArray1] {
   override def tuple2[A, B](fa: => IArray1[A], fb: => IArray1[B]) =
     fa.zip(fb)
 
-  // TODO https://github.com/scalaz/scalaz/commit/b24d595957b
-  override def tuple3[A, B, C](fa: => IArray1[A], fb: => IArray1[B], fc: IArray1[C]) =
+  override def tuple3[A, B, C](fa: => IArray1[A], fb: => IArray1[B], fc: => IArray1[C]) =
     IArray1.zip3(fa, fb, fc)
 
   override def tuple4[A, B, C, D](fa: => IArray1[A], fb: => IArray1[B], fc: => IArray1[C], fd: => IArray1[D]) =

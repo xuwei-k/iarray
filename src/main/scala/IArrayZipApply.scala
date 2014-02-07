@@ -59,8 +59,7 @@ private object IArrayZipApply extends Apply[IArray] {
     if(_fa.isEmpty) empty
     else _fa.zip(fb)
   }
-  // TODO https://github.com/scalaz/scalaz/commit/b24d595957
-  override def tuple3[A, B, C](fa: => IArray[A], fb: => IArray[B], fc: IArray[C]) = {
+  override def tuple3[A, B, C](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C]) = {
     val _fa = fa
     if(_fa.isEmpty) empty
     else{
