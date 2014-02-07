@@ -33,7 +33,7 @@ private object IArray1Instance extends
     IArray1(A.append(a1.head, a2.head), Align[IArray].merge(a1.tail, a2.tail))
 
   override def point[A](a: => A) =
-    IArray1(a, IArray.empty)
+    IArray1(a, IArray.empty[A])
 
   override def bind[A, B](fa: IArray1[A])(f: A => IArray1[B]) =
     fa flatMap f

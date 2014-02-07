@@ -512,10 +512,11 @@ object IArrayTest extends TestCommon{
 
   property("intersperse") = forAll{ xs: IArray[Alpha] =>
     import syntax.std.list._
-    xs.intersperse(",").toList must_=== xs.toList.intersperse(Tag(","))
+    xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
   }
 
-  property("intercalate") = forAll { xs: IArray[Alpha] =>
+  property("intercalate") = forAll { xs0: IArray[Alpha] =>
+    val xs: IArray[String] = xs0.widen
     xs.intercalate(" , ") must_=== Foldable[List].intercalate(xs.toList, " , ")
     xs.intercalate(",") must_=== xs.mkString(",")
     xs.intercalate(",") must_=== xs.intercalate1Opt(",").getOrElse(Monoid[String].zero)

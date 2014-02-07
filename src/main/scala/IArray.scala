@@ -12,7 +12,7 @@ object IArray extends IArrayFunctions{
 
 }
 
-final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) extends AnyVal{
+final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) extends AnyVal{
   import IArray._
 
   @inline def apply(i: Int): A =
@@ -61,9 +61,9 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
 
 
-  private[iarray] def unsafeMax[AA >: A](implicit O: Order[AA]): AA = {
+  private[iarray] def unsafeMax(implicit O: Order[A]): A = {
     var i = 1
-    var a: AA = self(0).asInstanceOf[AA]
+    var a = self(0).asInstanceOf[A]
     while(i < length){
       a = O.max(a, self(i).asInstanceOf[A])
       i += 1
@@ -71,13 +71,13 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     a
   }
 
-  def max[AA >: A](implicit O: Order[AA]): Option[AA] =
+  def max(implicit O: Order[A]): Option[A] =
     if(isEmpty) None
-    else Some(unsafeMax[AA])
+    else Some(unsafeMax)
 
-  private[iarray] def unsafeMin[AA >: A](implicit O: Order[AA]): AA = {
+  private[iarray] def unsafeMin(implicit O: Order[A]): A = {
     var i = 1
-    var a: AA = self(0).asInstanceOf[AA]
+    var a = self(0).asInstanceOf[A]
     while(i < length){
       a = O.min(a, self(i).asInstanceOf[A])
       i += 1
@@ -85,9 +85,9 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     a
   }
 
-  def min[AA >: A](implicit O: Order[AA]): Option[AA] =
+  def min(implicit O: Order[A]): Option[A] =
     if(isEmpty) None
-    else Some(unsafeMin[AA])
+    else Some(unsafeMin)
 
   def find(f: A => Boolean): Option[A] = {
     var i = 0
@@ -148,23 +148,23 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       Some(Zipper(acc, self(len).asInstanceOf[A], Stream.Empty))
     }
 
-  def oneAnd[AA >: A]: Option[OneAnd[IArray, AA]] =
+  def oneAnd: Option[OneAnd[IArray, A]] =
     if(isEmpty)
       None
     else
       Some(OneAnd(self(0).asInstanceOf[A], dropL(1)))
 
-  def toArray[AA >: A](implicit A: reflect.ClassTag[AA]): Array[AA] =
+  def toArray(implicit A: reflect.ClassTag[A]): Array[A] =
     if(A.runtimeClass.isPrimitive){
-      val array = new Array[AA](self.length)
+      val array = new Array[A](self.length)
       var i = 0
       while(i < self.length){
-        array(i) = self(i).asInstanceOf[AA]
+        array(i) = self(i).asInstanceOf[A]
         i += 1
       }
       array
     }else{
-      copyOf(self, self.length).asInstanceOf[Array[AA]]
+      copyOf(self, self.length).asInstanceOf[Array[A]]
     }
 
   def isEmpty: Boolean =
@@ -221,7 +221,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
-  def reverse_:::[AA >: A](prefix: IArray[AA]): IArray[AA] =
+  def reverse_:::(prefix: IArray[A]): IArray[A] =
     if(prefix.length == 0){
       this
     }else{
@@ -363,7 +363,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
-  def zipAll[B, AA >: A](that: IArray[B], a: AA, b: B): IArray[(AA, B)] = {
+  def zipAll[B](that: IArray[B], a: A, b: B): IArray[(A, B)] = {
     val len = Math.max(self.length, that.length)
     val min = Math.min(self.length, that.length)
     val array = new Array[AnyRef](len)
@@ -493,8 +493,8 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray[A](buf.result)
   }
 
-  def withFilter[AA >: A](f: AA => Boolean): WithFilter[AA] =
-    new WithFilter[AA](self, f)
+  def withFilter(f: A => Boolean): WithFilter[A] =
+    new WithFilter[A](self, f)
 
   def map[B](f: A => B): IArray[B] = {
     var i = 0
@@ -514,7 +514,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
   }
 
-  def contains[AA >: A](a: AA)(implicit A: Equal[AA]): Boolean = {
+  def contains(a: A)(implicit A: Equal[A]): Boolean = {
     var i = 0
     while(i < self.length){
       if(A.equal(this(i), a)){
@@ -545,21 +545,21 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
   }
 
-  def +:[AA >: A](a: AA): IArray[AA] = {
+  def +:(a: A): IArray[A] = {
     val array = new Array[AnyRef](self.length + 1)
     System.arraycopy(self, 0, array, 1, self.length)
     array(0) = a.asInstanceOf[AnyRef]
     new IArray(array)
   }
 
-  def :+[AA >: A](a: AA): IArray[AA] = {
+  def :+(a: A): IArray[A] = {
     val array = new Array[AnyRef](self.length + 1)
     System.arraycopy(self, 0, array, 0, self.length)
     array(self.length) = a.asInstanceOf[AnyRef]
     new IArray(array)
   }
 
-  def ++[AA >: A](that: IArray[AA]): IArray[AA] = {
+  def ++(that: IArray[A]): IArray[A] = {
     if(self.length == 0){
       that
     }else if(that.length == 0){
@@ -628,21 +628,21 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     (acc, new IArray(array))
   }
 
-  def fold[AA >: A](implicit A: Monoid[AA]): AA = {
+  def fold(implicit A: Monoid[A]): A = {
     var i = 0
     var acc = A.zero
     while(i < self.length){
-      acc = A.append(acc, self(i).asInstanceOf[AA])
+      acc = A.append(acc, self(i).asInstanceOf[A])
       i += 1
     }
     acc
   }
 
-  def fold1Opt[AA >: A](implicit A: Semigroup[AA]): Option[AA] =
+  def fold1Opt(implicit A: Semigroup[A]): Option[A] =
     if(isEmpty){
       None
     }else{
-      var acc: AA = self(0).asInstanceOf[A]
+      var acc: A = self(0).asInstanceOf[A]
       var i = 1
       while(i < self.length){
         acc = A.append(acc, self(i).asInstanceOf[A])
@@ -715,13 +715,13 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       Some(acc)
     }
 
-  def foldl1[AA >: A](f: (AA, AA) => AA): Option[AA] =
+  def foldl1(f: (A, A) => A): Option[A] =
     if(isEmpty) None
     else{
       var i = 1
-      var acc = self(0).asInstanceOf[AA]
+      var acc = self(0).asInstanceOf[A]
       while(i < self.length){
-        acc = f(acc, self(i).asInstanceOf[AA])
+        acc = f(acc, self(i).asInstanceOf[A])
         i += 1
       }
       Some(acc)
@@ -758,11 +758,11 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     acc
   }
 
-  def foldr1[AA >: A](f: (AA, AA) => AA): Option[AA] =
+  def foldr1(f: (A, A) => A): Option[A] =
     if(isEmpty) None
     else{
       var i = self.length - 2
-      var acc = self(self.length - 1).asInstanceOf[AA]
+      var acc = self(self.length - 1).asInstanceOf[A]
       while(i >= 0){
         acc = f(self(i).asInstanceOf[A], acc)
         i -= 1
@@ -794,7 +794,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
-  def scanLeft1[AA >: A](f: (AA, AA) => AA): IArray[AA] =
+  def scanLeft1(f: (A, A) => A): IArray[A] =
     if(self.length != 0){
       val array = new Array[AnyRef](self.length)
       array(0) = self(0).asInstanceOf[AnyRef]
@@ -808,7 +808,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       new IArray(array)
     }else empty
 
-  def scanRight1[AA >: A](f: (AA, AA) => AA): IArray[AA] =
+  def scanRight1(f: (A, A) => A): IArray[A] =
     if(self.length != 0){
       val array = new Array[AnyRef](self.length)
       array(self.length - 1) = self(self.length - 1).asInstanceOf[AnyRef]
@@ -821,26 +821,26 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       new IArray(array)
     }else empty
 
-  def startsWith[AA >: A](that: IArray[AA], offset: Int = 0)(implicit A: Equal[AA]): Boolean = {
+  def startsWith(that: IArray[A], offset: Int = 0)(implicit A: Equal[A]): Boolean = {
     require(offset >= 0, "offset = " + offset  + " is invalid. offset must be positive")
     var i = offset
     var j = 0
     val thisLen = self.length
     val thatLen = that.length
-    while (i < thisLen && j < thatLen && A.equal(self(i).asInstanceOf[AA], that(j))) {
+    while (i < thisLen && j < thatLen && A.equal(self(i).asInstanceOf[A], that(j))) {
       i += 1
       j += 1
     }
     j == thatLen
   }
 
-  def endsWith[AA >: A](that: IArray[AA])(implicit A: Equal[AA]): Boolean = {
+  def endsWith(that: IArray[A])(implicit A: Equal[A]): Boolean = {
     var i = length - 1
     var j = that.length - 1
 
     (j <= i) && {
       while (j >= 0){
-        if(false == A.equal(self(i).asInstanceOf[AA], that(j))){
+        if(false == A.equal(self(i).asInstanceOf[A], that(j))){
           return false
         }
         i -= 1
@@ -877,7 +877,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
   }
 
   @throws[IndexOutOfBoundsException]
-  def updated[AA >: A](index: Int, elem: AA): IArray[AA] = {
+  def updated(index: Int, elem: A): IArray[A] = {
     val array = self.clone
     array(index) = elem.asInstanceOf[AnyRef]
     new IArray(array)
@@ -942,7 +942,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     None
   }
 
-  def indexOfL[AA >: A](a: AA)(implicit E: Equal[AA]): Option[Int] = {
+  def indexOfL(a: A)(implicit E: Equal[A]): Option[Int] = {
     var i = 0
     while(i < self.length){
       if(E.equal(a, this(i))){
@@ -953,7 +953,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     None
   }
 
-  def indexOfR[AA >: A](a: AA)(implicit E: Equal[AA]): Option[Int] = {
+  def indexOfR(a: A)(implicit E: Equal[A]): Option[Int] = {
     var i = self.length - 1
     while(0 <= i){
       if(E.equal(a, this(i))){
@@ -964,9 +964,9 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     None
   }
 
-  def sum[AA >: A](implicit A: Numeric[AA]): AA = {
+  def sum(implicit A: Numeric[A]): A = {
     var i = 0
-    var acc: AA = A.zero
+    var acc: A = A.zero
     while(i < self.length){
       acc = A.plus(acc, self(i).asInstanceOf[A])
       i += 1
@@ -974,7 +974,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     acc
   }
 
-  def sorted[AA >: A](implicit O: Order[AA]): IArray[AA] =
+  def sorted(implicit O: Order[A]): IArray[A] =
     sort0(O.toScalaOrdering)
 
   def sortWith(f: (A, A) => Boolean): IArray[A] =
@@ -1009,23 +1009,23 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     new IArray(array)
   }
 
-  def groupBy1[B, AA >: A](f: AA => B)(implicit O: Order[B]): B ==>> IArray1[AA] =
-    foldl(==>>.empty[B, OneAnd[List, AA]]) { (m, a) =>
+  def groupBy1[B](f: A => B)(implicit O: Order[B]): B ==>> IArray1[A] =
+    foldl(==>>.empty[B, OneAnd[List, A]]) { (m, a) =>
       m.alter(f(a), {
         case Some(OneAnd(h, t)) => Some(OneAnd(a, h :: t))
-        case None => Some(OneAnd[List, AA](a, Nil))
+        case None => Some(OneAnd[List, A](a, Nil))
       })
     }.map{ case OneAnd(h, t) =>
       if(t.isEmpty){
-        IArray1(h, empty)
+        IArray1(h, empty[A])
       }else{
         val len = t.size
         val array = new Array[AnyRef](len)
         @tailrec
-        def go(i: Int, list: List[AA]): IArray1[AA] = (list: @unchecked) match {
+        def go(i: Int, list: List[A]): IArray1[A] = (list: @unchecked) match {
           case a :: last :: Nil =>
             array(i) = a.asInstanceOf[AnyRef]
-            IArray1(last, new IArray(array))
+            IArray1(last, new IArray[A](array))
           case a :: tail =>
             array(i) = a.asInstanceOf[AnyRef]
             go(i - 1, tail)
@@ -1034,33 +1034,33 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       }
     }
 
-  def intercalate[AA >: A](a: AA)(implicit A: Monoid[AA]): AA =
+  def intercalate(a: A)(implicit A: Monoid[A]): A =
     if(isEmpty){
       A.zero
     }else{
       var i = 1
-      var acc = self(0).asInstanceOf[AA]
+      var acc = self(0).asInstanceOf[A]
       while(i < self.length){
-        acc = A.append(A.append(acc, a), self(i).asInstanceOf[AA])
+        acc = A.append(A.append(acc, a), self(i).asInstanceOf[A])
         i += 1
       }
       acc
     }
 
-  def intercalate1Opt[AA >: A](a: AA)(implicit A: Semigroup[AA]): Option[AA] =
+  def intercalate1Opt(a: A)(implicit A: Semigroup[A]): Option[A] =
     if(isEmpty){
       None
     }else{
       var i = 1
-      var acc = self(0).asInstanceOf[AA]
+      var acc = self(0).asInstanceOf[A]
       while(i < self.length){
-        acc = A.append(A.append(acc, a), self(i).asInstanceOf[AA])
+        acc = A.append(A.append(acc, a), self(i).asInstanceOf[A])
         i += 1
       }
       Some(acc)
     }
 
-  def intersperse[AA >: A](a: AA): IArray[AA] =
+  def intersperse(a: A): IArray[A] =
     if(isEmpty){
       empty
     }else{
@@ -1100,7 +1100,7 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
     }
   }
 
-  def ===[AA >: A](that: IArray[AA])(implicit A: Equal[AA]): Boolean =
+  def ===(that: IArray[A])(implicit A: Equal[A]): Boolean =
     (self.length == that.length) && {
       var i = 0
       while(i < self.length){
@@ -1111,6 +1111,9 @@ final class IArray[+A] private[iarray](private[iarray] val self: Array[AnyRef]) 
       }
       true
     }
+
+  def widen[B](implicit ev: A <:< B): IArray[B] =
+    this.asInstanceOf[IArray[B]]
 
   @inline private def indexNot(f: A => Boolean): Int = {
     var i = 0

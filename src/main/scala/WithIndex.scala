@@ -1,6 +1,6 @@
 package iarray
 
-final class WithIndex[+A](private val self: Array[AnyRef]) extends AnyVal{
+final class WithIndex[A](private val self: Array[AnyRef]) extends AnyVal{
   def map[B](f: (A, Int) => B): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)

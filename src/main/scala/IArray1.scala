@@ -87,7 +87,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   // TODO optimize?
   def traverse1[F[_], B](f: A => F[B])(implicit F: Apply[F]): F[IArray1[B]] =
     if(tail.self.length == 0)
-      F.map(f(head))(x => IArray1(x, IArray.empty))
+      F.map(f(head))(x => IArray1(x, IArray.empty[B]))
     else F.apply2(
       f(head),
       OneAnd.oneAndTraverse[IArray].traverse1(OneAnd(tail.head, tail.tail))(f)
@@ -102,7 +102,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       array(i - 1) = f0(tail.self(i - 1), array(i))
       i -= 1
     }
-    IArray1(f(head, array(0).asInstanceOf[B]), new IArray(array))
+    IArray1(f(head, array(0).asInstanceOf[B]), new IArray[B](array))
   }
 
   def scanLeft[B](z: B)(f: (B, A) => B): IArray1[B] = {
@@ -114,7 +114,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       array(i + 1) = f0(array(i), tail.self(i))
       i += 1
     }
-    IArray1(z, new IArray(array))
+    IArray1(z, new IArray[B](array))
   }
 
   def foldr[B](z: B)(f: (A, B) => B): B =
@@ -154,7 +154,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       n += elem.length
       i += 1
     }
-    IArray1(h.head, new IArray(array))
+    IArray1(h.head, new IArray[B](array))
   }
 
   def flatMap[B](f: A => IArray1[B]): IArray1[B] = {
@@ -172,7 +172,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       }
       i += 1
     }
-    IArray1(h.head, new IArray(builder.result))
+    IArray1(h.head, new IArray[B](builder.result))
   }
 
   def cobind[B](f: IArray1[A] => B): IArray1[B] = {
@@ -186,7 +186,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       )).asInstanceOf[AnyRef]
       i += 1
     }
-    IArray1(f(this), new IArray(array))
+    IArray1(f(this), new IArray[B](array))
   }
 
   def cojoin: IArray1[IArray1[A]] = {
@@ -196,11 +196,11 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     while(i < len){
       array(i) = IArray1(
         tail.self(i),
-        new IArray(copyOfRange(tail.self, i + 1, len))
+        new IArray[AnyRef](copyOfRange(tail.self, i + 1, len))
       ).asInstanceOf[AnyRef]
       i += 1
     }
-    IArray1(this, new IArray(array))
+    IArray1(this, new IArray[IArray1[A]](array))
   }
 
   def +:(a: A): IArray1[A] =
@@ -325,7 +325,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
         array(len - i) = tail.self(i).asInstanceOf[AnyRef]
         i -= 1
       }
-      IArray1(tail.unsafeLast, new IArray(array))
+      IArray1(tail.unsafeLast, new IArray[A](array))
     }
   }
 
@@ -347,7 +347,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       array((i * 2) + 1) = tail.self(i)
       i += 1
     }
-    IArray1(head, new IArray(array))
+    IArray1(head, new IArray[A](array))
   }
 
   def widen[B](implicit ev: A <:< B): IArray1[B] =

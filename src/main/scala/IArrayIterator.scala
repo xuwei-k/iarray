@@ -1,6 +1,6 @@
 package iarray
 
-private final class IArrayIterator[+A](array: Array[AnyRef]) extends Iterator[A]{
+private final class IArrayIterator[A](array: Array[AnyRef]) extends Iterator[A]{
 
   private[this] var i = 0
   def hasNext = i < array.length
