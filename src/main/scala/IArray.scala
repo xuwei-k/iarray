@@ -1,6 +1,5 @@
 package iarray
 
-import annotation.unchecked.uncheckedVariance
 import annotation.tailrec
 import scalaz._
 import java.util.Arrays
@@ -468,7 +467,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
-  def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A @uncheckedVariance]]): F[A @uncheckedVariance] = {
+  def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
     val buf = C()
     var i = 0
     while(i < self.length){
@@ -478,7 +477,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     buf.result
   }
 
-  def toOneAnd[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A @uncheckedVariance]]): Option[OneAnd[F, A @uncheckedVariance]] =
+  def toOneAnd[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): Option[OneAnd[F, A]] =
     if(isEmpty){
       None
     }else{
