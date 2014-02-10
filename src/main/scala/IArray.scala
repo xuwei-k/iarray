@@ -117,6 +117,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   def toIterator: Iterator[A] =
     new IArrayIterator[A](self)
 
+  def toIList: IList[A] = {
+    var i = self.length - 1
+    var acc = IList.empty[A]
+    while(0 <= i){
+      acc = ICons(self(i).asInstanceOf[A], acc)
+      i -= 1
+    }
+    acc
+  }
+
   def toList: List[A] = {
     var i = self.length - 1
     var acc: List[A] = Nil

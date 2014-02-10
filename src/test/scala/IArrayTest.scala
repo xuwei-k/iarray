@@ -25,6 +25,11 @@ object IArrayTest extends TestCommon{
     a.toNel must_=== a.toList.toNel
   }
 
+  property("toIList") = forAll { a: IList[Alpha] =>
+    import syntax.foldable._
+    a.to[IArray].toIList must_=== a
+  }
+
   property("oneAnd toOneAnd") = forAll { a: IArray[Byte] =>
     a.oneAnd must_=== a.toNel.map{ nel =>
       OneAnd(nel.head, IArray.from(nel.tail))
