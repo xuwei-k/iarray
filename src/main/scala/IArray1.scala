@@ -283,6 +283,13 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     if(f(head)) Some(head)
     else tail.find(f)
 
+  def findRight(f: A => Boolean): Option[A] = {
+    val x = tail.findRight(f)
+    if(x.isDefined) x
+    else if(f(head)) Some(head)
+    else None
+  }
+
   def indexOfL(a: A)(implicit E: Equal[A]): Option[Int] = {
     if(E.equal(head, a)) Some(0)
     else tail.indexOfL(a).map(_ + 1)

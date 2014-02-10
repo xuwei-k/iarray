@@ -99,6 +99,17 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  def findRight(f: A => Boolean): Option[A] = {
+    var i = self.length - 1
+    while(0 <= i){
+      if(f(self(i).asInstanceOf[A])){
+        return Some(self(i).asInstanceOf[A])
+      }
+      i -= 1
+    }
+    None
+  }
+
   def exists(f: A => Boolean): Boolean = {
     var i = 0
     while(i < self.length){

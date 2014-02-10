@@ -57,6 +57,10 @@ object IArray1Test extends TestCommon {
     as.find(_ % 10 == 0) must_=== as.toList.find(_ % 10 == 0)
   }
 
+  property("findRight") = forAll{ as: IArray1[Int] =>
+    as.findRight(_ % 10 == 0) must_=== as.reverse.find(_ % 10 == 0)
+  }
+
   property("contains") = forAll{ (as: IArray1[Int], a: Int) =>
     as.contains(a) must_=== as.toList.contains(a)
   }

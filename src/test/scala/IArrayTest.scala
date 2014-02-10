@@ -228,6 +228,10 @@ object IArrayTest extends TestCommon{
     a.find(f) must_=== a.toList.find(f)
   }
 
+  property("findRight") = forAll { a: IArray[Int] =>
+    a.findRight(f) must_=== a.reverse.find(f)
+  }
+
   property("flatMap") = forAll { a: IArray[Int] =>
     val f: Int => IArray[String] = {i: Int => IArray.single(i.toString)}
     a.flatMap(f).toList must_=== a.toList.flatMap(x => f(x).toList)
