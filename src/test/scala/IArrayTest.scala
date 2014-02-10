@@ -448,6 +448,22 @@ object IArrayTest extends TestCommon{
     a.foldr1(_ - _) must_=== a.toList.reduceRightOption(_ - _)
   }
 
+  property("no stack overflow foldLeftM, foldRightM") = {
+    val n = 100000
+    Foldable[IArray].foldLeftM[Id.Id, Int, Int](IArray.fillAll(n)(1), 0)(_ + _) must_=== n
+    Foldable[IArray].foldRightM[Id.Id, Int, Int](IArray.fillAll(n)(1), 0)(_ + _) must_=== n
+  }
+
+  property("foldLeftM") = forAll { (a: IArray[Int], z: Vector[Int]) =>
+    Foldable[IArray].foldLeftM[Id.Id, Int, Vector[Int]](a, z)(_ :+ _) must_=== a.foldl(z)(_ :+ _)
+    Foldable[IArray].foldLeftM(a, Vector.empty[Int])((a, b) => Option(a :+ b)) must_=== Option(a.to[Vector])
+  }
+
+  property("foldRightM") = forAll { (a: IArray[Int], z: List[Int]) =>
+    Foldable[IArray].foldRightM[Id.Id, Int, List[Int]](a, z)(_ :: _) must_=== a.foldr(z)(_ :: _)
+    Foldable[IArray].foldRightM(a, List.empty[Int])((a, b) => Option(a :: b)) must_=== Option(a.toList)
+  }
+
   property("foldMapL1") = forAll { a: IArray[Int] =>
     val z = (a: Int) => Vector(a)
     a.foldMapL1(z)(_ :+ _) must_=== {
