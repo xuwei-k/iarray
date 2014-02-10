@@ -126,6 +126,36 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  def reverseList: List[A] = {
+    var i = 0
+    var acc: List[A] = Nil
+    while(i < self.length){
+      acc = new ::(self(i).asInstanceOf[A], acc)
+      i += 1
+    }
+    acc
+  }
+
+  def reverseIList: IList[A] = {
+    var i = 0
+    var acc = IList.empty[A]
+    while(i < self.length){
+      acc = ICons(self(i).asInstanceOf[A], acc)
+      i += 1
+    }
+    acc
+  }
+
+  def reverseArray(implicit A: reflect.ClassTag[A]): Array[A] = {
+    val array = new Array[A](self.length)
+    var i = 0
+    while(i < self.length){
+      array(self.length - i - 1) = self(i).asInstanceOf[A]
+      i += 1
+    }
+    array
+  }
+
   def toList: List[A] = {
     var i = self.length - 1
     var acc: List[A] = Nil
@@ -465,6 +495,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       i += 1
     }
     new IArray(array)
+  }
+
+  def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
+    val buf = C()
+    var i = self.length - 1
+    while(i >= 0){
+      buf += self(i).asInstanceOf[A]
+      i -= 1
+    }
+    buf.result
   }
 
   def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {

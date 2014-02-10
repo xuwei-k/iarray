@@ -12,6 +12,22 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("reversed") = { a: IArray[Int] =>
+    a.reversed[List] must_=== a.reverse.toList
+  }
+
+  property("reverseList") = { a: IArray[Int] =>
+    a.reverseList must_=== a.reverse.toList
+  }
+
+  property("reverseIList") = { a: IArray[Int] =>
+    a.reverseIList must_=== a.reverse.toIList
+  }
+
+  property("reverseArray") = { a: IArray[Int] =>
+    a.reverseArray.toList must_=== a.reverse.toList
+  }
+
   property("unfold") = {
     val a = IArray.unfold(0)(a =>
       if(a < 10) Some((a + 1, a + 1)) else None
