@@ -78,6 +78,12 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4))
   }
 
+  def unzip5[B, C, D, E, F](implicit e: A <:< Product5[B, C, D, E, F]): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
+    val h = e(head)
+    val t = tail.unzip5
+    (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4), IArray1(h._5, t._5))
+  }
+
   @inline def apply(i: Int): A =
     if(i == 0) head else tail(i - 1)
 

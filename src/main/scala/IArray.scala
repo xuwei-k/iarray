@@ -488,6 +488,21 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4))
   }
 
+  def unzip5[B, C, D, E, F](implicit e: A <:< Product5[B, C, D, E, F]): (IArray[B], IArray[C], IArray[D], IArray[E], IArray[F]) = {
+    var i = 0
+    val _1, _2, _3, _4, _5 = new Array[AnyRef](self.length)
+    while(i < self.length){
+      val x = self(i).asInstanceOf[Product5[AnyRef, AnyRef, AnyRef, AnyRef, AnyRef]]
+      _1(i) = x._1
+      _2(i) = x._2
+      _3(i) = x._3
+      _4(i) = x._4
+      _5(i) = x._5
+      i += 1
+    }
+    (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4), new IArray(_5))
+  }
+
   def firsts[B, C](implicit e: A <:< Product2[B, C]): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)

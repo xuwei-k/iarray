@@ -136,6 +136,10 @@ object IArrayTest extends TestCommon{
   object T4 extends Function4[String, Int, Long, List[Int], T4] with ShowAndEq[T4]{
     implicit val a = Functor[Arbitrary].map(implicitly[Arbitrary[(String, Int, Long, List[Int])]])(T4.tupled)
   }
+  final case class T5(_1: String, _2: Int, _3: Long, _4: List[Int], _5: (Int, Byte)) extends Product5[String, Int, Long, List[Int], (Int, Byte)]
+  object T5 extends Function5[String, Int, Long, List[Int], (Int, Byte), T5] with ShowAndEq[T5]{
+    implicit val a = Functor[Arbitrary].map(implicitly[Arbitrary[(String, Int, Long, List[Int], (Int, Byte))]])(T5.tupled)
+  }
 
   property("unzip3") = forAll { a: IArray[T3] =>
     val (_1, _2, _3) = a.unzip3
@@ -167,6 +171,15 @@ object IArrayTest extends TestCommon{
     _2 must_=== a.map(_._2)
     _3 must_=== a.map(_._3)
     _4 must_=== a.map(_._4)
+  }
+
+  property("unzip5") = forAll { a: IArray[T5] =>
+    val (_1, _2, _3, _4, _5) = a.unzip5
+    _1 must_=== a.map(_._1)
+    _2 must_=== a.map(_._2)
+    _3 must_=== a.map(_._3)
+    _4 must_=== a.map(_._4)
+    _5 must_=== a.map(_._5)
   }
 
   property("zipWithIndex") = forAll { a: IArray[Int] =>
