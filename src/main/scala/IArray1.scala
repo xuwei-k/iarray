@@ -3,7 +3,8 @@ package iarray
 import scalaz._
 import scala.collection.mutable.ArrayBuilder
 import scala.collection.generic.CanBuildFrom
-import java.util.Arrays.copyOfRange
+import java.util.Arrays
+import java.util.Arrays.{copyOfRange, copyOf}
 
 object IArray1 {
 
@@ -222,6 +223,22 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     System.arraycopy(that.tail.self, 0, array, tail.size + 1, that.tail.size)
     IArray1(head, new IArray[A](array))
   }
+
+  private def sort0[B](c: java.util.Comparator[B]): IArray1[A] = {
+    val array = copyOf(tail.self, tail.length + 1)
+    array(tail.length) = head.asInstanceOf[AnyRef]
+    Arrays.sort(array, c.asInstanceOf[java.util.Comparator[AnyRef]])
+    IArray1(array(0).asInstanceOf[A], new IArray[A](copyOfRange(array, 1, array.length)))
+  }
+
+  def sorted(implicit O: Order[A]): IArray1[A] =
+    sort0(O.toScalaOrdering)
+
+  def sortWith(f: (A, A) => Boolean): IArray1[A] =
+    sort0(IArray.comparatorFromFunction(f))
+
+  def sortBy[B](f: A => B)(implicit O: Order[B]): IArray1[A] =
+    sort0((O contramap f).toScalaOrdering)
 
   def max(implicit O: Order[A]): A =
     if(tail.self.length == 0) head

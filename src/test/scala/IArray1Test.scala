@@ -16,6 +16,19 @@ object IArray1Test extends TestCommon {
     a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
   }
 
+  property("sorted") = forAll{ (a: IArray1[Int], b: IArray[Alpha]) =>
+    a.sorted.toList must_=== a.toList.sorted
+    b.sorted.toList must_=== b.toList.sorted
+  }
+
+  property("sortBy") = forAll{ a: IArray1[Int] =>
+    a.sortBy(- _).toList must_=== a.toList.sortBy(- _)
+  }
+
+  property("sortWith") = forAll{ a: IArray1[Int] =>
+    a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _)
+  }
+
   property("max min") = forAll{ a: IArray1[Int] =>
     import syntax.foldable1._
     a.max must_=== a.toNel.maximum1

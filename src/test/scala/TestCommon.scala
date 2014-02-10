@@ -5,6 +5,7 @@ import Isomorphism._
 import org.scalacheck.{Gen, Arbitrary}
 import scalaz.scalacheck.ScalaCheckBinding._
 import scalaz.scalacheck.ScalazArbitrary._
+import std.list._, std.anyVal._
 
 trait TestCommon extends SpecLite {
 
@@ -18,7 +19,8 @@ trait TestCommon extends SpecLite {
 
   implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
   implicit val alphaShow: Show[Alpha] = Show.showA
-  implicit val alphaEqual: Equal[Alpha] = Equal.equalA
+  implicit val alphaOrd: Order[Alpha] = Order.orderBy(_.toList)
+  implicit val alphaOrdering = alphaOrd.toScalaOrdering
 
   implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =
     Functor[Arbitrary].map(implicitly[Arbitrary[List[A]]])(IArray.fromList[A])
