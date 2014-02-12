@@ -29,6 +29,9 @@ private object IArray1Instance extends
   override def alignWith[A, B, C](f: A \&/ B => C): (IArray1[A], IArray1[B]) => IArray1[C] =
     { (a, b) => a.alignWith(b)(f) }
 
+  override def align[A, B](fa: IArray1[A], fb: IArray1[B]): IArray1[A \&/ B] =
+    fa align fb
+
   override def merge[A](a1: IArray1[A], a2: IArray1[A])(implicit A: Semigroup[A]) =
     IArray1(A.append(a1.head, a2.head), Align[IArray].merge(a1.tail, a2.tail))
 

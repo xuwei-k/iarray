@@ -55,6 +55,9 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def alignWith[B, C](that: IArray1[B])(f: A \&/ B => C): IArray1[C] =
     IArray1(f(\&/.Both(head, that.head)), tail.alignWith(that.tail)(f))
 
+  def align[B](that: IArray1[B]): IArray1[A \&/ B] =
+    IArray1(\&/.Both(head, that.head), tail.align(that.tail))
+
   def zip[B](that: IArray1[B]): IArray1[(A, B)] =
     IArray1((head, that.head), tail.zip(that.tail))
 
