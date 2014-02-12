@@ -267,6 +267,16 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def toList: List[A] =
     head :: tail.toList
 
+  def toIterator: Iterator[A] = new Iterator[A] {
+    private[this] var i = 0
+    def hasNext: Boolean = i < length
+    def next(): A = {
+      val n = apply(i)
+      i += 1
+      n
+    }
+  }
+
   def toIList: IList[A] =
     head +: tail.toIList
 

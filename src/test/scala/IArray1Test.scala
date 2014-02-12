@@ -41,6 +41,10 @@ object IArray1Test extends TestCommon {
     a.min must_=== a.toNel.minimum1
   }
 
+  property("toIterator") = forAll{ a: Array[Int] =>
+    a.toIterator.toList must_=== a.toList
+  }
+
   property("toArray Int") = forAll{ (a: Int, as: Array[Int]) =>
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
