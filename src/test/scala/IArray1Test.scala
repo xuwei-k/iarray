@@ -11,6 +11,10 @@ object IArray1Test extends TestCommon {
     as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
   }
 
+  property("zipWithIndex") = forAll { a: IArray1[Int] =>
+    a.zipWithIndex.toList must_=== a.toList.zipWithIndex
+  }
+
   property("collectFirst collectLast") = forAll{ a: IArray1[Int] =>
     val f: PartialFunction[Int, String] = {case x if x % 10 == 0 => (x * 3).toString }
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
