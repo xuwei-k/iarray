@@ -64,6 +64,9 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def zipWith[B, C](that: IArray1[B])(f: (A, B) => C): IArray1[C] =
     IArray1(f(head, that.head), tail.zipWith(that.tail)(f))
 
+  def zipAll[B](that: IArray1[B], a: A, b: B): IArray1[(A, B)] =
+    IArray1((head, that.head), tail.zipAll(that.tail, a, b))
+
   def unzip[B, C](implicit e: A <:< Product2[B, C]): (IArray1[B], IArray1[C]) = {
     val h = e(head)
     val t = tail.unzip

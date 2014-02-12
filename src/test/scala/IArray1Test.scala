@@ -2,10 +2,14 @@ package iarray
 
 import scalaz._
 import org.scalacheck.Prop.forAll
-import std.anyVal._, std.list._, std.option._, std.string._
+import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._
 import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
+
+  property("zipAll") = forAll { (as: IArray1[Int], bs: IArray1[Alpha], a: Int, b: Alpha) =>
+    as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
+  }
 
   property("collectFirst collectLast") = forAll{ a: IArray1[Int] =>
     val f: PartialFunction[Int, String] = {case x if x % 10 == 0 => (x * 3).toString }
