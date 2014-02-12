@@ -88,6 +88,11 @@ object IArray1Test extends TestCommon {
     as.reverse.toNel must_=== as.toNel.reverse
   }
 
+  property("reverseMap") = forAll{ (as: IArray1[Int], n: Int) =>
+    val f = (_: Int) - n
+    as.reverseMap(f).toList must_=== as.toList.reverseMap(f)
+  }
+
   property("flatten") = forAll{ as: IArray1[IArray1[Int]] =>
     as.flatten.toList must_=== as.toList.flatMap(_.toList)
   }

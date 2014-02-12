@@ -360,6 +360,20 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     if(tail.self.length == 0) head
     else tail.unsafeLast
 
+  def reverseMap[B](f: A => B): IArray1[B] =
+    if(tail.self.length == 0) IArray1(f(head), IArray.empty[B])
+    else {
+      val array = new Array[AnyRef](tail.self.length)
+      array(tail.self.length - 1) = f(head).asInstanceOf[AnyRef]
+      val len = tail.self.length - 2
+      var i = len
+      while(0 <= i){
+        array(len - i) = f(tail.self(i).asInstanceOf[A]).asInstanceOf[AnyRef]
+        i -= 1
+      }
+      IArray1(f(tail.unsafeLast), new IArray[B](array))
+    }
+
   def reverse: IArray1[A] = {
     if(tail.self.length == 0) this
     else {
@@ -368,7 +382,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
       val len = tail.self.length - 2
       var i = len
       while(0 <= i){
-        array(len - i) = tail.self(i).asInstanceOf[AnyRef]
+        array(len - i) = tail.self(i)
         i -= 1
       }
       IArray1(tail.unsafeLast, new IArray[A](array))
