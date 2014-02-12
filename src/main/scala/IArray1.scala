@@ -94,6 +94,16 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def map[B](f: A => B): IArray1[B] =
     IArray1(f(head), tail map f)
 
+  def collectFirst[B](f: PartialFunction[A, B]): Option[B] =
+    if(f isDefinedAt head) Some(f(head))
+    else tail collectFirst f
+
+  def collectLast[B](f: PartialFunction[A, B]): Option[B] = {
+    val x = tail collectLast f
+    if(x.isDefined) x
+    else f.lift(head)
+  }
+
   // TODO optimize?
   def traverse1[F[_], B](f: A => F[B])(implicit F: Apply[F]): F[IArray1[B]] =
     if(tail.self.length == 0)
