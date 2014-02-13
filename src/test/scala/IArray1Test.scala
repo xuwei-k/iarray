@@ -7,6 +7,10 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("foldl") = forAll { a: IArray1[Int] =>
+    a.foldl(List[Int]())((a, b) => b :: a) must_=== a.toList.foldLeft(List[Int]())((a, b) => b :: a)
+  }
+
   property("zipAll") = forAll { (as: IArray1[Int], bs: IArray1[Alpha], a: Int, b: Alpha) =>
     as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
   }

@@ -156,6 +156,9 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def foldr1(f: (A, A) => A): A =
     tail.foldr(head)(f)
 
+  def foldl[B](z: B)(f: (B, A) => B): B =
+    tail.foldl(f(z, head))(f)
+
   def foldMapRight1[B](z: A => B)(f: (A, B) => B): B =
     if(tail.length == 0) z(head)
     else f(head, tail.foldMapR1(z)(f))
