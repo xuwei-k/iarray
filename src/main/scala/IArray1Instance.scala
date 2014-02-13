@@ -86,6 +86,12 @@ private object IArray1Instance extends
   override def minimum1[A: Order](fa: IArray1[A]) =
     fa.min
 
+  override def maximumBy1[A, B: Order](fa: IArray1[A])(f: A => B) =
+    fa maxBy f
+
+  override def minimumBy1[A, B: Order](fa: IArray1[A])(f: A => B) =
+    fa minBy f
+
   override def reverse[A](fa: IArray1[A]) =
     fa.reverse
 
