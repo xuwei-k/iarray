@@ -281,6 +281,22 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     if(tail.self.length == 0) head
     else O.min(head, tail.unsafeMin)
 
+  def maxBy[B](f: A => B)(implicit O: scalaz.Order[B]): A =
+    if(tail.self.length == 0) head
+    else {
+      val x = tail.unsafeMaxBy(f)
+      if(O.greaterThan(f(x), f(head))) x
+      else head
+    }
+
+  def minBy[B](f: A => B)(implicit O: scalaz.Order[B]): A =
+    if(tail.self.length == 0) head
+    else {
+      val x = tail.unsafeMinBy(f)
+      if(O.lessThan(f(x), f(head))) x
+      else head
+    }
+
   def toNel: NonEmptyList[A] =
     NonEmptyList.nel(head, tail.toList)
 

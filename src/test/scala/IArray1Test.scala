@@ -7,6 +7,16 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("maxBy") = forAll { a: IArray1[Int] =>
+    a.maxBy(conforms) must_=== a.toList.maxBy(conforms)
+    a.maxBy(- _) must_=== a.toList.maxBy(- _)
+  }
+
+  property("minBy") = forAll { a: IArray1[Int] =>
+    a.minBy(conforms) must_=== a.toList.minBy(conforms)
+    a.minBy(- _) must_=== a.toList.minBy(- _)
+  }
+
   property("foldl") = forAll { a: IArray1[Int] =>
     a.foldl(List[Int]())((a, b) => b :: a) must_=== a.toList.foldLeft(List[Int]())((a, b) => b :: a)
   }

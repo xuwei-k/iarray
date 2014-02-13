@@ -23,42 +23,49 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   def size: Int =
     self.length
 
+  private[iarray] def unsafeMaxBy[B](f: A => B)(implicit O: scalaz.Order[B]): A = {
+    var maxF = f(self(0).asInstanceOf[A])
+    var maxElem = self(0).asInstanceOf[A]
+    var i = 1
+    while(i < self.length){
+      val fx = f(self(i).asInstanceOf[A])
+      if (O.greaterThan(fx, maxF)) {
+        maxElem = self(i).asInstanceOf[A]
+        maxF = fx
+      }
+      i += 1
+    }
+    maxElem
+  }
+
   def maxBy[B](f: A => B)(implicit O: scalaz.Order[B]): Option[A] =
     if(self.length == 0){
       None
     }else{
-      var maxF = f(self(0).asInstanceOf[A])
-      var maxElem = self(0).asInstanceOf[A]
-      var i = 1
-      while(i < self.length){
-        val fx = f(self(i).asInstanceOf[A])
-        if (O.greaterThan(fx, maxF)) {
-          maxElem = self(i).asInstanceOf[A]
-          maxF = fx
-        }
-        i += 1
-      }
-      Some(maxElem)
+      Some(unsafeMaxBy(f))
     }
+
+  private[iarray] def unsafeMinBy[B](f: A => B)(implicit O: scalaz.Order[B]): A = {
+    var minF = f(self(0).asInstanceOf[A])
+    var minElem = self(0).asInstanceOf[A]
+    var i = 1
+    while(i < self.length){
+      val fx = f(self(i).asInstanceOf[A])
+      if (O.lessThan(fx, minF)) {
+        minElem = self(i).asInstanceOf[A]
+        minF = fx
+      }
+      i += 1
+    }
+    minElem
+  }
 
   def minBy[B](f: A => B)(implicit O: scalaz.Order[B]): Option[A] =
     if(self.length == 0){
       None
     }else{
-      var minF = f(self(0).asInstanceOf[A])
-      var minElem = self(0).asInstanceOf[A]
-      var i = 1
-      while(i < self.length){
-        val fx = f(self(i).asInstanceOf[A])
-        if (O.lessThan(fx, minF)) {
-          minElem = self(i).asInstanceOf[A]
-          minF = fx
-        }
-        i += 1
-      }
-      Some(minElem)
+      Some(unsafeMinBy(f))
     }
-
 
   private[iarray] def unsafeMax(implicit O: Order[A]): A = {
     var i = 1
