@@ -419,6 +419,17 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     }
   }
 
+  def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
+    val buf = C()
+    var i = tail.self.length - 1
+    while(i >= 0){
+      buf += tail.self(i).asInstanceOf[A]
+      i -= 1
+    }
+    buf += head
+    buf.result
+  }
+
   def intercalate1(a: A)(implicit A: Semigroup[A]): A = {
     var i = 0
     var acc = head

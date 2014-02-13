@@ -104,6 +104,10 @@ object IArray1Test extends TestCommon {
     as.contains(a) must_=== as.toList.contains(a)
   }
 
+  property("reversed") = forAll{ as: IArray1[Int] =>
+    as.reversed[List] must_=== as.reverse.toList
+  }
+
   property("reverse") = forAll{ as: IArray1[Int] =>
     as.reverse.toNel must_=== as.toNel.reverse
   }
