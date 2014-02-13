@@ -62,6 +62,9 @@ private object IArray1Instance extends
   override def foldLeft[A, B](fa: IArray1[A], z: B)(f: (B, A) => B) =
     fa.foldl(z)(f)
 
+  override def foldLeft1Opt[A](fa: IArray1[A])(f: (A, A) => A) =
+    Some(fa foldl1 f)
+
   override def plus[A](a: IArray1[A], b: => IArray1[A]) =
     a plus b
 

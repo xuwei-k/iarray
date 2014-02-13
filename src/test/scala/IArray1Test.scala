@@ -11,6 +11,10 @@ object IArray1Test extends TestCommon {
     a.foldl(List[Int]())((a, b) => b :: a) must_=== a.toList.foldLeft(List[Int]())((a, b) => b :: a)
   }
 
+  property("foldl1") = forAll { a: IArray1[List[Int]] =>
+    a.foldl1(_ ::: _) must_=== a.toList.reduceLeft(_ ::: _)
+  }
+
   property("zipAll") = forAll { (as: IArray1[Int], bs: IArray1[Alpha], a: Int, b: Alpha) =>
     as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
   }
