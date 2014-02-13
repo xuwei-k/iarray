@@ -7,6 +7,14 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("maxOf") = forAll { a: IArray1[Int] =>
+    a.maxOf(- _) must_=== a.toList.map(- _).max
+  }
+
+  property("minOf") = forAll { a: IArray1[Int] =>
+    a.minOf(- _) must_=== a.toList.map(- _).min
+  }
+
   property("maxBy") = forAll { a: IArray1[Int] =>
     a.maxBy(conforms) must_=== a.toList.maxBy(conforms)
     a.maxBy(- _) must_=== a.toList.maxBy(- _)
