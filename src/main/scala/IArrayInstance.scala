@@ -132,6 +132,10 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
     fa maxBy f
   override def minimumBy[A, B: Order](fa: IArray[A])(f: A => B) =
     fa minBy f
+  override def maximumOf[A, B: Order](fa: IArray[A])(f: A => B) =
+    fa maxOf f
+  override def minimumOf[A, B: Order](fa: IArray[A])(f: A => B) =
+    fa minOf f
   override def unite[T[_], A](value: IArray[T[A]])(implicit T: Foldable[T]) =
     bind(value)(ta => T.foldMap(ta)(singleF)(iarrayMonoid))
   override def separate[G[_, _], A, B](value: IArray[G[A, B]])(implicit G: Bifoldable[G]) = {
