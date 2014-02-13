@@ -533,6 +533,14 @@ object IArrayTest extends TestCommon{
     a.sum must_=== a.toIterator.sum
   }
 
+  property("maxOf") = forAll { a: IArray[Int] =>
+    a.maxOf(_.toString) must_=== a.map(_.toString).maxBy(conforms)
+  }
+
+  property("minOf") = forAll { a: IArray[Int] =>
+    a.minOf(_.toString) must_=== a.map(_.toString).minBy(conforms)
+  }
+
   property("maxBy") = forAll { a: IArray[Int] =>
     a.maxBy(_.toString) must_=== (
       if(a.isEmpty) None

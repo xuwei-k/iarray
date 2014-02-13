@@ -95,6 +95,34 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     if(isEmpty) None
     else Some(unsafeMin)
 
+  private[iarray] def unsafeMaxOf[B](f: A => B)(implicit O: Order[B]): B = {
+    var a = f(self(0).asInstanceOf[A])
+    var i = 1
+    while(i < self.length){
+      a = O.max(a, f(self(i).asInstanceOf[A]))
+      i += 1
+    }
+    a
+  }
+
+  def maxOf[B](f: A => B)(implicit O: Order[B]): Option[B] =
+    if(self.length == 0) None
+    else Some(unsafeMaxOf(f))
+
+  private[iarray] def unsafeMinOf[B](f: A => B)(implicit O: Order[B]): B = {
+    var a = f(self(0).asInstanceOf[A])
+    var i = 1
+    while(i < self.length){
+      a = O.min(a, f(self(i).asInstanceOf[A]))
+      i += 1
+    }
+    a
+  }
+
+  def minOf[B](f: A => B)(implicit O: Order[B]): Option[B] =
+    if(self.length == 0) None
+    else Some(unsafeMinOf(f))
+
   def find(f: A => Boolean): Option[A] = {
     var i = 0
     while(i < self.length){
