@@ -165,8 +165,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     tail.foldr(head)(f)
 
   def foldl1(f: (A, A) => A): A =
-    if(tail.self.length == 0) head
-    else tail.tail.foldl(f(head, tail.head))(f)
+    tail.foldl(head)(f)
 
   def foldl[B](z: B)(f: (B, A) => B): B =
     tail.foldl(f(z, head))(f)
