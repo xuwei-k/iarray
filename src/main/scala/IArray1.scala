@@ -18,6 +18,11 @@ object IArray1 {
       override def equalIsNatural = Equal[A].equalIsNatural
     }
 
+  private[this] val _single: AnyRef => IArray1[AnyRef] =
+    head => IArray1(head, IArray.empty[AnyRef])
+
+  def singleF[A]: A => IArray1[A] = _single.asInstanceOf[A => IArray1[A]]
+
   def fromNel[A](nel: NonEmptyList[A]): IArray1[A] =
     IArray1(nel.head, IArray.fromList(nel.tail))
 
