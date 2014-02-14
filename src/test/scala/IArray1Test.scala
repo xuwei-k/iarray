@@ -7,6 +7,14 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("unite1") = forAll { a: IArray1[NonEmptyList[Int]] =>
+    a.unite1.toNel must_=== Bind[NonEmptyList].join(a.toNel)
+  }
+
+  property("unite") = forAll { a: IArray1[List[Int]] =>
+    a.unite must_=== a.toList.flatten.to[IArray]
+  }
+
   property("fromOneAnd") = forAll { a: OneAnd[Vector, Int] =>
     IArray1.fromOneAnd(a).toOneAnd[Vector] must_=== a
   }

@@ -182,6 +182,12 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
     if(tail.self.length == 0) f(head)
     else B.append(f(head), tail.foldMap1(f))
 
+  def unite1[G[_], B](implicit A: A <:< G[B], G: Foldable1[G]): IArray1[B] =
+    flatMap(G.foldMap1(_)(IArray1.singleF)(IArray1Instance.semigroup[B]))
+
+  def unite[G[_], B](implicit A: A <:< G[B], G: Foldable[G]): IArray[B] =
+    foldMap1(G.foldMap(_)(IArray.singleF))
+
   def flatten[B](implicit A: A <:< IArray1[B]): IArray1[B] = {
     var i = 0
     val h = head.asInstanceOf[IArray1[B]]
