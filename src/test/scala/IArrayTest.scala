@@ -12,6 +12,20 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("fromArray Int") = { a: IArray[Int] =>
+    IArray.fromArray(a.toArray) must_=== a
+    IArray.fromArray(a.toArray).takeL(2) must_=== a.takeL(2)
+  }
+
+  property("fromArray Ref") = { a: IArray[List[Int]] =>
+    IArray.fromArray(a.toArray) must_=== a
+    IArray.fromArray(a.toArray).takeL(2) must_=== a.takeL(2)
+  }
+
+  property("fromRefArray") = { a: IArray[List[Int]] =>
+    IArray.fromRefArray(a.toArray) must_=== a
+  }
+
   property("reversed") = { a: IArray[Int] =>
     a.reversed[List] must_=== a.reverse.toList
   }

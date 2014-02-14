@@ -213,6 +213,16 @@ private[iarray] abstract class IArrayFunctions{
       )
     )
 
+  final def fromRefArray[A <: AnyRef](xs: Array[A]): IArray[A] =
+    new IArray[A](xs.clone.asInstanceOf[Array[AnyRef]])
+
+  final def fromArray[A](xs: Array[A]): IArray[A] =
+    if(xs.getClass.getComponentType.isPrimitive){
+      new IArray[A](copyAnyValArray(xs))
+    }else{
+      new IArray[A](xs.clone.asInstanceOf[Array[AnyRef]])
+    }
+
   final def fromList[A](xs: List[A]): IArray[A] = {
     val array = new Array[AnyRef](xs.size)
     var list = xs
