@@ -41,6 +41,9 @@ private object IArray1Instance extends
   override def bind[A, B](fa: IArray1[A])(f: A => IArray1[B]) =
     fa flatMap f
 
+  override def join[A](fa: IArray1[IArray1[A]]) =
+    fa.flatten
+
   override def cobind[A, B](fa: IArray1[A])(f: IArray1[A] => B) =
     fa cobind f
 
