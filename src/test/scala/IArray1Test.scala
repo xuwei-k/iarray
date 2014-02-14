@@ -2,10 +2,14 @@ package iarray
 
 import scalaz._
 import org.scalacheck.Prop.forAll
-import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._
+import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.vector._
 import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
+
+  property("fromOneAnd") = forAll { a: OneAnd[Vector, Int] =>
+    IArray1.fromOneAnd(a).toOneAnd[Vector] must_=== a
+  }
 
   property("maxOf") = forAll { a: IArray1[Int] =>
     a.maxOf(- _) must_=== a.toList.map(- _).max

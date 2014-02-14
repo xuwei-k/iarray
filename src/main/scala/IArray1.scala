@@ -21,6 +21,9 @@ object IArray1 {
   def fromNel[A](nel: NonEmptyList[A]): IArray1[A] =
     IArray1(nel.head, IArray.fromList(nel.tail))
 
+  def fromOneAnd[F[_], A](a: OneAnd[F, A])(implicit F: Foldable[F]): IArray1[A] =
+    IArray1(a.head, F.to[A, IArray](a.tail))
+
   def apply[A](head: A, tail: A*): IArray1[A] =
     IArray1(head, IArray.apply(tail: _*))
 
