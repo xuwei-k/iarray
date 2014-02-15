@@ -60,6 +60,10 @@ object IArray1 {
  */
 final case class IArray1[A](head: A, tail: IArray[A]) {
 
+  def dropL(n: Int): IArray[A] =
+    if(n <= 0) toIArray
+    else tail.dropL(n - 1)
+
   def alignWith[B, C](that: IArray1[B])(f: A \&/ B => C): IArray1[C] =
     IArray1(f(\&/.Both(head, that.head)), tail.alignWith(that.tail)(f))
 

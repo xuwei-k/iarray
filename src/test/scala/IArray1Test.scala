@@ -7,6 +7,10 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("dropL") = forAll { (a: IArray1[Int], n: Int) =>
+    a.dropL(n).toList must_=== a.toList.drop(n)
+  }
+
   property("toIArray") = forAll { a: IArray1[Int] =>
     a.toIArray must_=== a.to[IArray]
   }
