@@ -7,6 +7,11 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("collect") = forAll { a: IArray1[Int] =>
+    val f: PartialFunction[Int, String] = { case i if i % 5 == 2 => i.toString }
+    a.collect(f).toList must_=== a.toList.collect(f)
+  }
+
   property("unite1") = forAll { a: IArray1[NonEmptyList[Int]] =>
     a.unite1.toNel must_=== Bind[NonEmptyList].join(a.toNel)
   }

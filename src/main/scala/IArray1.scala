@@ -115,6 +115,18 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def map[B](f: A => B): IArray1[B] =
     IArray1(f(head), tail map f)
 
+  def collect[B](f: PartialFunction[A, B]): IArray[B] = {
+    val builder = new ArrayBuilder.ofRef[AnyRef]()
+    var i = 0
+    val f0 = f.asInstanceOf[PartialFunction[AnyRef, AnyRef]].runWith(builder += _)
+    f0(head.asInstanceOf[AnyRef])
+    while(i < tail.self.length){
+      f0(tail.self(i))
+      i += 1
+    }
+    new IArray[B](builder.result)
+  }
+
   def collectFirst[B](f: PartialFunction[A, B]): Option[B] =
     if(f isDefinedAt head) Some(f(head))
     else tail collectFirst f
