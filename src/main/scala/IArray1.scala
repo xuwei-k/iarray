@@ -349,6 +349,13 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def toIList: IList[A] =
     head +: tail.toIList
 
+  def toIArray: IArray[A] = {
+    val array = new Array[AnyRef](length)
+    array(0) = head.asInstanceOf[AnyRef]
+    System.arraycopy(tail.self, 0, array, 1, tail.self.length)
+    new IArray[A](array)
+  }
+
   def toArray(implicit A: reflect.ClassTag[A]): Array[A] = {
     val array = new Array[A](length)
     array(0) = head
