@@ -7,6 +7,11 @@ import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {
 
+  property("partition") = forAll { a: IArray1[Int] =>
+    val f = (_: Int) % 3 == 0
+    a.partition(f) must_=== a.toIArray.partition(f)
+  }
+
   property("dropL") = forAll { (a: IArray1[Int], n: Int) =>
     a.dropL(n).toList must_=== a.toList.drop(n)
   }

@@ -60,6 +60,17 @@ object IArray1 {
  */
 final case class IArray1[A](head: A, tail: IArray[A]) {
 
+  def partition(f: A => Boolean): (IArray[A], IArray[A]) = {
+    val l, r = new ArrayBuilder.ofRef[AnyRef]()
+    (if(f(head)) l else r) += head.asInstanceOf[AnyRef]
+    var i = 0
+    while(i < tail.self.length){
+      (if(f(tail.self(i).asInstanceOf[A])) l else r) += tail.self(i)
+      i += 1
+    }
+    (new IArray(l.result), new IArray(r.result))
+  }
+
   def dropL(n: Int): IArray[A] =
     if(n <= 0) toIArray
     else tail.dropL(n - 1)
