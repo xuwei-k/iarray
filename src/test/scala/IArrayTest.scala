@@ -12,6 +12,10 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("WithFilter#to") = { a: IArray[Int] =>
+    a.withFilter(f).to[List] must_=== a.toList.filter(f)
+  }
+
   property("fromArray Int") = { a: IArray[Int] =>
     IArray.fromArray(a.toArray) must_=== a
     IArray.fromArray(a.toArray).takeL(2) must_=== a.takeL(2)
