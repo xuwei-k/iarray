@@ -1,6 +1,6 @@
 scalaVersion := "2.11.0-M8"
 
-crossScalaVersions := List("2.11.0-M8")
+crossScalaVersions := List("2.11.0-M8", "2.10.3")
 
 incOptions := incOptions.value.withNameHashing(true)
 
@@ -68,6 +68,27 @@ def specLiteFile(dir: File, contents: List[String]): File = {
 
 sourceGenerators in Test += task{
   Seq(specLiteFile((sourceManaged in Test).value, specLite.value))
+}
+
+val valueClasses = Seq("IArray.scala", "WithIndex.scala")
+
+unmanagedSources in Compile := {
+  val a = (unmanagedSources in Compile).value
+  if(scalaVersion.value startsWith "2.10") a.filterNot(f => valueClasses.contains(f.getName))
+  else a
+}
+
+sourceGenerators in Compile += task{
+  if(scalaVersion.value startsWith "2.10"){
+    valueClasses.map{ f =>
+      val lines = IO.readLines((scalaSource in Compile).value / f).map(
+        _.replace("extends AnyVal", "")
+      )
+      val x = (sourceManaged in Compile).value / f
+      IO.writeLines(x, lines)
+      x
+    }
+  }else Nil
 }
 
 val showDoc = TaskKey[Unit]("showDoc")

@@ -240,8 +240,9 @@ object IArrayTest extends TestCommon{
   property("collect") = forAll { a: IArray[Int] =>
     var sideEffect = 0
     val f: PartialFunction[Int, String] = {case i if { sideEffect += 1; i % 2 == 0} => (i * 3).toString}
-    a.collect(f).toList must_=== a.toList.collect(f)
-    sideEffect must_=== (a.length * 2)
+    val x = a.collect(f).toList
+    sideEffect must_=== a.length
+    x must_=== a.toList.collect(f)
   }
 
   property("collect String") = forAll { a: IArray[Alpha] =>
