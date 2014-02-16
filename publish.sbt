@@ -34,9 +34,10 @@ commands += Command.command("updateReadme")(updateReadme)
 
 val updateReadmeProcess: ReleaseStep = updateReadme
 
-val publishSignedStep: ReleaseStep = ReleaseStep{ state =>
-  Project.extract(state).runTask(PgpKeys.publishSigned, state)._1
-}
+val publishSignedStep: ReleaseStep = ReleaseStep(
+  action = state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1,
+  enableCrossBuild = true
+)
 
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
