@@ -5,19 +5,6 @@ import scalaz.scalacheck.ScalazProperties
 import scalaz.scalacheck.ScalazProperties._
 import org.scalacheck.{Gen, Arbitrary}
 
-object IArray1Traverse1Test extends TestCommon with ScalacheckOps {
-
-  for ((name, prop) <- traverse1.laws[IArray1].properties) yield {
-    property(name) = {
-      if(name contains "sequential fusion")
-        prop.contramap(p => p.resize(p.size % 6))
-      else
-        prop
-    }
-  }
-
-}
-
 object IArray1TypeclassTest extends TestCommon {
 
   implicit val iarray1Arb0: Arbitrary[IArray1[Int] => Int] = {
@@ -45,7 +32,7 @@ object IArray1TypeclassTest extends TestCommon {
   checkAll(monad.laws[IArray1])
   checkAll(align.laws[IArray1])
   checkAll(zip.laws[IArray1])
-  checkAll(foldable1.laws[IArray1])
+  checkAll(traverse1.laws[IArray1])
   checkAll(ScalazProperties.apply.laws[IArray1](IArray1ZipApply, implicitly, implicitly, implicitly))
 
 }
