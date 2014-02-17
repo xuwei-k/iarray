@@ -218,6 +218,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     else
       Some(NonEmptyList.nel(self(0).asInstanceOf[A], toList.tail))
 
+  def toIArray1: Option[IArray1[A]] =
+    if(self.length == 0)
+      None
+    else
+      Some(IArray1(self(0).asInstanceOf[A], new IArray[A](copyOfRange(self, 1, self.length))))
+
   def zipperEnd: Option[Zipper[A]] =
     if(isEmpty){
       None

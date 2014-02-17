@@ -59,6 +59,10 @@ object IArrayTest extends TestCommon{
     a must_=== b
   }
 
+  property("toIArray1") = forAll { a: IArray[Int] =>
+    a.toIArray1 must_=== a.toNel.map(IArray1.fromNel)
+  }
+
   property("toNel") = forAll { a: IArray[Byte] =>
     import syntax.std.list._
     a.toNel must_=== a.toList.toNel
