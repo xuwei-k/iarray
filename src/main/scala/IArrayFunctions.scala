@@ -9,6 +9,8 @@ private[iarray] abstract class IArrayFunctions{
 
   def toNelK[A]: Kleisli[Option, IArray[A], NonEmptyList[A]] =
     kleisli.toNel.asInstanceOf[Kleisli[Option, IArray[A], NonEmptyList[A]]]
+  def toIArray1K[A]: Kleisli[Option, IArray[A], IArray1[A]] =
+    kleisli.toIArray1.asInstanceOf[Kleisli[Option, IArray[A], IArray1[A]]]
   def oneAndK[A]: Kleisli[Option, IArray[A], OneAnd[IArray, A]] =
     kleisli.oneAnd.asInstanceOf[Kleisli[Option, IArray[A], OneAnd[IArray, A]]]
   def headOptionK[A]: Kleisli[Option, IArray[A], A] =
