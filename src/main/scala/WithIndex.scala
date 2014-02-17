@@ -1,5 +1,7 @@
 package iarray
 
+import scala.collection.generic.CanBuildFrom
+
 final class WithIndex[A](private val self: Array[AnyRef]) extends AnyVal{
   def map[B](f: (A, Int) => B): IArray[B] = {
     var i = 0
@@ -19,7 +21,16 @@ final class WithIndex[A](private val self: Array[AnyRef]) extends AnyVal{
     }
   }
 
-  // TODO more methods ?
+  def to[F[_]](implicit C: CanBuildFrom[Nothing, (A, Int), F[(A, Int)]]): F[(A, Int)] = {
+    var i = 0
+    val buf = C()
+    while(i < self.length){
+      buf += ((self(i).asInstanceOf[A], i))
+      i += 1
+    }
+    buf.result
+  }
+
 }
 
 

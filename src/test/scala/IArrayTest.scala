@@ -12,6 +12,11 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("withIndex") = { a: IArray[Int] =>
+    a.withIndex.map((x, y) => (x, y)) must_=== a.zipWithIndex
+    a.withIndex.to[List] must_=== a.toList.zipWithIndex
+  }
+
   property("WithFilter#to") = { a: IArray[Int] =>
     a.withFilter(f).to[List] must_=== a.toList.filter(f)
   }
