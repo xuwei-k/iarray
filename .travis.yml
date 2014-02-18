@@ -12,6 +12,6 @@ script: sbt ++${TRAVIS_SCALA_VERSION} test $(if [[ $TRAVIS_PULL_REQUEST == "fals
 
 env:
   global:
-    secure: Hk6nwo1WVEJN5z5EyGTiUeq0SYwGfvVilNOXLQMf0D3tdluvdBJr4yPj0VmEVYd03+iOEJOp7IRWHhxX4H1/wPA1S0EPWK37pkHmJmd8vHNKZEtVKBgNmmcVurp4xynaRH07HCzfnJqHX99+XJ/SWl/M/O9qqSe+bwMuEp/MBD4=
-    secure: NJ3IxnzsHMEeX1G1ppN0GNdq37Xh65AxscJkiz1RxBuqsNuiuyUtXPglO04i8qSP9uLa+CfBkIEhujxg+Xod7WT/c74UEVO0r8tker6rhFIEvTss37M06Ms+EiZ9bqX01biljsESRIDUvQuZ+lEvZEP8avBILF+c2El5tuyhEcs=
+    secure: "oFGpGBnIhBaqg2pbEpUtgULqzEQAjF2FCeZuPl2dPjYgPSA3vgtapueUa7JiiPEdJOjq6SNqifj92GMSUdemnzTdj4e1GAkFNmPzZyUcDnH8FtOiLJYp/HKQ1X9rvy1TmTa/1xWsBkwwvBjOoMGn07ltmbgGcZ7UTwvviLJIiSc="
+    secure: "REndpJMxzGTv3DJuDPsyifI9Cic8spwzCm1UHXHD4kJXinFdROObsXgyjeY475tdeU7W827hGlRFpo2rFPgePlIOz4mXvS9hU5zbFzj7QWUHpJXvttuHm3O9KFkk8nnHJZXt9IuflBumDZ7iBLM6XgnQ9XqZ80XW347ihvN3+R0="
 
