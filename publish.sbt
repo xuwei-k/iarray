@@ -82,3 +82,4 @@ credentials ++= userPass.map{
   case (user, pass) => Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass) :: Nil
 }.getOrElse(Nil)
 
+pomIncludeRepository := { _ => false }
