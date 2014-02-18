@@ -72,3 +72,13 @@ publishTo := {
 }
 
 sonatypeSettings
+
+val userPass = for {
+  user <- sys.env.get("SONATYPE_USER")
+  pass <- sys.env.get("SONATYPE_PASS")
+} yield (user, pass)
+
+credentials ++= userPass.map{
+  case (user, pass) => Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass) :: Nil
+}.getOrElse(Nil)
+
