@@ -65,7 +65,7 @@ checkPackage := {
 }
 
 publishTo := {
-  if(version.value endsWith "SNAPSHOT")
+  if(isSnapshot.value)
     Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
   else
     Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
@@ -80,9 +80,5 @@ val userPass = for {
 
 credentials ++= userPass.map{
   case (user, pass) => Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass) :: Nil
-}.getOrElse(sys.error("hoge"))
-
-pomIncludeRepository := { _ => false }
-
-publishArtifact in Test := false
+}.getOrElse(Nil)
 
