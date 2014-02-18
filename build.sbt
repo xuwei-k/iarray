@@ -17,9 +17,12 @@ scmInfo := Some(ScmInfo(
 
 description := "Immutable array wrapper. does not use ClassTag. scalaz friendly"
 
+def gitHash: Option[String] = scala.util.Try(
+  sys.process.Process("git show -s --oneline").lines_!.head.split(" ").head
+).toOption
+
 scalacOptions in (Compile, doc) ++= {
-  val v = version.value
-  val tag = if(v endsWith "SNAPSHOT") "master" else { "v" + v }
+  val tag = if(isSnapshot.value) gitHash.getOrElse("master") else { "v" + version.value }
   Seq(
     "-sourcepath", baseDirectory.value.getAbsolutePath,
     "-doc-source-url", s"https://github.com/xuwei-k/iarray/tree/${tag}€{FILE_PATH}.scala"
