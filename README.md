@@ -1,6 +1,8 @@
 # IArray [![Build Status](https://secure.travis-ci.org/xuwei-k/iarray.png?branch=master)](http://travis-ci.org/xuwei-k/iarray)
 
 
+
+
 `IArray` is an __I__mmutable __Array__ wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala/blob/v2.11.0-M8/src/library/scala/reflect/ClassTag.scala)
 
 [`scalaz.ImmutableArray`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/ImmutableArray.scala) and [`scala.Array`](https://github.com/scala/scala/blob/v2.11.0-M8/src/library/scala/Array.scala) could __NOT__ be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Functor.scala).
