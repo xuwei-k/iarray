@@ -7,16 +7,31 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 
 `IArray` __always boxing__ primitive values in return for provide an abstraction(scalaz typeclasses).
 
+
+- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22)
+- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+
+### latest stable version
+
 ```scala
 scalaVersion := "2.11.0-M8"
 
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.6"
 ```
 
-
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.11.0-M8/0.2.6/iarray_2.11.0-M8-0.2.6-javadoc.jar/!/index.html#iarray.IArray)
-- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22)
-- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+
+### snapshot version
+
+```scala
+scalaVersion := "2.11.0-M8"
+
+resolvers += Opts.resolver.sonatypeSnapshots
+
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.7-SNAPSHOT"
+```
+
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11.0-M8/0.2.7-SNAPSHOT/iarray_2.11.0-M8-0.2.7-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
 
 
 
