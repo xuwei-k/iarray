@@ -65,10 +65,19 @@ checkPackage := {
 }
 
 publishTo := {
-  if(version.value endsWith "SNAPSHOT")
+  if(isSnapshot.value)
     Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
   else
     Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
 }
 
 sonatypeSettings
+
+val userPass = for {
+  user <- sys.env.get("SONATYPE_USER")
+  pass <- sys.env.get("SONATYPE_PASS")
+} yield (user, pass)
+
+credentials ++= userPass.map{
+  case (user, pass) => Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass) :: Nil
+}.getOrElse(Nil)
