@@ -83,3 +83,6 @@ credentials ++= userPass.map{
 }.getOrElse(Nil)
 
 pomIncludeRepository := { _ => false }
+
+publishArtifact in Test := false
+
