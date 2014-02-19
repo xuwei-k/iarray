@@ -9,6 +9,8 @@ import collection.mutable.ArrayBuilder
 
 object IArray extends IArrayFunctions{
 
+  private[this] val fallbackPartialFunction: PartialFunction[Any, AnyRef] = { case _ => fallbackPartialFunction }
+  private def fallback[A]: PartialFunction[A, AnyRef] = fallbackPartialFunction
 }
 
 final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) extends AnyVal{
@@ -842,6 +844,19 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       }
       Some(acc)
     }
+
+  def foldLeftP[B](z: B)(f: PartialFunction[(B, A), B]): B = {
+    var i = 0
+    var acc = z
+    while(i < self.length){
+      val x: Any = f.applyOrElse((acc, this(i)), fallback[Tuple2[B, A]])
+      if(x.asInstanceOf[AnyRef] ne fallback){
+         acc = x.asInstanceOf[B]
+      }
+      i += 1
+    }
+    acc
+  }
 
   def foldl[B](z: B)(f: (B, A) => B): B = {
     var i = 0

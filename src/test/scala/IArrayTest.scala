@@ -12,6 +12,11 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("foldLeftP") = { a: IArray[Int] =>
+    a.foldLeftP(0){case (b, a) if a % 2 == 0 => a + b} must_=== a.filter(_ % 2 == 0).sum
+    a.foldLeftP(List[Int]()){case (b, a) if a % 2 == 0 => a :: b} must_=== a.filter(_ % 2 == 0).reverseList
+  }
+
   property("withIndex") = { a: IArray[Int] =>
     a.withIndex.map((x, y) => (x, y)) must_=== a.zipWithIndex
     a.withIndex.to[List] must_=== a.toList.zipWithIndex
