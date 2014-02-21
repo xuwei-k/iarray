@@ -36,10 +36,14 @@ commands += Command.command("updateReadme")(updateReadme)
 
 val updateReadmeProcess: ReleaseStep = updateReadme
 
-val publishSignedStep: ReleaseStep = ReleaseStep(
-  action = state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1,
+def releaseStepCross[A](key: TaskKey[A]) = ReleaseStep(
+  action = state => Project.extract(state).runTask(key, state)._1,
   enableCrossBuild = true
 )
+
+val sonatypeReleaseAllTask = taskKey[Unit]("sonatypeReleaseAllTask")
+
+sonatypeReleaseAllTask := SonatypeKeys.sonatypeReleaseAll.toTask("").value
 
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
@@ -50,10 +54,11 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   commitReleaseVersion,
   updateReadmeProcess,
   tagRelease,
-  publishSignedStep,
+  releaseStepCross(PgpKeys.publishSigned),
   setNextVersion,
   commitNextVersion,
   updateReadmeProcess,
+  releaseStepCross(sonatypeReleaseAllTask),
   pushChanges
 )
 
