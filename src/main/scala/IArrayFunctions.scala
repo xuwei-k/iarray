@@ -131,6 +131,37 @@ private[iarray] abstract class IArrayFunctions{
     LazyTuple2(a, b)
   }
 
+  final def partitionLazyTuple3[A, B, C](tuples: IArray[LazyTuple3[A, B, C]]): LazyTuple3[IArray[A], IArray[B], IArray[C]] = {
+    lazy val a = {
+      var i = 0
+      val array = new Array[AnyRef](tuples.length)
+      while(i < tuples.length){
+        array(i) = tuples(i)._1.asInstanceOf[AnyRef]
+        i += 1
+      }
+      new IArray[A](array)
+    }
+    lazy val b = {
+      var i = 0
+      val array = new Array[AnyRef](tuples.length)
+      while(i < tuples.length){
+        array(i) = tuples(i)._2.asInstanceOf[AnyRef]
+        i += 1
+      }
+      new IArray[B](array)
+    }
+    lazy val c = {
+      var i = 0
+      val array = new Array[AnyRef](tuples.length)
+      while(i < tuples.length){
+        array(i) = tuples(i)._3.asInstanceOf[AnyRef]
+        i += 1
+      }
+      new IArray[C](array)
+    }
+    LazyTuple3(a, b, c)
+  }
+
   private[this] val _canBuildFrom: CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] =
     new CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] {
       import collection.mutable.Builder

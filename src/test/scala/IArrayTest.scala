@@ -685,6 +685,13 @@ object IArrayTest extends TestCommon{
     IArray.partitionLazyTuples(IArray(LazyTuple2(sys.error("error"): Int, "a")))._2  must_=== IArray("a")
   }
 
+  property("partitionLazyTuple3") = {
+    def e: Int = sys.error("error")
+    IArray.partitionLazyTuple3(IArray(LazyTuple3(1, e, e)))._1 must_=== IArray(1)
+    IArray.partitionLazyTuple3(IArray(LazyTuple3(e, 1, e)))._2 must_=== IArray(1)
+    IArray.partitionLazyTuple3(IArray(LazyTuple3(e, e, 1)))._3 must_=== IArray(1)
+  }
+
   property("groupBy1") = forAll { (xs: IArray[Int], x: Int) =>
     val f = (a: Int) => if(x == 0) a else a % x
     xs.groupBy1(f).map(_.toNel) must_=== ==>>.fromList(std.list.groupBy1(xs.toList)(f).toList)
