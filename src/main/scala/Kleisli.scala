@@ -1,9 +1,33 @@
 package iarray
 
-import scalaz.{OneAnd, NonEmptyList, Kleisli, Endomorphic}
+import scalaz._
 import scalaz.std.option._
 
 private object kleisli {
+
+  val toList: Kleisli[List, IArray[AnyRef], AnyRef] =
+    Kleisli(_.toList)
+
+  val zipWithIndex: Kleisli[IArray, IArray[AnyRef], (AnyRef, Int)] =
+    Kleisli(_.zipWithIndex)
+
+  val reverse: Kleisli[IArray, IArray[AnyRef], AnyRef] =
+    Kleisli(_.reverse)
+
+  val toIList: Kleisli[IList, IArray[AnyRef], AnyRef] =
+    Kleisli(_.toIList)
+
+  val reverseList: Kleisli[List, IArray[AnyRef], AnyRef] =
+    Kleisli(_.reverseList)
+
+  val reverseIList: Kleisli[IList, IArray[AnyRef], AnyRef] =
+    Kleisli(_.reverseIList)
+
+  val zipperEnd: Kleisli[Option, IArray[AnyRef], Zipper[AnyRef]] =
+    Kleisli(_.zipperEnd)
+
+  val cojoin: Kleisli[IArray, IArray[AnyRef], IArray[AnyRef]] =
+    Kleisli(_.cojoin)
 
   val toNel: Kleisli[Option, IArray[AnyRef], NonEmptyList[AnyRef]] =
     Kleisli(_.toNel)

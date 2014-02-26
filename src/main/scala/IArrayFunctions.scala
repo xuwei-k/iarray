@@ -7,6 +7,22 @@ import collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions{
 
+  def toListK[A]: Kleisli[List, IArray[A], A] =
+    kleisli.toList.asInstanceOf[Kleisli[List, IArray[A], A]]
+  def zipWithIndexK[A]: Kleisli[IArray, IArray[A], (A, Int)] =
+    kleisli.zipWithIndex.asInstanceOf[Kleisli[IArray, IArray[A], (A, Int)]]
+  def reverseK[A]: Kleisli[IArray, IArray[A], A] =
+    kleisli.reverse.asInstanceOf[Kleisli[IArray, IArray[A], A]]
+  def toIListK[A]: Kleisli[IList, IArray[A], A] =
+    kleisli.toIList.asInstanceOf[Kleisli[IList, IArray[A], A]]
+  def reverseListK[A]: Kleisli[List, IArray[A], A] =
+    kleisli.reverseList.asInstanceOf[Kleisli[List, IArray[A], A]]
+  def reverseIListK[A]: Kleisli[IList, IArray[A], A] =
+    kleisli.reverseIList.asInstanceOf[Kleisli[IList, IArray[A], A]]
+  def zipperEndK[A]: Kleisli[Option, IArray[A], A] =
+    kleisli.zipperEnd.asInstanceOf[Kleisli[Option, IArray[A], A]]
+  def cojoinK[A]: Kleisli[IArray, IArray[A], A] =
+    kleisli.cojoin.asInstanceOf[Kleisli[IArray, IArray[A], A]]
   def toNelK[A]: Kleisli[Option, IArray[A], NonEmptyList[A]] =
     kleisli.toNel.asInstanceOf[Kleisli[Option, IArray[A], NonEmptyList[A]]]
   def toIArray1K[A]: Kleisli[Option, IArray[A], IArray1[A]] =
