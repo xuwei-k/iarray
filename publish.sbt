@@ -1,6 +1,7 @@
 import sbtrelease._
 import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
+import xerial.sbt.Sonatype
 
 releaseSettings
 
@@ -41,10 +42,6 @@ def releaseStepCross[A](key: TaskKey[A]) = ReleaseStep(
   enableCrossBuild = true
 )
 
-val sonatypeReleaseAllTask = taskKey[Unit]("sonatypeReleaseAllTask")
-
-sonatypeReleaseAllTask := SonatypeKeys.sonatypeReleaseAll.toTask("").value
-
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
@@ -58,7 +55,7 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   setNextVersion,
   commitNextVersion,
   updateReadmeProcess,
-  releaseStepCross(sonatypeReleaseAllTask),
+  releaseStepCross(Sonatype.SonatypeKeys.sonatypeReleaseAll),
   pushChanges
 )
 
