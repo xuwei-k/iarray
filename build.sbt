@@ -18,7 +18,7 @@ scmInfo := Some(ScmInfo(
 description := "Immutable array wrapper. does not use ClassTag. scalaz friendly"
 
 def gitHash: Option[String] = scala.util.Try(
-  sys.process.Process("git show -s --oneline").lines_!.head.split(" ").head
+  sys.process.Process("git rev-parse HEAD").lines_!.head
 ).toOption
 
 scalacOptions in (Compile, doc) ++= {
