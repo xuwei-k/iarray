@@ -1,6 +1,6 @@
-scalaVersion := "2.11.0-M8"
+scalaVersion := "2.11.0-RC1"
 
-crossScalaVersions := List("2.11.0-M8", "2.10.3")
+crossScalaVersions := List("2.11.0-RC1", "2.10.3")
 
 incOptions := incOptions.value.withNameHashing(true)
 
@@ -46,7 +46,7 @@ licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked", "-language:_")
 
-val scalazV = "7.1.0-M5"
+val scalazV = "7.1.0-M6"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
