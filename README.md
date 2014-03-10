@@ -28,10 +28,10 @@ scalaVersion := "2.11.0-RC1"
 
 resolvers += Opts.resolver.sonatypeSnapshots
 
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.7-SNAPSHOT"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.8-SNAPSHOT"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11.0-RC1/0.2.7-SNAPSHOT/iarray_2.11.0-RC1-0.2.7-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11.0-RC1/0.2.8-SNAPSHOT/iarray_2.11.0-RC1-0.2.8-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
 
 
 
