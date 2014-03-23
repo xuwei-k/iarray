@@ -1,6 +1,6 @@
 scalaVersion := "2.11.0-RC1"
 
-crossScalaVersions := List("2.11.0-RC1", "2.10.3")
+crossScalaVersions := List("2.11.0-RC1", "2.10.4")
 
 incOptions := incOptions.value.withNameHashing(true)
 
