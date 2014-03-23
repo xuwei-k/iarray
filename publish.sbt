@@ -5,6 +5,8 @@ import xerial.sbt.Sonatype
 
 releaseSettings
 
+sonatypeSettings
+
 val sonatypeURL =
 "https://oss.sonatype.org/service/local/repositories/"
 
@@ -68,15 +70,6 @@ checkPackage := {
     IO.unzip((packageSrc in Compile).value, dir).map(f => f.getName -> f.length) foreach println
   }
 }
-
-publishTo := {
-  if(isSnapshot.value)
-    Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
-  else
-    Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
-}
-
-sonatypeSettings
 
 val userPass = for {
   user <- sys.env.get("SONATYPE_USER")
