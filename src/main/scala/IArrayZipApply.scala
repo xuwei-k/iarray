@@ -4,8 +4,6 @@ import scalaz._
 import IArray._
 
 private object IArrayZipApply extends Apply[IArray] {
-  override val applyApplicative =
-    super.applyApplicative
   def map[A, B](fa: IArray[A])(f: A => B) =
     fa map f
   def ap[A, B](fa: => IArray[A])(f: => IArray[A => B]) =
@@ -59,13 +57,12 @@ private object IArrayZipApply extends Apply[IArray] {
     if(_fa.isEmpty) empty
     else _fa.zip(fb)
   }
-  override def tuple3[A, B, C](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C]) = {
+  override def tuple3[A, B, C](fa: => IArray[A], fb: => IArray[B], fc: IArray[C]) = {
     val _fa = fa
     if(_fa.isEmpty) empty
     else{
-      val _fb = fb
-      if(_fb.isEmpty) empty
-      else zip3(_fa, _fb, fc)
+      if(fb.isEmpty) empty
+      else zip3(_fa, fb, fc)
     }
   }
   override def tuple4[A, B, C, D](fa: => IArray[A], fb: => IArray[B], fc: => IArray[C], fd: => IArray[D]) = {

@@ -8,7 +8,7 @@ import java.util.Arrays.{copyOfRange, copyOf}
 
 object IArray1 {
 
-  implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
+  implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
 
   val zipApply: Apply[IArray1] = IArray1ZipApply
 
@@ -27,7 +27,10 @@ object IArray1 {
     IArray1(nel.head, IArray.fromList(nel.tail))
 
   def fromOneAnd[F[_], A](a: OneAnd[F, A])(implicit F: Foldable[F]): IArray1[A] =
-    IArray1(a.head, F.to[A, IArray](a.tail))
+    IArray1(
+      a.head,
+      F.foldLeft(a.tail, IArray.canBuildFrom[A].apply())(_ += _).result
+    )
 
   def apply[A](head: A, tail: A*): IArray1[A] =
     IArray1(head, IArray.apply(tail: _*))

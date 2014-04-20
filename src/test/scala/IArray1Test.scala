@@ -33,8 +33,8 @@ object IArray1Test extends TestCommon {
     a.unite must_=== a.toList.flatten.to[IArray]
   }
 
-  property("fromOneAnd") = forAll { a: OneAnd[Vector, Int] =>
-    IArray1.fromOneAnd(a).toOneAnd[Vector] must_=== a
+  property("fromOneAnd") = forAll { a: OneAnd[List, Int] =>
+    IArray1.fromOneAnd(a).toOneAnd[List] must_=== a
   }
 
   property("maxOf") = forAll { a: IArray1[Int] =>
@@ -75,10 +75,6 @@ object IArray1Test extends TestCommon {
     val f: PartialFunction[Int, String] = {case x if x % 10 == 0 => (x * 3).toString }
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
     a.collectLast(f) must_=== a.toList.reverse.collectFirst(f)
-  }
-
-  property("merge") = forAll{ (a: IArray1[Int], b: IArray1[Int]) =>
-    Align[IArray1].merge(a, b).toList must_=== Align[List].merge(a.toList, b.toList)
   }
 
   property("cojoin cobind") = forAll{ a: IArray1[Int] =>

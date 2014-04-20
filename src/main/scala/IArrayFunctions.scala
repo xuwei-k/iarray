@@ -9,20 +9,10 @@ private[iarray] abstract class IArrayFunctions{
 
   def toListK[A]: Kleisli[List, IArray[A], A] =
     kleisli.toList.asInstanceOf[Kleisli[List, IArray[A], A]]
-  def zipWithIndexK[A]: Kleisli[IArray, IArray[A], (A, Int)] =
-    kleisli.zipWithIndex.asInstanceOf[Kleisli[IArray, IArray[A], (A, Int)]]
-  def reverseK[A]: Kleisli[IArray, IArray[A], A] =
-    kleisli.reverse.asInstanceOf[Kleisli[IArray, IArray[A], A]]
-  def toIListK[A]: Kleisli[IList, IArray[A], A] =
-    kleisli.toIList.asInstanceOf[Kleisli[IList, IArray[A], A]]
   def reverseListK[A]: Kleisli[List, IArray[A], A] =
     kleisli.reverseList.asInstanceOf[Kleisli[List, IArray[A], A]]
-  def reverseIListK[A]: Kleisli[IList, IArray[A], A] =
-    kleisli.reverseIList.asInstanceOf[Kleisli[IList, IArray[A], A]]
   def zipperEndK[A]: Kleisli[Option, IArray[A], A] =
     kleisli.zipperEnd.asInstanceOf[Kleisli[Option, IArray[A], A]]
-  def cojoinK[A]: Kleisli[IArray, IArray[A], A] =
-    kleisli.cojoin.asInstanceOf[Kleisli[IArray, IArray[A], A]]
   def toNelK[A]: Kleisli[Option, IArray[A], NonEmptyList[A]] =
     kleisli.toNel.asInstanceOf[Kleisli[Option, IArray[A], NonEmptyList[A]]]
   def toIArray1K[A]: Kleisli[Option, IArray[A], IArray1[A]] =
@@ -37,11 +27,6 @@ private[iarray] abstract class IArrayFunctions{
     kleisli.tailOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
   def initOptionK[A]: Kleisli[Option, IArray[A], IArray[A]] =
     kleisli.initOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
-
-  def tailOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
-    kleisli.tailOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
-  def initOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
-    kleisli.initOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
 
   private[iarray] def byName2[A, B, C](f: (A, => B) => C): (A, B) => C = (a, b) => f(a, b)
 
@@ -240,7 +225,7 @@ private[iarray] abstract class IArrayFunctions{
   implicit final def iarrayMonoid[A]: Monoid[IArray[A]] =
     _iarrayMonoid.asInstanceOf[Monoid[IArray[A]]]
 
-  implicit val iarrayInstance: MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Align[IArray] with Unzip[IArray] with Cobind[IArray] = IArrayInstance
+  implicit val iarrayInstance: MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Unzip[IArray] with Cobind[IArray] with Cojoin[IArray] = IArrayInstance
 
   final val zipApply: Apply[IArray] =
     IArrayZipApply

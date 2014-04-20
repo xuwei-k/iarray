@@ -7,7 +7,6 @@ private object IArray1Instance extends
   Plus[IArray1] with
   Traverse1[IArray1] with
   Zip[IArray1] with
-  Align[IArray1] with
   Unzip[IArray1] with
   Comonad[IArray1] {
 
@@ -17,23 +16,11 @@ private object IArray1Instance extends
   override val flip =
     super.flip
 
-  override val applyApplicative =
-    super.applyApplicative
-
   override def semigroup[A] =
     _semigroup.asInstanceOf[Semigroup[IArray1[A]]]
 
   override def map[A, B](fa: IArray1[A])(f: A => B) =
     fa map f
-
-  override def alignWith[A, B, C](f: A \&/ B => C): (IArray1[A], IArray1[B]) => IArray1[C] =
-    { (a, b) => a.alignWith(b)(f) }
-
-  override def align[A, B](fa: IArray1[A], fb: IArray1[B]): IArray1[A \&/ B] =
-    fa align fb
-
-  override def merge[A](a1: IArray1[A], a2: IArray1[A])(implicit A: Semigroup[A]) =
-    IArray1(A.append(a1.head, a2.head), Align[IArray].merge(a1.tail, a2.tail))
 
   override def point[A](a: => A) =
     IArray1(a, IArray.empty[A])
@@ -53,20 +40,14 @@ private object IArray1Instance extends
   override def copoint[A](a: IArray1[A]) =
     a.head
 
-  override def foldMapRight1[A, B](fa: IArray1[A])(z: A => B)(f: (A, => B) => B) =
-    fa.foldMapRight1(z)(IArray.byName2(f))
-
-  override def foldMapLeft1[A, B](fa: IArray1[A])(z: A => B)(f: (B, A) => B) =
-    fa.foldMapLeft1(z)(f)
-
   override def foldMap1[A, B: Semigroup](fa: IArray1[A])(f: A => B) =
     fa foldMap1 f
 
   override def foldLeft[A, B](fa: IArray1[A], z: B)(f: (B, A) => B) =
     fa.foldl(z)(f)
 
-  override def foldLeft1Opt[A](fa: IArray1[A])(f: (A, A) => A) =
-    Some(fa foldl1 f)
+  override def foldRight1[A](fa: IArray1[A])(f: (A, => A) => A) =
+    fa.foldr1(IArray.byName2(f))
 
   override def plus[A](a: IArray1[A], b: => IArray1[A]) =
     a plus b
@@ -80,32 +61,14 @@ private object IArray1Instance extends
   override def zip[A, B](a: => IArray1[A], b: => IArray1[B]) =
     a zip b
 
-  override def length[A](fa: IArray1[A]) =
-    fa.length
-
   override def maximum1[A: Order](fa: IArray1[A]) =
     fa.max
 
   override def minimum1[A: Order](fa: IArray1[A]) =
     fa.min
 
-  override def maximumBy1[A, B: Order](fa: IArray1[A])(f: A => B) =
-    fa maxBy f
-
-  override def minimumBy1[A, B: Order](fa: IArray1[A])(f: A => B) =
-    fa minBy f
-
-  override def maximumOf1[A, B: Order](fa: IArray1[A])(f: A => B) =
-    fa maxOf f
-
-  override def minimumOf1[A, B: Order](fa: IArray1[A])(f: A => B) =
-    fa minOf f
-
   override def reverse[A](fa: IArray1[A]) =
     fa.reverse
-
-  override def index[A](fa: IArray1[A], i: Int) =
-    if(0 <= i && i < fa.length) Some(fa(i)) else None
 
   override def all[A](fa: IArray1[A])(f: A => Boolean) =
     fa forall f
@@ -126,7 +89,5 @@ private object IArray1Instance extends
   override def intercalate[A: Monoid](fa: IArray1[A], a: A) =
     fa intercalate1 a
 
-  override def intercalate1[A: Semigroup](fa: IArray1[A], a: A) =
-    fa intercalate1 a
 }
 

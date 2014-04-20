@@ -5,6 +5,19 @@ import std.anyVal._, std.string._
 import scalaz.scalacheck.ScalazProperties._
 import org.scalacheck.{Gen, Arbitrary}
 
+object IArrayTraverseTest extends TestCommon with ScalacheckOps {
+
+  for ((name, prop) <- traverse.laws[IArray].properties) yield {
+    property(name) = {
+      if(name contains "sequential fusion")
+        prop.contramap(p => p.resize(p.size % 6))
+      else
+        prop
+    }
+  }
+
+}
+
 object TypeclassLawTest extends TestCommon {
 
   implicit val iarrayArb0: Arbitrary[IArray[Int] => Int] = {
@@ -25,17 +38,8 @@ object TypeclassLawTest extends TestCommon {
     ))
   }
 
-  property("cobind associative") =
-    cobind.cobindAssociative[IArray, Int, Int, Int, Int](
-      implicitly, implicitly, implicitly, iarrayArb0, iarrayArb0, iarrayArb0
-    )
-
   checkAll(monadPlus.strongLaws[IArray])
   checkAll(isEmpty.laws[IArray])
-  checkAll(foldable.laws[IArray])
-  checkAll(zip.laws[IArray])
-  checkAll(align.laws[IArray])
-  checkAll(traverse.laws[IArray])
   checkAll(monoid.laws[IArray[String]])
 
 }
