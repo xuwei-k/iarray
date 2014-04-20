@@ -34,5 +34,10 @@ libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.8-SNAPSHOT"
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11.0-RC1/0.2.8-SNAPSHOT/iarray_2.11.0-RC1-0.2.8-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
 
 
+### for Scalaz 7.0.x
+
+- <https://github.com/xuwei-k/iarray/tree/scalaz70#readme>
+
+
 
 I'm not good at English. Documentation pull requests are welcome.
