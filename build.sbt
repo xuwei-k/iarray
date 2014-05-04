@@ -10,11 +10,6 @@ organization := "com.github.xuwei-k"
 
 startYear := Some(2014)
 
-scmInfo := Some(ScmInfo(
-  url("https://github.com/xuwei-k/iarray"),
-  "scm:git:git@github.com:xuwei-k/iarray.git"
-))
-
 description := "Immutable array wrapper. does not use ClassTag. scalaz friendly"
 
 def gitHash: Option[String] = scala.util.Try(
@@ -40,6 +35,11 @@ pomExtra := (
     <url>https://github.com/xuwei-k</url>
   </developer>
 </developers>
+<scm>
+  <url>git@github.com:xuwei-k/iarray.git</url>
+  <connection>scm:git:git@github.com:xuwei-k/iarray.git</connection>
+  <tag>{if(isSnapshot.value) gitHash.getOrElse("master") else { "v" + version.value }}</tag>
+</scm>
 )
 
 licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
