@@ -17,10 +17,10 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   @inline def apply(i: Int): A =
     self(i).asInstanceOf[A]
 
-  def length: Int =
+  @inline def length: Int =
     self.length
 
-  def size: Int =
+  @inline def size: Int =
     self.length
 
   private[iarray] def unsafeMaxBy[B](f: A => B)(implicit O: scalaz.Order[B]): A = {
@@ -258,25 +258,25 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       copyOf(self, self.length).asInstanceOf[Array[A]]
     }
 
-  def isEmpty: Boolean =
+  @inline def isEmpty: Boolean =
     self.length == 0
 
-  def nonEmpty: Boolean =
+  @inline def nonEmpty: Boolean =
     self.length != 0
 
   // unsafe
-  private[iarray] def head: A =
+  @inline private[iarray] def head: A =
     self(0).asInstanceOf[A]
 
   // unsafe
-  private[iarray] def tail: IArray[A] =
+  @inline private[iarray] def tail: IArray[A] =
     dropL(1)
 
   def headOption: Option[A] =
     if(isEmpty) None
     else Some(this(0))
 
-  private[iarray] def unsafeLast: A =
+  @inline private[iarray] def unsafeLast: A =
     self(self.length - 1).asInstanceOf[A]
 
   def lastOption: Option[A] =

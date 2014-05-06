@@ -21,7 +21,7 @@ object IArray1 {
   private[this] val _single: AnyRef => IArray1[AnyRef] =
     head => IArray1(head, IArray.empty[AnyRef])
 
-  def singleF[A]: A => IArray1[A] = _single.asInstanceOf[A => IArray1[A]]
+  @inline def singleF[A]: A => IArray1[A] = _single.asInstanceOf[A => IArray1[A]]
 
   def fromNel[A](nel: NonEmptyList[A]): IArray1[A] =
     IArray1(nel.head, IArray.fromList(nel.tail))
@@ -404,8 +404,8 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def oneAnd: OneAnd[IArray, A] =
     OneAnd(head, tail)
 
-  def length: Int = tail.length + 1
-  def size: Int = tail.length + 1
+  @inline def length: Int = tail.length + 1
+  @inline def size: Int = tail.length + 1
 
   def count(f: A => Boolean): Int =
     (if(f(head)) 1 else 0) + tail.count(f)
