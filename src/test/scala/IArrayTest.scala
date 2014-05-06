@@ -2,7 +2,7 @@ package iarray
 
 import scalaz._
 import std.tuple._, std.anyVal._, std.string._
-import std.vector._, std.list._, std.option._, std.either._
+import std.vector._, std.list._, std.option._
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Gen}
 import scalaz.scalacheck.ScalazArbitrary._

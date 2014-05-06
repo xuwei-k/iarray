@@ -2,7 +2,7 @@ package iarray
 
 import scalaz._
 import org.scalacheck.Prop.forAll
-import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.vector._
+import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._
 import scalaz.scalacheck.ScalazArbitrary._
 
 object IArray1Test extends TestCommon {

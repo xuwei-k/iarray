@@ -1,7 +1,6 @@
 package iarray
 
 import scalaz._
-import scalaz.std.option._
 
 private object kleisli {
 
