@@ -1,8 +1,8 @@
 # IArray [![Build Status](https://secure.travis-ci.org/xuwei-k/iarray.png?branch=master)](http://travis-ci.org/xuwei-k/iarray)
 
-`IArray` is an Immutable Array wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala/blob/v2.11.0-RC1/src/library/scala/reflect/ClassTag.scala)
+`IArray` is an Immutable Array wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala/blob/v2.11.0/src/library/scala/reflect/ClassTag.scala)
 
-[`scalaz.ImmutableArray`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/ImmutableArray.scala) and [`scala.Array`](https://github.com/scala/scala/blob/v2.11.0-RC1/src/library/scala/Array.scala) could __NOT__ be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Functor.scala).
+[`scalaz.ImmutableArray`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/ImmutableArray.scala) and [`scala.Array`](https://github.com/scala/scala/blob/v2.11.0/src/library/scala/Array.scala) could __NOT__ be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Functor.scala).
 On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Functor.scala), [`scalaz.Monad`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Monad.scala), [`scalaz.Traverse`](https://github.com/scalaz/scalaz/blob/scalaz-seven/core/src/main/scala/scalaz/Traverse.scala) etc.
 
 `IArray` __always boxing__ primitive values in return for provide an abstraction(scalaz typeclasses).
@@ -14,24 +14,20 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 ### latest stable version
 
 ```scala
-scalaVersion := "2.11.0-RC1"
-
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.7"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.11.0-RC1/0.2.7/iarray_2.11.0-RC1-0.2.7-javadoc.jar/!/index.html#iarray.IArray)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.11/0.2.7/iarray_2.11-0.2.7-javadoc.jar/!/index.html#iarray.IArray)
 
 ### snapshot version
 
 ```scala
-scalaVersion := "2.11.0-RC1"
-
 resolvers += Opts.resolver.sonatypeSnapshots
 
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.2.8-SNAPSHOT"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11.0-RC1/0.2.8-SNAPSHOT/iarray_2.11.0-RC1-0.2.8-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11/0.2.8-SNAPSHOT/iarray_2.11-0.2.8-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
 
 
 ### for Scalaz 7.0.x
