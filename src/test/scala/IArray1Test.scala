@@ -4,6 +4,7 @@ import scalaz._
 import org.scalacheck.Prop.forAll
 import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.vector._
 import scalaz.scalacheck.ScalazArbitrary._
+import IArray.conform
 
 object IArray1Test extends TestCommon {
 
@@ -46,12 +47,12 @@ object IArray1Test extends TestCommon {
   }
 
   property("maxBy") = forAll { a: IArray1[Int] =>
-    a.maxBy(conforms) must_=== a.toList.maxBy(conforms)
+    a.maxBy(conform) must_=== a.toList.maxBy(conform)
     a.maxBy(- _) must_=== a.toList.maxBy(- _)
   }
 
   property("minBy") = forAll { a: IArray1[Int] =>
-    a.minBy(conforms) must_=== a.toList.minBy(conforms)
+    a.minBy(conform) must_=== a.toList.minBy(conform)
     a.minBy(- _) must_=== a.toList.minBy(- _)
   }
 
@@ -82,7 +83,7 @@ object IArray1Test extends TestCommon {
   }
 
   property("cojoin cobind") = forAll{ a: IArray1[Int] =>
-    a.cojoin must_=== a.cobind(conforms)
+    a.cojoin must_=== a.cobind(conform)
     a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
   }
 
@@ -187,7 +188,7 @@ object IArray1Test extends TestCommon {
 
   property("equals hashCode law") = forAll { (a1: IArray1[Int], a2: IArray1[Int], a3: IArray1[Int]) =>
     (a1 == a2) must_=== (a2 == a1)
-    (a1 == a1.map(conforms)) must_=== true
+    (a1 == a1.map(conform)) must_=== true
     std.boolean.conditional((a1 == a2) && (a2 == a3), a1 == a3) must_=== true
     std.boolean.conditional(a1 == a2, a1.## == a2.##) must_=== true
   }

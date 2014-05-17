@@ -103,7 +103,7 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
   def alignWith[A, B, C](f: A \&/ B => C) =
     (a, b) => a.alignWith(b)(f)
   override def align[A, B](a: IArray[A], b: IArray[B]) =
-    a.alignWith(b)(conforms)
+    a.alignWith(b)(conform)
   override def merge[A](a1: IArray[A], a2: IArray[A])(implicit A: Semigroup[A]) = {
     val min = Math.min(a1.length, a2.length)
     val len = Math.max(a1.length, a2.length)
