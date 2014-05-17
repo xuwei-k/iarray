@@ -7,6 +7,7 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.{Arbitrary, Gen}
 import scalaz.scalacheck.ScalazArbitrary._
 import scalaz.scalacheck.ScalaCheckBinding._
+import IArray.conform
 
 object IArrayTest extends TestCommon{
 
@@ -87,7 +88,7 @@ object IArrayTest extends TestCommon{
   }
 
   property("tabulate") = forAll { size: Byte =>
-    IArray.tabulate(size)(conforms) must_=== List.tabulate(size)(conforms).to[IArray]
+    IArray.tabulate(size)(conform) must_=== List.tabulate(size)(conform).to[IArray]
   }
 
   property("CanBuildFrom") = forAll { (a: List[Int], b: List[String]) =>
@@ -546,11 +547,11 @@ object IArrayTest extends TestCommon{
   }
 
   property("maxOf") = forAll { a: IArray[Int] =>
-    a.maxOf(_.toString) must_=== a.map(_.toString).maxBy(conforms)
+    a.maxOf(_.toString) must_=== a.map(_.toString).maxBy(conform)
   }
 
   property("minOf") = forAll { a: IArray[Int] =>
-    a.minOf(_.toString) must_=== a.map(_.toString).minBy(conforms)
+    a.minOf(_.toString) must_=== a.map(_.toString).minBy(conform)
   }
 
   property("maxBy") = forAll { a: IArray[Int] =>

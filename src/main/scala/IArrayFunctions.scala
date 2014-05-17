@@ -7,6 +7,11 @@ import collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions{
 
+  private[this] val _conform: AnyRef => AnyRef =
+    x => x
+  @inline private[iarray] final def conform[A]: A => A =
+    _conform.asInstanceOf[A => A]
+
   def toListK[A]: Kleisli[List, IArray[A], A] =
     kleisli.toList.asInstanceOf[Kleisli[List, IArray[A], A]]
   def reverseListK[A]: Kleisli[List, IArray[A], A] =

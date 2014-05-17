@@ -403,7 +403,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     else new IArray(copyOf(self, n))
 
   def align[B](b: IArray[B]): IArray[A \&/ B] =
-    alignWith(b)(conforms)
+    alignWith(b)(conform)
 
   def alignWith[B, C](that: IArray[B])(f: A \&/ B => C): IArray[C] = {
     import \&/._
