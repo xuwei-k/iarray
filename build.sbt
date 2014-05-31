@@ -1,6 +1,6 @@
 scalaVersion := "2.11.1"
 
-crossScalaVersions := List("2.11.0", "2.10.4")
+crossScalaVersions := scalaVersion.value :: "2.10.4" :: Nil
 
 incOptions := incOptions.value.withNameHashing(true)
 
