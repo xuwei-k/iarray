@@ -107,3 +107,22 @@ val showDoc = TaskKey[Unit]("showDoc")
 showDoc in Compile <<= (doc in Compile, target in doc in Compile) map { (_, out) =>
   java.awt.Desktop.getDesktop.open(out / "index.html")
 }
+
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq[BuildInfoKey](
+  organization,
+  name,
+  version,
+  scalaVersion,
+  sbtVersion,
+  scalacOptions,
+  licenses,
+  "scalazVersion" -> scalazV
+)
+
+buildInfoPackage := "iarray"
+
+buildInfoObject := "BuildInfoIArray"
