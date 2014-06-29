@@ -257,7 +257,8 @@ object IArrayTest extends TestCommon{
 
   property("collect String") = forAll { a: IArray[Alpha] =>
     val f: PartialFunction[String, Int] = {case s if s.sum % 2 == 0 => s.length}
-    a.collect(f).toList must_=== a.toList.collect(f)
+    val aa = Tag.unsubst(a)
+    aa.collect(f).toList must_=== aa.toList.collect(f)
   }
 
   property("collectFirst collectLast") = forAll { a: IArray[Int] =>
@@ -606,7 +607,7 @@ object IArrayTest extends TestCommon{
   }
 
   property("intercalate") = forAll { xs0: IArray[Alpha] =>
-    val xs: IArray[String] = xs0.widen
+    val xs: IArray[String] = Tag.unsubst(xs0)
     xs.intercalate(" , ") must_=== Foldable[List].intercalate(xs.toList, " , ")
     xs.intercalate(",") must_=== xs.mkString(",")
     xs.intercalate(",") must_=== xs.intercalate1Opt(",").getOrElse(Monoid[String].zero)

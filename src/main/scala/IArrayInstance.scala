@@ -139,7 +139,7 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
   override def unite[T[_], A](value: IArray[T[A]])(implicit T: Foldable[T]) =
     bind(value)(ta => T.foldMap(ta)(singleF)(iarrayMonoid))
   override def separate[G[_, _], A, B](value: IArray[G[A, B]])(implicit G: Bifoldable[G]) = {
-    if(G eq (\/.DisjunctionInstances3: Bifoldable[\/]))
+    if(G eq (\/.DisjunctionInstances2: Bifoldable[\/]))
       partitionEithers(value.asInstanceOf[IArray[A \/ B]])
     else if(G eq (std.tuple.tuple2Bitraverse: Bifoldable[Tuple2]))
       value.asInstanceOf[IArray[(A, B)]].unzip

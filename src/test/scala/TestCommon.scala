@@ -19,7 +19,7 @@ trait TestCommon extends SpecLite {
 
   implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
   implicit val alphaShow: Show[Alpha] = Show.showA
-  implicit val alphaOrd: Order[Alpha] = Order.orderBy(_.toList)
+  implicit val alphaOrd: Order[Alpha] = Order.orderBy(a => Tag.unwrap(a).toList)
   implicit val alphaOrdering = alphaOrd.toScalaOrdering
 
   implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =

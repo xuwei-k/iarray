@@ -46,7 +46,7 @@ licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked", "-language:_", "-optimize")
 
-val scalazV = "7.1.0-M7"
+val scalazV = "7.1.0-RC1"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
