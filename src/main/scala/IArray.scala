@@ -612,6 +612,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   def withFilter(f: A => Boolean): WithFilter[A] =
     new WithFilter[A](self, f)
 
+  def mapTo[C, B](f: A => B)(implicit C: CanBuildFrom[Nothing, B, C]): C = {
+    val buf = C()
+    var i = 0
+    while(i < self.length){
+      buf += f(self(i).asInstanceOf[A])
+      i += 1
+    }
+    buf.result
+  }
+
   def map[B](f: A => B): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)

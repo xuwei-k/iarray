@@ -285,6 +285,14 @@ object IArrayTest extends TestCommon{
     a.map(f).toList must_=== a.toList.map(f)
   }
 
+  property("mapTo") = forAll { a: IArray[Int] =>
+    val f: Int => String = i => (i + 1).toString
+    val list: List[String] = a.mapTo(f)
+    val vector: Vector[String] = a.mapTo(f)
+    list must_=== a.to[List].map(f)
+    vector must_=== a.map(f).to[Vector]
+  }
+
   property("foreach") = forAll { a: IArray[Int] =>
     val buf1, buf2 = new collection.mutable.ListBuffer[Int]
     val f1 = buf1 += (_:Int)
