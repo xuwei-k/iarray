@@ -44,7 +44,16 @@ pomExtra := (
 
 licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
-scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked", "-language:_", "-optimize")
+scalacOptions ++= (
+  "-deprecation" ::
+  "-unchecked" ::
+  "-Xlint" ::
+  "-optimize" ::
+  "-language:existentials" ::
+  "-language:higherKinds" ::
+  "-language:implicitConversions" ::
+  Nil
+)
 
 val scalazV = "7.1.0-RC2"
 
