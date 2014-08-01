@@ -21,6 +21,14 @@ object IArray1Test extends TestCommon {
     a.toIArray must_=== a.to[IArray]
   }
 
+  property("mapTo") = forAll { a: IArray1[Int] =>
+    val f: Int => String = i => (i * 2).toString
+    val list: List[String] = a.mapTo(f)
+    val vector: Vector[String] = a.mapTo(f)
+    list must_=== a.to[List].map(f)
+    vector must_=== a.map(f).to[Vector]
+  }
+
   property("collect") = forAll { a: IArray1[Int] =>
     val f: PartialFunction[Int, String] = { case i if i % 5 == 2 => i.toString }
     a.collect(f).toList must_=== a.toList.collect(f)

@@ -130,6 +130,17 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
   def map[B](f: A => B): IArray1[B] =
     IArray1(f(head), tail map f)
 
+  def mapTo[C, B](f: A => B)(implicit C: CanBuildFrom[Nothing, B, C]): C = {
+    val buf = C()
+    var i = 0
+    buf += f(head)
+    while(i < tail.length){
+      buf += f(tail(i))
+      i += 1
+    }
+    buf.result
+  }
+
   def collect[B](f: PartialFunction[A, B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
