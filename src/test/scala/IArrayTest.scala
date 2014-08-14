@@ -13,6 +13,10 @@ object IArrayTest extends TestCommon{
 
   val f = (_: Int) > 100
 
+  property("map_") = { a: IArray[Int] =>
+    a.map(_ + 1) must_=== a.map_(_ + 1)
+  }
+
   property("withIndex") = { a: IArray[Int] =>
     a.withIndex.map((x, y) => (x, y)) must_=== a.zipWithIndex
     a.withIndex.to[List] must_=== a.toList.zipWithIndex

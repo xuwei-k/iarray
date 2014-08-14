@@ -56,28 +56,13 @@ scalacOptions ++= (
 )
 
 val scalazV = "7.1.0"
-val spireVersion = "0.8.2"
 
 libraryDependencies ++= (
   ("org.scalaz" %% "scalaz-core" % scalazV) ::
-  ("org.spire-math" %% "spire-macros" % spireVersion) ::
+  ("org.scala-lang" % "scala-reflect" % scalaVersion.value) ::
   ("org.scalaz" %% "scalaz-scalacheck-binding" % scalazV % "test") ::
   Nil
 )
-
-libraryDependencies ++= {
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      ("org.scalamacros" %% "quasiquotes" % "2.0.1") ::
-      compilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full) ::
-      Nil
-    case _ => Nil
-  }
-}
-
-unmanagedSourceDirectories in Compile += {
-  (sourceDirectory in Compile).value / scalaBinaryVersion.value
-}
 
 val specLiteURL = s"https://raw.github.com/scalaz/scalaz/v${scalazV}/tests/src/test/scala/scalaz/SpecLite.scala"
 val specLite = SettingKey[List[String]]("specLite")
@@ -138,8 +123,7 @@ buildInfoKeys := Seq[BuildInfoKey](
   sbtVersion,
   scalacOptions,
   licenses,
-  "scalazVersion" -> scalazV,
-  "spireVersion" -> spireVersion
+  "scalazVersion" -> scalazV
 )
 
 buildInfoPackage := "iarray"

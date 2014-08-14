@@ -6,12 +6,32 @@ import java.util.Arrays
 import Arrays.{copyOf, copyOfRange}
 import collection.generic.CanBuildFrom
 import collection.mutable.ArrayBuilder
+import scala.language.experimental.macros
+import scala.reflect.macros.blackbox.Context
+import InlineUtil.inlineAndReset
 
 object IArray extends IArrayFunctions{
 
+  def map[A: c.WeakTypeTag, B](c: Context)(f: c.Expr[A => B]): c.Expr[IArray[B]] = {
+    import c.universe._
+    val A = c.weakTypeOf[A]
+    val f0 = inlineAndReset(c)(q"$f(self(i).asInstanceOf[$A])")
+    val tree = q"""
+      val self = ${c.prefix}.self
+      var i = 0
+      val array = new Array[AnyRef](self.length)
+      while(i < self.length){
+        array(i) = $f0.asInstanceOf[AnyRef]
+        i += 1
+      }
+      new _root_.iarray.IArray(array)
+    """
+    c.Expr[IArray[B]](tree)
+  }
+
 }
 
-final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) extends AnyVal{
+final class IArray[A](val self: Array[AnyRef]) extends AnyVal{
   import IArray._
 
   @inline def apply(i: Int): A =
@@ -621,6 +641,9 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
     buf.result
   }
+
+  def map_[B](f: A => B): IArray[B] =
+    macro IArray.map[A, B]
 
   def map[B](f: A => B): IArray[B] = {
     var i = 0
