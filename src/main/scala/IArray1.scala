@@ -29,9 +29,6 @@ object IArray1 {
   def fromOneAnd[F[_], A](a: OneAnd[F, A])(implicit F: Foldable[F]): IArray1[A] =
     IArray1(a.head, F.to[A, IArray](a.tail))
 
-  def apply[A](head: A, tail: A*): IArray1[A] =
-    IArray1(head, IArray.apply(tail: _*))
-
   def iterate[A](start: A, size: Int)(f: A => A): IArray1[A] =
     IArray1(start, IArray.iterate(f(start), size - 1)(f))
 

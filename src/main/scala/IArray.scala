@@ -12,6 +12,22 @@ import InlineUtil.inlineAndReset
 
 object IArray extends IArrayFunctions{
 
+  def apply[A](xs: A*): IArray[A] =
+    macro applyImpl[A]
+
+  def applyImpl[A: c.WeakTypeTag](c: Context)(xs: c.Expr[A]*): c.Expr[IArray[A]] = {
+    import c.universe._
+    val A = c.weakTypeOf[A]
+    val values = xs.map{
+      case Expr(x @ Literal(Constant(_))) =>
+        q"$x.asInstanceOf[AnyRef]"
+      case other =>
+        c.abort(c.enclosingPosition, s"${other.tree} should be literal")
+    }
+    val tree = q" new iarray.IArray[$A](scala.Array[AnyRef](..$values)) "
+    c.Expr[IArray[A]](tree)
+  }
+
   def map[A: c.WeakTypeTag, B](c: Context)(f: c.Expr[A => B]): c.Expr[IArray[B]] = {
     import c.universe._
     val A = c.weakTypeOf[A]
