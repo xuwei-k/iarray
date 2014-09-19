@@ -62,7 +62,7 @@ libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-scalacheck-binding" % scalazV % "test"
 )
 
-val specLiteURL = s"https://raw.github.com/scalaz/scalaz/v${scalazV}/tests/src/test/scala/scalaz/SpecLite.scala"
+val specLiteURL = "https://raw.github.com/scalaz/scalaz/83e1b85ee4b18df01/tests/src/test/scala/scalaz/SpecLite.scala"
 val specLite = SettingKey[List[String]]("specLite")
 
 specLite := {
