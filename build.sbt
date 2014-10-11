@@ -1,4 +1,4 @@
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.3"
 
 crossScalaVersions := scalaVersion.value :: "2.10.4" :: Nil
 
