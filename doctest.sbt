@@ -1,0 +1,3 @@
+doctestGenSettings
+
+doctestWithDependencies := false

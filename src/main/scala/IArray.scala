@@ -14,9 +14,22 @@ object IArray extends IArrayFunctions{
 final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) extends AnyVal{
   import IArray._
 
+  /**
+   * @example{{{
+   * scala> val x = IArray(10, 20, 30, 40)
+   * scala> x(2)
+   * res0: Int = 30
+   * }}}
+   */
   @inline def apply(i: Int): A =
     self(i).asInstanceOf[A]
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b").length
+   * res0: Int = 2
+   * }}}
+   */
   @inline def length: Int =
     self.length
 
@@ -38,6 +51,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     maxElem
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray("aa", "bbb", "c").maxBy(_.size)
+   * res0: Option[String] = Some(bbb)
+   *
+   * scala> IArray[String]().maxBy(_.size)
+   * res1: Option[String] = None
+   * }}}
+   */
   def maxBy[B](f: A => B)(implicit O: scalaz.Order[B]): Option[A] =
     if(self.length == 0){
       None
@@ -60,6 +83,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     minElem
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray("aa", "bbb", "c").minBy(_.size)
+   * res0: Option[String] = Some(c)
+   *
+   * scala> IArray[String]().minBy(_.size)
+   * res1: Option[String] = None
+   * }}}
+   */
   def minBy[B](f: A => B)(implicit O: scalaz.Order[B]): Option[A] =
     if(self.length == 0){
       None
@@ -77,6 +110,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     a
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(20, 30, 10).max
+   * res0: Option[Int] = Some(30)
+   *
+   * scala> IArray[Int]().max
+   * res1: Option[Int] = None
+   * }}}
+   */
   def max(implicit O: Order[A]): Option[A] =
     if(isEmpty) None
     else Some(unsafeMax)
@@ -91,6 +134,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     a
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(20, 30, 10).min
+   * res0: Option[Int] = Some(10)
+   *
+   * scala> IArray[Int]().min
+   * res1: Option[Int] = None
+   * }}}
+   */
   def min(implicit O: Order[A]): Option[A] =
     if(isEmpty) None
     else Some(unsafeMin)
@@ -105,6 +158,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     a
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(20, 30, 10).maxOf(- _)
+   * res0: Option[Int] = Some(-10)
+   *
+   * scala> IArray[Int]().maxOf(- _)
+   * res1: Option[Int] = None
+   * }}}
+   */
   def maxOf[B](f: A => B)(implicit O: Order[B]): Option[B] =
     if(self.length == 0) None
     else Some(unsafeMaxOf(f))
@@ -119,10 +182,26 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     a
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(20, 30, 10).minOf(- _)
+   * res0: Option[Int] = Some(-30)
+   *
+   * scala> IArray[Int]().minOf(- _)
+   * res1: Option[Int] = None
+   * }}}
+   */
   def minOf[B](f: A => B)(implicit O: Order[B]): Option[B] =
     if(self.length == 0) None
     else Some(unsafeMinOf(f))
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5).find(_ > 3)
+   * res0: Option[Int] = Some(4)
+   * }}}
+   */
   def find(f: A => Boolean): Option[A] = {
     var i = 0
     while(i < self.length){
@@ -134,6 +213,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5).findRight(_ < 4)
+   * res0: Option[Int] = Some(3)
+   * }}}
+   */
   def findRight(f: A => Boolean): Option[A] = {
     var i = self.length - 1
     while(0 <= i){
@@ -145,6 +230,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> val a = IArray(1, 2, 3, 4)
+   * scala> a.exists(_ % 3 == 0)
+   * res0: Boolean = true
+   *
+   * scala> a.exists(_ <= 0)
+   * res1: Boolean = false
+   * }}}
+   */
   def exists(f: A => Boolean): Boolean = {
     var i = 0
     while(i < self.length){
@@ -156,12 +251,34 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     false
   }
 
+  /**
+   * @example{{{
+   * scala> val a = IArray(1, 2, 3, 4)
+   * scala> a.forall(_ <= 4)
+   * res0: Boolean = true
+   *
+   * scala> a.forall(_ % 4 < 3)
+   * res1: Boolean = false
+   * }}}
+   */
   def forall(f: A => Boolean): Boolean =
     indexNot(f) < 0
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5).toIterator.filter(_ % 2 == 0).toList
+   * res0: List[Int] = List(2, 4)
+   * }}}
+   */
   def toIterator: Iterator[A] =
     new IArrayIterator[A](self)
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).toIList
+   * res0: scalaz.IList[Int] = [1,2,3]
+   * }}}
+   */
   def toIList: IList[A] = {
     var i = self.length - 1
     var acc = IList.empty[A]
@@ -172,6 +289,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).reverseList
+   * res0: List[Int] = List(3, 2, 1)
+   * }}}
+   */
   def reverseList: List[A] = {
     var i = 0
     var acc: List[A] = Nil
@@ -182,6 +305,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).reverseIList
+   * res0: scalaz.IList[Int] = [3,2,1]
+   * }}}
+   */
   def reverseIList: IList[A] = {
     var i = 0
     var acc = IList.empty[A]
@@ -192,6 +321,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).reverseArray
+   * res0: Array[Int] = Array(3, 2, 1)
+   * }}}
+   */
   def reverseArray(implicit A: reflect.ClassTag[A]): Array[A] = {
     val array = new Array[A](self.length)
     var i = 0
@@ -202,6 +337,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     array
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).toList
+   * res0: List[Int] = List(1, 2, 3)
+   * }}}
+   */
   def toList: List[A] = {
     var i = self.length - 1
     var acc: List[A] = Nil
@@ -212,18 +353,43 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.NonEmptyList
+   * scala> IArray(1, 2, 3).toNel
+   * res0: Option[NonEmptyList[Int]] = Some(NonEmptyList(1, 2, 3))
+   *
+   * scala> IArray[Int]().toNel
+   * res1: Option[NonEmptyList[Int]] = None
+   * }}}
+   */
   def toNel: Option[NonEmptyList[A]] =
     if(isEmpty)
       None
     else
       Some(NonEmptyList.nel(self(0).asInstanceOf[A], toList.tail))
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).toIArray1
+   * res0: Option[IArray1[Int]] = Some(IArray1(1, 2, 3))
+   *
+   * scala> IArray[Int]().toIArray1
+   * res1: Option[IArray1[Int]] = None
+   * }}}
+   */
   def toIArray1: Option[IArray1[A]] =
     if(self.length == 0)
       None
     else
       Some(IArray1(self(0).asInstanceOf[A], new IArray[A](copyOfRange(self, 1, self.length))))
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).zipperEnd.map(_.modify(_ + 10).toStream.toList)
+   * res0: Option[List[Int]] = Some(List(1, 2, 13))
+   * }}}
+   */
   def zipperEnd: Option[Zipper[A]] =
     if(isEmpty){
       None
@@ -239,12 +405,24 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(Zipper(acc, self(len).asInstanceOf[A], Stream.Empty))
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).oneAnd
+   * res0: Option[scalaz.OneAnd[IArray, Int]] = Some(OneAnd(1,IArray(2, 3)))
+   * }}}
+   */
   def oneAnd: Option[OneAnd[IArray, A]] =
     if(isEmpty)
       None
     else
       Some(OneAnd(self(0).asInstanceOf[A], dropL(1)))
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).toArray
+   * res0: Array[Int] = Array(1, 2, 3)
+   * }}}
+   */
   def toArray(implicit A: reflect.ClassTag[A]): Array[A] =
     if(A.runtimeClass.isPrimitive){
       val array = new Array[A](self.length)
@@ -258,9 +436,27 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       copyOf(self, self.length).asInstanceOf[Array[A]]
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2).isEmpty
+   * res0: Boolean = false
+   *
+   * scala> IArray[Int](1, 2).dropL(10).isEmpty
+   * res1: Boolean = true
+   * }}}
+   */
   @inline def isEmpty: Boolean =
     self.length == 0
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2).nonEmpty
+   * res0: Boolean = true
+   *
+   * scala> IArray[Int](1, 2).dropL(10).nonEmpty
+   * res1: Boolean = false
+   * }}}
+   */
   @inline def nonEmpty: Boolean =
     self.length != 0
 
@@ -272,6 +468,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   @inline private[iarray] def tail: IArray[A] =
     dropL(1)
 
+
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).headOption
+   * res0: Option[Int] = Some(10)
+   * }}}
+   */
   def headOption: Option[A] =
     if(isEmpty) None
     else Some(this(0))
@@ -279,18 +482,40 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   @inline private[iarray] def unsafeLast: A =
     self(self.length - 1).asInstanceOf[A]
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).lastOption
+   * res0: Option[Int] = Some(30)
+   * }}}
+   */
   def lastOption: Option[A] =
     if(isEmpty) None
     else Some(this(length - 1))
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).tailOption
+   * res0: Option[IArray[Int]] = Some(IArray(20, 30))
+   * }}}
+   */
   def tailOption: Option[IArray[A]] =
     if(isEmpty) None
     else Some(dropL(1))
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).initOption
+   * res0: Option[IArray[Int]] = Some(IArray(10, 20))
+   * }}}
+   */
   def initOption: Option[IArray[A]] =
     if(isEmpty) None
     else Some(dropR(1))
 
+  /**
+   * @example{{{
+   * }}}
+   */
   def slice(from: Int, until: Int): IArray[A] = {
     if(until <= from || until <= 0 || from >= self.length){
       empty[A]
@@ -301,6 +526,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).reverse
+   * res0: IArray[Int] = IArray(3, 2, 1)
+   * }}}
+   */
   def reverse: IArray[A] = {
     var i = 0
     val len = self.length
@@ -312,6 +543,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3) reverse_::: IArray(10, 11, 12)
+   * res0: IArray[Int] = IArray(3, 2, 1, 10, 11, 12)
+   * }}}
+   */
   def reverse_:::(prefix: IArray[A]): IArray[A] =
     if(prefix.length == 0){
       this
@@ -327,6 +564,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       new IArray[A](array)
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).count(_ % 2 == 1)
+   * res0: Int = 4
+   * }}}
+   */
   def count(f: A => Boolean): Int = {
     var i = 0
     var n = 0
@@ -339,6 +582,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     n
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30, 40, 50, 60, 70).splitAt(5)
+   * res0: (IArray[Int], IArray[Int]) = (IArray(10, 20, 30, 40, 50),IArray(60, 70))
+   * }}}
+   */
   def splitAt(n: Int): (IArray[A], IArray[A]) =
     if(n <= 0){
       (empty[A], this)
@@ -348,6 +597,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       (new IArray[A](copyOf(self, n)), new IArray(copyOfRange(self, n, self.length)))
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).takeWhileL(_ < 5)
+   * res0: IArray[Int] = IArray(1, 2, 3, 4)
+   * }}}
+   */
   def takeWhileL(f: A => Boolean): IArray[A] = {
     val len = indexNot(f)
     if(len < 0){
@@ -359,6 +614,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).takeWhileR(_ > 2)
+   * res0: IArray[Int] = IArray(3, 4, 5, 6, 7)
+   * }}}
+   */
   def takeWhileR(f: A => Boolean): IArray[A] = {
     val len = lastIndex(f) + 1
     if(len <= 0){
@@ -370,6 +631,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).dropWhileL(_ < 4)
+   * res0: IArray[Int] = IArray(4, 5, 6, 7)
+   * }}}
+   */
   def dropWhileL(f: A => Boolean): IArray[A] = {
     val len = indexNot(f)
     if(len < 0){
@@ -381,6 +648,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).dropWhileR(_ > 5)
+   * res0: IArray[Int] = IArray(1, 2, 3, 4, 5)
+   * }}}
+   */
   def dropWhileR(f: A => Boolean): IArray[A] = {
     val len = lastIndex(f) + 1
     if(len <= 0){
@@ -392,19 +665,44 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c", "d", "e", "f").takeR(4)
+   * res0: IArray[String] = IArray(c, d, e, f)
+   * }}}
+   */
   def takeR(n: Int): IArray[A] =
     if(n <= 0) empty[A]
     else if(n >= length) this
     else new IArray(copyOfRange(self, length - n, length))
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c", "d", "e", "f").takeL(2)
+   * res0: IArray[String] = IArray(a, b)
+   * }}}
+   */
   def takeL(n: Int): IArray[A] =
     if(n <= 0) empty[A]
     else if(n >= length) this
     else new IArray(copyOf(self, n))
 
+  /**
+   * @example{{{
+   * scala> import scalaz.\&/
+   * scala> IArray(1, 2, 3) align IArray("a", "b", "c", "d", "e")
+   * res0: IArray[Int \&/ String] = IArray(Both(1,a), Both(2,b), Both(3,c), That(d), That(e))
+   * }}}
+   */
   def align[B](b: IArray[B]): IArray[A \&/ B] =
     alignWith(b)(conform)
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def alignWith[B, C](that: IArray[B])(f: A \&/ B => C): IArray[C] = {
     import \&/._
     val max = Math.max(length, that.length)
@@ -429,9 +727,21 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[C](array)
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def withIndex: WithIndex[A] =
     new WithIndex(self)
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c").zipWithIndex
+   * res0: IArray[(String, Int)] = IArray((a,0), (b,1), (c,2))
+   * }}}
+   */
   def zipWithIndex: IArray[(A, Int)] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
@@ -442,6 +752,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[(A, Int)](array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c", "d").zipWith(IArray("x", "y", "z"))(_ + _)
+   * res0: IArray[String] = IArray(ax, by, cz)
+   * }}}
+   */
   def zipWith[B, C](that: IArray[B])(f: (A, B) => C): IArray[C] = {
     val len = Math.min(length, that.length)
     var i = 0
@@ -454,6 +770,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c", "d").zipAll(IArray(1, 2), "z", 0)
+   * res0: IArray[(String, Int)] = IArray((a,1), (b,2), (c,0), (d,0))
+   * }}}
+   */
   def zipAll[B](that: IArray[B], a: A, b: B): IArray[(A, B)] = {
     val len = Math.max(self.length, that.length)
     val min = Math.min(self.length, that.length)
@@ -477,6 +799,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b") zip IArray(1, 2, 3, 4)
+   * res0: IArray[(String, Int)] = IArray((a,1), (b,2))
+   * }}}
+   */
   def zip[B](that: IArray[B]): IArray[(A, B)] = {
     val len = Math.min(length, that.length)
     var i = 0
@@ -488,6 +816,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[(A, B)](array)
   }
 
+  /** alias of `unzip2` */
   def unzip[B, C](implicit e: A <:< Product2[B, C]): (IArray[B], IArray[C]) = {
     var i = 0
     val _1, _2 = new Array[AnyRef](self.length)
@@ -500,8 +829,20 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(_1), new IArray(_2))
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 1), ("b", 2)).unzip2
+   * res0: (IArray[String], IArray[Int]) = (IArray(a, b),IArray(1, 2))
+   * }}}
+   */
   def unzip2[B, C](implicit e: A <:< Product2[B, C]): (IArray[B], IArray[C]) = unzip[B, C]
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 1, true), ("b", 2, false)).unzip3
+   * res0: (IArray[String], IArray[Int], IArray[Boolean]) = (IArray(a, b),IArray(1, 2),IArray(true, false))
+   * }}}
+   */
   def unzip3[B, C, D](implicit e: A <:< Product3[B, C, D]): (IArray[B], IArray[C], IArray[D]) = {
     var i = 0
     val _1, _2, _3 = new Array[AnyRef](self.length)
@@ -515,6 +856,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(_1), new IArray(_2), new IArray(_3))
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 1, true, 'x), ("b", 2, false, 'y)).unzip4
+   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[Symbol]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray('x, 'y))
+   * }}}
+   */
   def unzip4[B, C, D, E](implicit e: A <:< Product4[B, C, D, E]): (IArray[B], IArray[C], IArray[D], IArray[E]) = {
     var i = 0
     val _1, _2, _3, _4 = new Array[AnyRef](self.length)
@@ -529,6 +876,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4))
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 1, true, 'x, 'f'), ("b", 2, false, 'y, 'g')).unzip5
+   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[Symbol], IArray[Char]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray('x, 'y),IArray(f, g))
+   * }}}
+   */
   def unzip5[B, C, D, E, F](implicit e: A <:< Product5[B, C, D, E, F]): (IArray[B], IArray[C], IArray[D], IArray[E], IArray[F]) = {
     var i = 0
     val _1, _2, _3, _4, _5 = new Array[AnyRef](self.length)
@@ -544,6 +897,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(_1), new IArray(_2), new IArray(_3), new IArray(_4), new IArray(_5))
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 1), ("b", 2)).firsts
+   * res0: IArray[String] = IArray(a, b)
+   * }}}
+   */
   def firsts[B, C](implicit e: A <:< Product2[B, C]): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
@@ -554,6 +913,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(("a", 10), ("b", 20)).seconds
+   * res0: IArray[Int] = IArray(10, 20)
+   * }}}
+   */
   def seconds[B, C](implicit e: A <:< Product2[B, C]): IArray[C] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
@@ -564,6 +929,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30, 40).reversed[List]
+   * res0: List[Int] = List(40, 30, 20, 10)
+   * }}}
+   */
   def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
     val buf = C()
     var i = self.length - 1
@@ -574,6 +945,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     buf.result
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30, 40).to[Vector]
+   * res0: Vector[Int] = Vector(10, 20, 30, 40)
+   * }}}
+   */
   def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
     val buf = C()
     var i = 0
@@ -584,6 +961,15 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     buf.result
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.OneAnd
+   * scala> IArray(10, 20, 30, 40).toOneAnd[Vector]
+   * res0: Option[OneAnd[Vector, Int]] = Some(OneAnd(10,Vector(20, 30, 40)))
+   * scala> IArray.empty[String].toOneAnd[Vector]
+   * res1: Option[OneAnd[Vector, String]] = None
+   * }}}
+   */
   def toOneAnd[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): Option[OneAnd[F, A]] =
     if(isEmpty){
       None
@@ -597,6 +983,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(OneAnd(self(0).asInstanceOf[A], buf.result))
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5).filter(_ % 3 != 1)
+   * res0: IArray[Int] = IArray(2, 3, 5)
+   * }}}
+   */
   def filter(f: A => Boolean): IArray[A] = {
     val buf = new ArrayBuilder.ofRef[AnyRef]
     var i = 0
@@ -609,9 +1001,21 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[A](buf.result)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5).withFilter(_ % 3 != 1).map(_ * 10)
+   * res0: IArray[Int] = IArray(20, 30, 50)
+   * }}}
+   */
   def withFilter(f: A => Boolean): WithFilter[A] =
     new WithFilter[A](self, f)
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).mapTo(_ * 10): List[Int]
+   * res0: List[Int] = List(10, 20, 30)
+   * }}}
+   */
   def mapTo[C, B](f: A => B)(implicit C: CanBuildFrom[Nothing, B, C]): C = {
     val buf = C()
     var i = 0
@@ -622,6 +1026,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     buf.result
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).map(_ * 10)
+   * res0: IArray[Int] = IArray(10, 20, 30)
+   * }}}
+   */
   def map[B](f: A => B): IArray[B] = {
     var i = 0
     val array = new Array[AnyRef](self.length)
@@ -632,6 +1042,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foreach[U](f: A => U): Unit = {
     var i = 0
     while(i < self.length){
@@ -640,6 +1056,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> val a = IArray(1, 2, 3, 4)
+   * scala> a.contains(3)
+   * res0: Boolean = true
+   * scala> a.contains(5)
+   * res1: Boolean = false
+   * }}}
+   */
   def contains(a: A)(implicit A: Equal[A]): Boolean = {
     var i = 0
     while(i < self.length){
@@ -651,6 +1077,17 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     false
   }
 
+  /**
+   * @example{{{
+   * scala> val a = IArray("a", "b", "c", "d", "e")
+   * scala> a.dropL(-1)
+   * res0: IArray[String] = IArray(a, b, c, d, e)
+   * scala> a.dropL(2)
+   * res1: IArray[String] = IArray(c, d, e)
+   * scala> a.dropL(6)
+   * res2: IArray[String] = IArray()
+   * }}}
+   */
   def dropL(n: Int): IArray[A] = {
     if(n <= 0){
       this
@@ -661,6 +1098,17 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> val a = IArray("a", "b", "c", "d", "e")
+   * scala> a.dropR(-1)
+   * res0: IArray[String] = IArray(a, b, c, d, e)
+   * scala> a.dropR(2)
+   * res1: IArray[String] = IArray(a, b, c)
+   * scala> a.dropR(6)
+   * res2: IArray[String] = IArray()
+   * }}}
+   */
   def dropR(n: Int): IArray[A] = {
     if(n <= 0){
       this
@@ -671,6 +1119,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> 100 +: IArray(1, 2, 3)
+   * res0: IArray[Int] = IArray(100, 1, 2, 3)
+   * }}}
+   */
   def +:(a: A): IArray[A] = {
     val array = new Array[AnyRef](self.length + 1)
     System.arraycopy(self, 0, array, 1, self.length)
@@ -678,6 +1132,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3) :+ 100
+   * res0: IArray[Int] = IArray(1, 2, 3, 100)
+   * }}}
+   */
   def :+(a: A): IArray[A] = {
     val array = new Array[AnyRef](self.length + 1)
     System.arraycopy(self, 0, array, 0, self.length)
@@ -685,6 +1145,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c") ++ IArray("x", "y")
+   * res0: IArray[String] = IArray(a, b, c, x, y)
+   * }}}
+   */
   def ++(that: IArray[A]): IArray[A] = {
     if(self.length == 0){
       that
@@ -700,6 +1166,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def cobind[B](f: IArray[A] => B): IArray[B] = {
     if(isEmpty) empty
     else{
@@ -714,6 +1186,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def cojoin: IArray[IArray[A]] = {
     if(isEmpty) empty
     else{
@@ -728,6 +1206,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def mapAccumL[S, B](z: S)(f: (S, A) => (S, B)): (S, IArray[B]) = {
     var i = 0
     val array = new Array[AnyRef](self.length)
@@ -741,6 +1225,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (acc, new IArray(array))
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def mapAccumR[S, B](z: S)(f: (S, A) => (S, B)): (S, IArray[B]) = {
     var i = self.length - 1
     val array = new Array[AnyRef](self.length)
@@ -754,6 +1244,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (acc, new IArray(array))
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2, 3, 4, 5).fold
+   * res0: Int = 15
+   * scala> import scalaz.std.string._
+   * scala> IArray("a", "bc", "d").fold
+   * res1: String = abcd
+   * }}}
+   */
   def fold(implicit A: Monoid[A]): A = {
     var i = 0
     var acc = A.zero
@@ -764,6 +1264,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.{\/, \/-, -\/}
+   * scala> import scalaz.std.string._, scalaz.std.anyVal._
+   * scala> IArray[Int \/ String](\/-("a"), -\/(1), -\/(2), \/-("b")).fold1Opt
+   * res0: Option[Int \/ String] = Some(-\/(3))
+   * scala> IArray.empty[Int \/ String].fold1Opt
+   * res1: Option[Int \/ String] = None
+   * }}}
+   */
   def fold1Opt(implicit A: Semigroup[A]): Option[A] =
     if(isEmpty){
       None
@@ -788,6 +1298,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldMap1Opt[B](f: A => B)(implicit B: Semigroup[B]): Option[B] =
     if(isEmpty){
       None
@@ -795,6 +1311,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(foldMap1(f))
     }
 
+  /**
+   * @example{{{
+   * scala> IArray("ab", "cde").flatMap(IArray.from(_))
+   * res0: IArray[Char] = IArray(a, b, c, d, e)
+   * }}}
+   */
   def flatMap[B](f: A => IArray[B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
@@ -821,6 +1343,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldMapR1Opt[B](z: A => B)(f: (A, B) => B): Option[B] =
     if(self.length == 0){
       None
@@ -828,6 +1356,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(foldMapR1(z)(f))
     }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldMapL1[B](z: A => B)(f: (B, A) => B): Option[B] =
     if(self.length == 0){
       None
@@ -841,6 +1375,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(acc)
     }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldl1(f: (A, A) => A): Option[A] =
     if(isEmpty) None
     else{
@@ -853,6 +1393,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(acc)
     }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldl[B](z: B)(f: (B, A) => B): B = {
     var i = 0
     var acc = z
@@ -863,6 +1409,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(123, 23, 9, 54).foldMap(_.toString.size)
+   * res0: Int = 8
+   * }}}
+   */
   def foldMap[B](f: A => B)(implicit B: Monoid[B]): B = {
     var i = 0
     var acc = B.zero
@@ -874,6 +1427,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldr[B](z: B)(f: (A, B) => B): B = {
     var i = self.length - 1
     var acc = z
@@ -884,6 +1443,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def foldr1(f: (A, A) => A): Option[A] =
     if(isEmpty) None
     else{
@@ -896,6 +1461,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(acc)
     }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def scanLeft[B](z: B)(f: (B, A) => B): IArray[B] = {
     val array = new Array[AnyRef](self.length + 1)
     array(0) = z.asInstanceOf[AnyRef]
@@ -908,6 +1479,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def scanRight[B](z: B)(f: (A, B) => B): IArray[B] = {
     val array = new Array[AnyRef](self.length + 1)
     array(self.length) = z.asInstanceOf[AnyRef]
@@ -920,6 +1497,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def scanLeft1(f: (A, A) => A): IArray[A] =
     if(self.length != 0){
       val array = new Array[AnyRef](self.length)
@@ -934,6 +1517,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       new IArray(array)
     }else empty
 
+  /**
+   * @example{{{
+   * scala>
+   * res0: =
+   * }}}
+   */
   def scanRight1(f: (A, A) => A): IArray[A] =
     if(self.length != 0){
       val array = new Array[AnyRef](self.length)
@@ -947,6 +1536,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       new IArray(array)
     }else empty
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2, 3, 4, 5) startsWith IArray(1, 2)
+   * res0: Boolean = true
+   * }}}
+   */
   def startsWith(that: IArray[A], offset: Int = 0)(implicit A: Equal[A]): Boolean = {
     require(offset >= 0, "offset = " + offset  + " is invalid. offset must be positive")
     var i = offset
@@ -960,6 +1556,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     j == thatLen
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2, 3, 4, 5) endsWith IArray(3, 4, 5)
+   * res0: Boolean = true
+   * }}}
+   */
   def endsWith(that: IArray[A])(implicit A: Equal[A]): Boolean = {
     var i = length - 1
     var j = that.length - 1
@@ -976,6 +1579,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(2, 8, 11, -2, 5, 6).span(_ % 2 == 0)
+   * res0: (IArray[Int], IArray[Int]) = (IArray(2, 8),IArray(11, -2, 5, 6))
+   * }}}
+   */
   def span(f: A => Boolean): (IArray[A], IArray[A]) = {
     val n = indexNot(f)
     if(n < 0){
@@ -987,6 +1596,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(2, 8, 11, -2, 5, 6).partition(_ % 2 == 0)
+   * res0: (IArray[Int], IArray[Int]) = (IArray(2, 8, -2, 6),IArray(11, 5))
+   * }}}
+   */
   def partition(f: A => Boolean): (IArray[A], IArray[A]) = {
     val l, r = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
@@ -1002,6 +1617,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     (new IArray(l.result), new IArray(r.result))
   }
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c", "d").updated(2, "z")
+   * res0: IArray[String] = IArray(a, b, z, d)
+   * }}}
+   */
   @throws[IndexOutOfBoundsException]
   def updated(index: Int, elem: A): IArray[A] = {
     val array = self.clone
@@ -1009,6 +1630,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray[Seq[Int]](Vector(1), List(2), Vector(3), List(4)).collectBy[Vector[Int]]
+   * res0: IArray[Vector[Int]] = IArray(Vector(1), Vector(3))
+   * }}}
+   */
   def collectBy[B](implicit B: reflect.ClassTag[B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
@@ -1021,6 +1648,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[B](builder.result)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).collect{ case i if i > 3 => i * 10 }
+   * res0: IArray[Int] = IArray(40, 50, 60, 70)
+   * }}}
+   */
   def collect[B](f: PartialFunction[A, B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     var i = 0
@@ -1032,6 +1665,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[B](builder.result)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4).reverseMap(_ * 3)
+   * res0: IArray[Int] = IArray(12, 9, 6, 3)
+   * }}}
+   */
   def reverseMap[B](f: A => B): IArray[B] = {
     val len = self.length
     val array = new Array[AnyRef](len)
@@ -1044,6 +1683,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).collectFirst{ case i if i > 3 => i * 10 }
+   * res0: Option[Int] = Some(40)
+   * }}}
+   */
   def collectFirst[B](f: PartialFunction[A, B]): Option[B] = {
     var i = 0
     val f0 = f.asInstanceOf[PartialFunction[AnyRef, B]]
@@ -1056,6 +1701,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4, 5, 6, 7).collectLast{ case i if i < 3 => i * 10 }
+   * res0: Option[Int] = Some(20)
+   * }}}
+   */
   def collectLast[B](f: PartialFunction[A, B]): Option[B] = {
     var i = self.length - 1
     val f0 = f.asInstanceOf[PartialFunction[AnyRef, B]]
@@ -1068,6 +1719,15 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(-1, 0, 1, 2, -1, 0, 1, 2).indexOfL(2)
+   * res0: Option[Int] = Some(3)
+   * scala> IArray(1, 2, 3, 1, 2, 3).indexOfL(5)
+   * res1: Option[Int] = None
+   * }}}
+   */
   def indexOfL(a: A)(implicit E: Equal[A]): Option[Int] = {
     var i = 0
     while(i < self.length){
@@ -1079,6 +1739,15 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2, 3, 1, 2, 3).indexOfR(1)
+   * res0: Option[Int] = Some(3)
+   * scala> IArray(1, 2, 3, 1, 2, 3).indexOfR(5)
+   * res1: Option[Int] = None
+   * }}}
+   */
   def indexOfR(a: A)(implicit E: Equal[A]): Option[Int] = {
     var i = self.length - 1
     while(0 <= i){
@@ -1090,6 +1759,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     None
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).sum
+   * res0: Int = 60
+   * }}}
+   */
   def sum(implicit A: Numeric[A]): A = {
     var i = 0
     var acc: A = A.zero
@@ -1100,12 +1775,33 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     acc
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.string._
+   * scala> IArray("y", "k", "f", "i", "t", "s").sorted
+   * res0: IArray[String] = IArray(f, i, k, s, t, y)
+   * }}}
+   */
   def sorted(implicit O: Order[A]): IArray[A] =
     sort0(O.toScalaOrdering)
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(2, 7, 4, 6, 1).sortWith(_ > _)
+   * res0: IArray[Int] = IArray(7, 6, 4, 2, 1)
+   * }}}
+   */
   def sortWith(f: (A, A) => Boolean): IArray[A] =
     sort0(comparatorFromFunction(f))
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray("aaaa", "bb", "ccccc", "d").sortBy(_.length)
+   * res0: IArray[String] = IArray(d, bb, aaaa, ccccc)
+   * }}}
+   */
   def sortBy[B](f: A => B)(implicit O: Order[B]): IArray[A] =
     sort0((O contramap f).toScalaOrdering)
 
@@ -1115,6 +1811,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> IArray(IArray(1, 2), IArray(3)).flatten
+   * res0: IArray[Int] = IArray(1, 2, 3)
+   * }}}
+   */
   def flatten[B](implicit A: A <:< IArray[B]): IArray[B] = {
     var i = 0
     var n = 0
@@ -1135,6 +1837,14 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray(array)
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.==>>
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2, 3, 4, 5).groupBy1(_ % 3).toList.sortBy(_._1)
+   * res0: List[(Int, IArray1[Int])] = List((0,IArray1(3)), (1,IArray1(1, 4)), (2,IArray1(2, 5)))
+   * }}}
+   */
   def groupBy1[B](f: A => B)(implicit O: Order[B]): B ==>> IArray1[A] =
     foldl(==>>.empty[B, OneAnd[List, A]]) { (m, a) =>
       m.alter(f(a), {
@@ -1186,6 +1896,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     new IArray[A](array)
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.list._
+   * scala> IArray(List("a"), List("b", "c"), Nil, List("d")).intercalate(List("z"))
+   * res0: List[String] = List(a, z, b, c, z, z, d)
+   * }}}
+   */
   def intercalate(a: A)(implicit A: Monoid[A]): A =
     if(isEmpty){
       A.zero
@@ -1199,6 +1916,15 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       acc
     }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.list._
+   * scala> IArray(List("a"), List("b", "c"), Nil, List("d")).intercalate1Opt(List("z"))
+   * res0: Option[List[String]] = Some(List(a, z, b, c, z, z, d))
+   * scala> IArray.empty[List[Int]].intercalate1Opt(List(7))
+   * res1: Option[List[Int]] = None
+   * }}}
+   */
   def intercalate1Opt(a: A)(implicit A: Semigroup[A]): Option[A] =
     if(isEmpty){
       None
@@ -1212,6 +1938,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       Some(acc)
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3, 4).intersperse(0)
+   * res0: IArray[Int] = IArray(1, 0, 2, 0, 3, 0, 4)
+   * }}}
+   */
   def intersperse(a: A): IArray[A] =
     if(isEmpty){
       empty
@@ -1226,15 +1958,39 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       new IArray(array)
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).toString
+   * res0: String = IArray(1, 2, 3)
+   * }}}
+   */
   override def toString: String =
     mkString("IArray(",", ",")")
 
+  /**
+   * @example{{{
+   * scala> IArray("a", "b", "c").mkString("_")
+   * res0: String = a_b_c
+   * }}}
+   */
   def mkString(sep: String = ""): String =
     mkString("", sep, "")
 
+  /**
+   * @example{{{
+   * scala> IArray(1, 2, 3).mkString("[", ",", "]")
+   * res0: String = [1,2,3]
+   * }}}
+   */
   def mkString(start: String, sep: String, end: String): String =
     addString(new StringBuilder(), start, sep, end).toString
 
+  /**
+   * @example{{{
+   * scala> IArray("x", "y", "z").addString(new StringBuilder("aaa"), "c", "d", "e").toString
+   * res0: String = aaacxdydze
+   * }}}
+   */
   def addString(b: StringBuilder, start: String, sep: String, end: String): StringBuilder = {
     b append start
 
@@ -1252,6 +2008,13 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     }
   }
 
+  /**
+   * @example{{{
+   * scala> import scalaz.std.anyVal._
+   * scala> IArray(1, 2) === IArray(1, 2)
+   * res0: Boolean = true
+   * }}}
+   */
   def ===(that: IArray[A])(implicit A: Equal[A]): Boolean =
     (self.length == that.length) && {
       var i = 0
@@ -1264,6 +2027,12 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       true
     }
 
+  /**
+   * @example{{{
+   * scala> IArray(List(1)).widen[Seq[Int]]
+   * res0: IArray[Seq[Int]] = IArray(List(1))
+   * }}}
+   */
   def widen[B](implicit ev: A <:< B): IArray[B] =
     this.asInstanceOf[IArray[B]]
 
