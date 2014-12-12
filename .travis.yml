@@ -11,6 +11,8 @@ jdk:
   - oraclejdk8
 
 script:
+  - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
+  - git show --oneline --check
   - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk7) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
   - sbt $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "" ; else echo "-Ddisable_sxr"; fi) ++${TRAVIS_SCALA_VERSION} test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
 
@@ -18,4 +20,3 @@ env:
   global:
     - secure: "oFGpGBnIhBaqg2pbEpUtgULqzEQAjF2FCeZuPl2dPjYgPSA3vgtapueUa7JiiPEdJOjq6SNqifj92GMSUdemnzTdj4e1GAkFNmPzZyUcDnH8FtOiLJYp/HKQ1X9rvy1TmTa/1xWsBkwwvBjOoMGn07ltmbgGcZ7UTwvviLJIiSc="
     - secure: "REndpJMxzGTv3DJuDPsyifI9Cic8spwzCm1UHXHD4kJXinFdROObsXgyjeY475tdeU7W827hGlRFpo2rFPgePlIOz4mXvS9hU5zbFzj7QWUHpJXvttuHm3O9KFkk8nnHJZXt9IuflBumDZ7iBLM6XgnQ9XqZ80XW347ihvN3+R0="
-
