@@ -1160,6 +1160,32 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
       }
     }
 
+  def interleave(that: IArray[A]): IArray[A] = {
+    val len = Math.min(self.length, that.self.length)
+    val array = new Array[AnyRef](self.length + that.self.length)
+    @tailrec def loop(isThis: Boolean, i: Int): Unit = {
+      if(i < len) {
+        if (isThis) {
+          array(i * 2) = self(i)
+          loop(false, i)
+        } else {
+          array(i * 2 + 1) = that.self(i)
+          loop(true, i + 1)
+        }
+      }
+    }
+    loop(true, 0)
+    def cp(min: Array[AnyRef], max: Array[AnyRef]): Unit = {
+      System.arraycopy(max, min.length, array, len * 2, max.length - min.length)
+    }
+    if(self.length > that.length) {
+      cp(that.self, self)
+    }else if(self.length < that.length){
+      cp(self, that.self)
+    }
+    new IArray[A](array)
+  }
+
   def intercalate(a: A)(implicit A: Monoid[A]): A =
     if(isEmpty){
       A.zero

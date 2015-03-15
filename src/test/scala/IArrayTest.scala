@@ -609,6 +609,13 @@ object IArrayTest extends TestCommon{
     }
   }
 
+  property("interleave") = forAll{ (xs: IArray[Int], ys: IArray[Int]) =>
+    import std.stream._
+    val z = xs.interleave(ys)
+    z.length must_=== (xs.length + ys.length)
+    std.stream.interleave(xs.to[Stream], ys.to[Stream]) must_=== z.to[Stream]
+  }
+
   property("intersperse") = forAll{ xs: IArray[Alpha] =>
     import syntax.std.list._
     xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
