@@ -1,14 +1,12 @@
 package iarray
 
-import scalaz._
+import scala.reflect.ClassTag
+import scalaz.{Alpha => _, _}
+import scalaprops._
 import Isomorphism._
-import org.scalacheck.{Gen, Arbitrary}
-import scalaz.scalacheck.ScalaCheckBinding._
-import scalaz.scalacheck.ScalazArbitrary._
 import std.list._, std.anyVal._
 
-trait TestCommon extends SpecLite {
-
+trait TestCommon extends Scalaprops {
   sealed trait AlphaTag
   type Alpha = String @@ AlphaTag
 
@@ -17,18 +15,9 @@ trait TestCommon extends SpecLite {
     implicit val s: Show[A] = Show.showA[A]
   }
 
-  implicit val alpha: Arbitrary[Alpha] = Tag.subst(Arbitrary(Gen.alphaStr))
   implicit val alphaShow: Show[Alpha] = Show.showA
   implicit val alphaOrd: Order[Alpha] = Order.orderBy(a => Tag.unwrap(a).toList)
   implicit val alphaOrdering = alphaOrd.toScalaOrdering
-
-  implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =
-    Functor[Arbitrary].map(implicitly[Arbitrary[List[A]]])(IArray.fromList[A])
-
-  implicit def iarray1arb[A: Arbitrary]: Arbitrary[IArray1[A]] =
-    Functor[Arbitrary].map(
-      implicitly[Arbitrary[NonEmptyList[A]]]
-    )(a => IArray1(a.head, a.tail.to[IArray]))
 
   val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
     new IsoFunctorTemplate[({type λ[α] = Throwable \/ α})#λ, scala.util.Try] {
@@ -42,9 +31,60 @@ trait TestCommon extends SpecLite {
       }
     }
 
-  implicit def tryArb[A: Arbitrary]: Arbitrary[scala.util.Try[A]] =
-    Functor[Arbitrary].map(
-      implicitly[Arbitrary[Throwable \/ A]]
-    )(tryEitherIso.to(_))
-}
+  final implicit val alphaGen: scalaprops.Gen[Alpha] =
+    Tag.subst(scalaprops.Gen.genAsciiString)
 
+  final implicit def iarrayGen[A: Gen]: Gen[IArray[A]] =
+    Gen[List[A]].map(IArray.fromList)
+
+  final implicit def iarrayCogen[A: Cogen]: Cogen[IArray[A]] =
+    Cogen[List[A]].contramap(_.toList)
+
+  final implicit def iarray1Gen[A: Gen]: Gen[IArray1[A]] =
+    Gen[NonEmptyList[A]].map(IArray1.fromNel)
+
+  final implicit def iarray1Cogen[A: Cogen]: Cogen[IArray1[A]] =
+    Cogen[NonEmptyList[A]].contramap(_.toNel)
+
+  final implicit def iarrayShrink[A: Shrink]: Shrink[IArray[A]] =
+    Shrink[List[A]].xmap(IArray.fromList, _.toList)
+
+  final implicit val genString: Gen[String] =
+    scalaprops.Gen.genAsciiString.mapSize(_ / 4)
+
+  implicit class AnyOps[A](actual: => A) {
+    def must_===(expected: A)(implicit S: Show[A], A: Equal[A]): Boolean = {
+      val act = actual
+      def test = A.equal(expected, act)
+      if (!test) {
+        sys.error(s"${S.show(act)} !== ${S.shows(expected)}")
+      }
+      test
+    }
+
+    def mustThrowA[T <: Throwable](implicit man: ClassTag[T]): Boolean = {
+      val erasedClass = man.runtimeClass
+      try {
+        actual
+        sys.error("no exception thrown, expected " + erasedClass)
+      } catch {
+        case ex: Throwable =>
+          if (!erasedClass.isInstance(ex)) {
+            sys.error("wrong exception thrown, expected: " + erasedClass + " got: " + ex)
+          } else {
+            true
+          }
+      }
+    }
+
+  }
+
+  final implicit val throwableGen: Gen[Throwable] =
+    Gen.oneOf(
+      Gen.value(new Throwable),
+      Gen[String].map(new Throwable(_))
+    )
+
+  final implicit def tryGen[A: Gen]: Gen[scala.util.Try[A]] =
+    Gen[Throwable \/ A].map(tryEitherIso.to(_))
+}
