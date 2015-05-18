@@ -7,6 +7,22 @@ import collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions{
 
+  /**
+   * @example{{{
+   * scala> import scalaz._, std.anyVal._
+   * scala> val S = Show[IArray[Int]]
+   * scala> S.show(IArray(1, 2, 3))
+   * res0: Cord = IArray(1, 2, 3)
+   * scala> S.shows(IArray(1, 2, 3))
+   * res1: String = IArray(1, 2, 3)
+   * }}}
+   */
+  implicit final def iarrayShow[A](implicit A: Show[A]): Show[IArray[A]] =
+    new Show[IArray[A]] {
+      override def shows(a: IArray[A]) =
+        a.toIterator.map(A.shows).mkString("IArray(", ", ", ")")
+    }
+
   private[this] val _conform: AnyRef => AnyRef =
     x => x
   @inline private[iarray] final def conform[A]: A => A =
