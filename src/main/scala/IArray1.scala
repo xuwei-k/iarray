@@ -74,7 +74,7 @@ object IArray1 {
 
 /** Non empty immutable array
  */
-final case class IArray1[A](head: A, tail: IArray[A]) {
+final case class IArray1[A](head: A, tail: IArray[A]) { self =>
 
   def partition(f: A => Boolean): (IArray[A], IArray[A]) = {
     val l, r = new ArrayBuilder.ofRef[AnyRef]()
@@ -380,7 +380,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) {
 
   def toIterator: Iterator[A] = new Iterator[A] {
     private[this] var i = 0
-    def hasNext: Boolean = i < length
+    def hasNext: Boolean = i < self.length
     def next(): A = {
       val n = apply(i)
       i += 1
