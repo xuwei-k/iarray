@@ -10,6 +10,22 @@ object IArray1 {
 
   implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
 
+  /**
+   * @example{{{
+   * scala> import scalaz._, std.anyVal._
+   * scala> val S = Show[IArray1[Int]]
+   * scala> S.show(IArray1(1, 2, 3))
+   * res0: Cord = IArray1(1, 2, 3)
+   * scala> S.shows(IArray1(1, 2, 3))
+   * res1: String = IArray1(1, 2, 3)
+   * }}}
+   */
+  implicit def iarray1Show[A](implicit A: Show[A]): Show[IArray1[A]] =
+    new Show[IArray1[A]] {
+      override def shows(a: IArray1[A]) =
+        a.toIterator.map(A.shows).mkString("IArray1(", ", ", ")")
+    }
+
   val zipApply: Apply[IArray1] = IArray1ZipApply
 
   implicit def iarray1Equal[A: Equal]: Equal[IArray1[A]] =
