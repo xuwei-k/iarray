@@ -25,16 +25,10 @@ trait TestCommon extends SpecLite {
   implicit def arb[A: Arbitrary]: Arbitrary[IArray[A]] =
     Functor[Arbitrary].map(implicitly[Arbitrary[List[A]]])(IArray.fromList[A])
 
-  implicit def iarrayShow[A: Show]: Show[IArray[A]] =
-    Show.showA
-
   implicit def iarray1arb[A: Arbitrary]: Arbitrary[IArray1[A]] =
     Functor[Arbitrary].map(
       implicitly[Arbitrary[NonEmptyList[A]]]
     )(a => IArray1(a.head, a.tail.to[IArray]))
-
-  implicit def iarray1Show[A: Show]: Show[IArray1[A]] =
-    Show.showA
 
   val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
     new IsoFunctorTemplate[({type λ[α] = Throwable \/ α})#λ, scala.util.Try] {
