@@ -52,17 +52,29 @@ private[iarray] abstract class IArrayFunctions{
     kleisli.oneAnd.asInstanceOf[Kleisli[Option, IArray[A], OneAnd[IArray, A]]]
   def headOptionK[A]: Kleisli[Option, IArray[A], A] =
     kleisli.headOption.asInstanceOf[Kleisli[Option, IArray[A], A]]
+  def headMaybeK[A]: Kleisli[Maybe, IArray[A], A] =
+    kleisli.headMaybe.asInstanceOf[Kleisli[Maybe, IArray[A], A]]
   def lastOptionK[A]: Kleisli[Option, IArray[A], A] =
     kleisli.lastOption.asInstanceOf[Kleisli[Option, IArray[A], A]]
+  def lastMaybeK[A]: Kleisli[Maybe, IArray[A], A] =
+    kleisli.lastMaybe.asInstanceOf[Kleisli[Maybe, IArray[A], A]]
   def tailOptionK[A]: Kleisli[Option, IArray[A], IArray[A]] =
     kleisli.tailOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
+  def tailMaybeK[A]: Kleisli[Maybe, IArray[A], IArray[A]] =
+    kleisli.tailMaybe.asInstanceOf[Kleisli[Maybe, IArray[A], IArray[A]]]
   def initOptionK[A]: Kleisli[Option, IArray[A], IArray[A]] =
     kleisli.initOption.asInstanceOf[Kleisli[Option, IArray[A], IArray[A]]]
+  def initMaybeK[A]: Kleisli[Maybe, IArray[A], IArray[A]] =
+    kleisli.initMaybe.asInstanceOf[Kleisli[Maybe, IArray[A], IArray[A]]]
 
   def tailOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
     kleisli.tailOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
+  def tailMaybeEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Maybe, α, β]})#λ, IArray[A]] =
+    kleisli.tailMaybeEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Maybe, α, β]})#λ, IArray[A]]]
   def initOptionEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]] =
     kleisli.initOptionEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Option, α, β]})#λ, IArray[A]]]
+  def initMaybeEndo[A]: Endomorphic[({type λ[α, β] = Kleisli[Maybe, α, β]})#λ, IArray[A]] =
+    kleisli.initMaybeEndo.asInstanceOf[Endomorphic[({type λ[α, β] = Kleisli[Maybe, α, β]})#λ, IArray[A]]]
 
   private[iarray] def byName2[A, B, C](f: (A, => B) => C): (A, B) => C = (a, b) => f(a, b)
 
