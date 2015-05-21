@@ -479,6 +479,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     if(isEmpty) None
     else Some(this(0))
 
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).headMaybe
+   * res0: scalaz.Maybe[Int] = Just(10)
+   * }}}
+   */
+  def headMaybe: Maybe[A] =
+    if(isEmpty) Maybe.empty[A]
+    else Maybe.Just(this(0))
+
   @inline private[iarray] def unsafeLast: A =
     self(self.length - 1).asInstanceOf[A]
 
@@ -494,6 +504,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
 
   /**
    * @example{{{
+   * scala> IArray(10, 20, 30).lastMaybe
+   * res0: scalaz.Maybe[Int] = Just(30)
+   * }}}
+   */
+  def lastMaybe: Maybe[A] =
+    if(isEmpty) Maybe.empty[A]
+    else Maybe.Just(this(length - 1))
+
+  /**
+   * @example{{{
    * scala> IArray(10, 20, 30).tailOption
    * res0: Option[IArray[Int]] = Some(IArray(20, 30))
    * }}}
@@ -504,6 +524,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
 
   /**
    * @example{{{
+   * scala> IArray(10, 20, 30).tailMaybe
+   * res0: scalaz.Maybe[IArray[Int]] = Just(IArray(20, 30))
+   * }}}
+   */
+  def tailMaybe: Maybe[IArray[A]] =
+    if(isEmpty) Maybe.empty[IArray[A]]
+    else Maybe.Just(dropL(1))
+
+  /**
+   * @example{{{
    * scala> IArray(10, 20, 30).initOption
    * res0: Option[IArray[Int]] = Some(IArray(10, 20))
    * }}}
@@ -511,6 +541,16 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
   def initOption: Option[IArray[A]] =
     if(isEmpty) None
     else Some(dropR(1))
+
+  /**
+   * @example{{{
+   * scala> IArray(10, 20, 30).initMaybe
+   * res0: scalaz.Maybe[IArray[Int]] = Just(IArray(10, 20))
+   * }}}
+   */
+  def initMaybe: Maybe[IArray[A]] =
+    if(isEmpty) Maybe.empty[IArray[A]]
+    else Maybe.Just(dropR(1))
 
   /**
    * @example{{{
