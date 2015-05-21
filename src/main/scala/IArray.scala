@@ -554,6 +554,11 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
 
   /**
    * @example{{{
+   * scala> val array = IArray("a", "b", "c", "d", "e", "f")
+   * scala> array.slice(1, 3)
+   * res0: IArray[String] = IArray(b, c)
+   * scala> array.slice(4, 17)
+   * res1: IArray[String] = IArray(e, f)
    * }}}
    */
   def slice(from: Int, until: Int): IArray[A] = {
