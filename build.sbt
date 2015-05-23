@@ -1,6 +1,8 @@
-scalaVersion := "2.11.6"
+val Scala211 = "2.11.6"
 
-crossScalaVersions := scalaVersion.value :: "2.10.5" :: Nil
+scalaVersion := Scala211
+
+crossScalaVersions := Scala211 :: "2.10.5" :: Nil
 
 incOptions := incOptions.value.withNameHashing(true)
 
