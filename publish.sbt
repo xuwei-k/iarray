@@ -5,7 +5,7 @@ import xerial.sbt.Sonatype
 
 releaseSettings
 
-sonatypeSettings
+Sonatype.sonatypeRootSettings
 
 val sonatypeURL =
 "https://oss.sonatype.org/service/local/repositories/"
