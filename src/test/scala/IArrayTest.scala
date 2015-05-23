@@ -532,12 +532,24 @@ object IArrayTest extends TestCommon{
     )
   }
 
+  val tailMaybe = forAll { a: IArray[Int] =>
+    a.tailMaybe.toOption must_=== a.tailOption
+  }
+
   val headOption = forAll { a: IArray[Int] =>
     a.headOption must_=== a.toList.headOption
   }
 
+  val headMaybe = forAll { a: IArray[Int] =>
+    a.headMaybe must_=== a.toIList.headMaybe
+  }
+
   val lastOption = forAll { a: IArray[Int] =>
     a.lastOption must_=== a.toList.lastOption
+  }
+
+  val lastMaybe = forAll { a: IArray[Int] =>
+    a.lastMaybe must_=== Maybe.fromOption(a.lastOption)
   }
 
   val initOption = forAll { a: IArray[Int] =>
@@ -545,6 +557,10 @@ object IArrayTest extends TestCommon{
       if(a.isEmpty) None
       else Some(a.toList.init)
     )
+  }
+
+  val initMaybe = forAll { a: IArray[Int] =>
+    a.initMaybe.toOption must_=== a.initOption
   }
 
   val sum = forAll { a: IArray[Int] =>
