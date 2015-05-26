@@ -1,7 +1,3 @@
-testFrameworks += new TestFramework("scalaprops.ScalapropsFramework")
+scalapropsWithScalazlaws
 
-parallelExecution in Test := false
-
-val v = "0.1.5"
-libraryDependencies += "com.github.scalaprops" %% "scalaprops" % v % "test"
-libraryDependencies += "com.github.scalaprops" %% "scalaprops-scalazlaws" % v % "test"
+scalapropsVersion := "0.1.5"
