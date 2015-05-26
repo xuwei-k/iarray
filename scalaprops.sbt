@@ -2,6 +2,6 @@ testFrameworks += new TestFramework("scalaprops.ScalapropsFramework")
 
 parallelExecution in Test := false
 
-val v = "0.1.4"
-libraryDependencies += "com.github.xuwei-k" %% "scalaprops" % v % "test"
-libraryDependencies += "com.github.xuwei-k" %% "scalaprops-scalazlaws" % v % "test"
+val v = "0.1.5"
+libraryDependencies += "com.github.scalaprops" %% "scalaprops" % v % "test"
+libraryDependencies += "com.github.scalaprops" %% "scalaprops-scalazlaws" % v % "test"

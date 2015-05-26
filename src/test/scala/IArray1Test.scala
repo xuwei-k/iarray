@@ -1,8 +1,9 @@
 package iarray
 
 import scalaprops._
+import scalaprops.GenTags.AlphaNum
 import scalaprops.Property.forAll
-import scalaz.{Alpha => _, _}
+import scalaz._
 import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.vector._
 import IArray.conform
 
@@ -120,7 +121,7 @@ object IArray1Test extends TestCommon {
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
-  val `toArray String` = forAll{ (a: Alpha, as: Array[Alpha]) =>
+  val `toArray String` = forAll{ (a: String @@ AlphaNum, as: Array[String @@ AlphaNum]) =>
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
@@ -181,12 +182,12 @@ object IArray1Test extends TestCommon {
     as.indexOfR(a) must_=== toOpt(as.toList.lastIndexOf(a))
   }
 
-  val intersperse = forAll{ xs: IArray1[Alpha] =>
+  val intersperse = forAll{ xs: IArray1[String @@ AlphaNum] =>
     import syntax.std.list._
     xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
   }
 
-  val intercalate1 = forAll { xs: IArray1[Alpha] =>
+  val intercalate1 = forAll { xs: IArray1[String @@ AlphaNum] =>
     val xs0: IArray1[String] = Tag.unsubst(xs)
     xs0.intercalate1(",") must_=== Foldable[NonEmptyList].intercalate(xs0.toNel, ",")
   }

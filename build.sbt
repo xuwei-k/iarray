@@ -61,7 +61,7 @@ val scalazV = "7.1.2"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
-  "org.scalacheck" %% "scalacheck" % "1.12.3" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.12.2" % "test"
 )
 
 val valueClasses = Seq("IArray.scala", "WithIndex.scala")

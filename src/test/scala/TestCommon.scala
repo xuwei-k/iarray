@@ -1,22 +1,20 @@
 package iarray
 
 import scala.reflect.ClassTag
-import scalaz.{Alpha => _, _}
+import scalaz._
 import scalaprops._
 import Isomorphism._
 import std.list._, std.anyVal._
+import scalaprops.GenTags.AlphaNum
 
 trait TestCommon extends Scalaprops {
-  sealed trait AlphaTag
-  type Alpha = String @@ AlphaTag
-
   trait ShowAndEq[A] {
     implicit val e: Equal[A] = Equal.equalA[A]
     implicit val s: Show[A] = Show.showA[A]
   }
 
-  implicit val alphaShow: Show[Alpha] = Show.showA
-  implicit val alphaOrd: Order[Alpha] = Order.orderBy(a => Tag.unwrap(a).toList)
+  implicit val alphaShow: Show[String @@ AlphaNum] = Show.showA
+  implicit val alphaOrd: Order[String @@ AlphaNum] = Order.orderBy(a => Tag.unwrap(a).toList)
   implicit val alphaOrdering = alphaOrd.toScalaOrdering
 
   val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
@@ -30,9 +28,6 @@ trait TestCommon extends Scalaprops {
         case -\/(e) => scala.util.Failure(e)
       }
     }
-
-  final implicit val alphaGen: scalaprops.Gen[Alpha] =
-    Tag.subst(scalaprops.Gen.genAsciiString)
 
   final implicit def iarrayGen[A: Gen]: Gen[IArray[A]] =
     Gen[List[A]].map(IArray.fromList)
@@ -50,7 +45,7 @@ trait TestCommon extends Scalaprops {
     Shrink[List[A]].xmap(IArray.fromList, _.toList)
 
   final implicit val genString: Gen[String] =
-    scalaprops.Gen.genAsciiString.mapSize(_ / 4)
+    scalaprops.Gen.asciiString.mapSize(_ / 4)
 
   implicit class AnyOps[A](actual: => A) {
     def must_===(expected: A)(implicit S: Show[A], A: Equal[A]): Boolean = {
