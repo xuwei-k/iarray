@@ -1,3 +1,3 @@
 scalapropsWithScalazlaws
 
-scalapropsVersion := "0.1.8"
+scalapropsVersion := "0.1.9"
