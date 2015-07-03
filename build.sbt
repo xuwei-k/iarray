@@ -1,4 +1,4 @@
-val Scala211 = "2.11.6"
+val Scala211 = "2.11.7"
 
 scalaVersion := Scala211
 
