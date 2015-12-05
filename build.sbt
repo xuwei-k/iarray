@@ -4,7 +4,7 @@ scalaVersion := Scala211
 
 crossScalaVersions := Scala211 :: "2.10.6" :: Nil
 
-incOptions := incOptions.value.withNameHashing(true)
+fullResolvers ~= {_.filterNot(_.name == "jcenter")}
 
 name := "iarray"
 
