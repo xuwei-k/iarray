@@ -73,11 +73,11 @@ object IArrayTest extends TestCommon{
 
   val `oneAnd toOneAnd` = forAll { a: IArray[Byte] =>
     a.oneAnd must_=== a.toNel.map{ nel =>
-      OneAnd(nel.head, IArray.from(nel.tail))
+      OneAnd(nel.head, IArray.fromIList(nel.tail))
     }
     a.toOneAnd[IArray] must_=== a.oneAnd
     a.toOneAnd[List].map{
-      case OneAnd(h, t) => NonEmptyList.nel(h, t)
+      case OneAnd(h, t) => NonEmptyList.nel(h, IList.fromList(t))
     } must_=== a.toNel
   }
 

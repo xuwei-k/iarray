@@ -40,7 +40,7 @@ object IArray1 {
   @inline def singleF[A]: A => IArray1[A] = _single.asInstanceOf[A => IArray1[A]]
 
   def fromNel[A](nel: NonEmptyList[A]): IArray1[A] =
-    IArray1(nel.head, IArray.fromList(nel.tail))
+    IArray1(nel.head, IArray.fromIList(nel.tail))
 
   def fromOneAnd[F[_], A](a: OneAnd[F, A])(implicit F: Foldable[F]): IArray1[A] =
     IArray1(a.head, F.to[A, IArray](a.tail))
@@ -373,7 +373,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     else O.min(f(head), tail.unsafeMinOf(f))
 
   def toNel: NonEmptyList[A] =
-    NonEmptyList.nel(head, tail.toList)
+    NonEmptyList.nel(head, tail.toIList)
 
   def toList: List[A] =
     head :: tail.toList

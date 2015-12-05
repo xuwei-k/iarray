@@ -357,7 +357,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
    * @example{{{
    * scala> import scalaz.NonEmptyList
    * scala> IArray(1, 2, 3).toNel
-   * res0: Option[NonEmptyList[Int]] = Some(NonEmptyList(1, 2, 3))
+   * res0: Option[NonEmptyList[Int]] = Some(NonEmpty[1,2,3])
    *
    * scala> IArray[Int]().toNel
    * res1: Option[NonEmptyList[Int]] = None
@@ -367,7 +367,7 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
     if(isEmpty)
       None
     else
-      Some(NonEmptyList.nel(self(0).asInstanceOf[A], toList.tail))
+      Some(NonEmptyList.nel(self(0).asInstanceOf[A], toIList.tailOption.get))
 
   /**
    * @example{{{

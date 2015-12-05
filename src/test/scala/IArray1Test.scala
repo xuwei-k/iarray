@@ -133,7 +133,7 @@ object IArray1Test extends TestCommon {
   val to = forAll{ as: IArray1[Int] =>
     import syntax.id._
     as.to[List] must_=== as.toList
-    (as.toOneAnd[List] |> { x => NonEmptyList.nel(x.head, x.tail) }) must_=== as.toNel
+    (as.toOneAnd[List] |> { x => NonEmptyList.nel(x.head, IList.fromList(x.tail)) }) must_=== as.toNel
   }
 
   val init = forAll{ as: IArray1[Int] =>

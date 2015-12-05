@@ -317,6 +317,18 @@ private[iarray] abstract class IArrayFunctions{
     new IArray(array)
   }
 
+  final def fromIList[A](xs: IList[A]): IArray[A] = {
+    val array = new Array[AnyRef](xs.length)
+    @tailrec def loop(list: IList[A], i: Int): Unit = list match {
+      case ICons(h, t) =>
+        array(i) = h.asInstanceOf[AnyRef]
+        loop(t, i + 1)
+      case _ =>
+    }
+    loop(xs, 0)
+    new IArray(array)
+  }
+
   final def fromIndexedSeq[A](xs: IndexedSeq[A]): IArray[A] = {
     val len = xs.size
     val array = new Array[AnyRef](len)
