@@ -1,3 +1,3 @@
-doctestGenSettings
+enablePlugins(DoctestPlugin)
 
 doctestWithDependencies := false
