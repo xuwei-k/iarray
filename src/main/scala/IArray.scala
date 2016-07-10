@@ -1832,7 +1832,6 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
 
   /**
    * @example{{{
-   * scala> import scalaz.std.anyVal._
    * scala> IArray(2, 7, 4, 6, 1).sortWith(_ > _)
    * res0: IArray[Int] = IArray(7, 6, 4, 2, 1)
    * }}}
@@ -1884,7 +1883,6 @@ final class IArray[A] private[iarray](private[iarray] val self: Array[AnyRef]) e
 
   /**
    * @example{{{
-   * scala> import scalaz.==>>
    * scala> import scalaz.std.anyVal._
    * scala> IArray(1, 2, 3, 4, 5).groupBy1(_ % 3).toList.sortBy(_._1)
    * res0: List[(Int, IArray1[Int])] = List((0,IArray1(3)), (1,IArray1(1, 4)), (2,IArray1(2, 5)))

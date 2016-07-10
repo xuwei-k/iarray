@@ -1,6 +1,5 @@
 package iarray
 
-import scalaprops._
 import scalaprops.GenTags.AlphaNum
 import scalaprops.Property.forAll
 import scalaz._
