@@ -90,9 +90,7 @@ showDoc in Compile <<= (doc in Compile, target in doc in Compile) map { (_, out)
   java.awt.Desktop.getDesktop.open(out / "index.html")
 }
 
-buildInfoSettings
-
-sourceGenerators in Compile <+= buildInfo
+enablePlugins(BuildInfoPlugin)
 
 buildInfoKeys := Seq[BuildInfoKey](
   organization,
