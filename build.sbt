@@ -46,6 +46,19 @@ pomExtra := (
 
 licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
+val unusedWarnings = (
+  "-Ywarn-unused-import" ::
+  Nil
+)
+
+scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
+  case Some((2, v)) if v >= 11 => unusedWarnings
+}.toList.flatten
+
+Seq(Compile, Test).flatMap(c =>
+  scalacOptions in (c, console) ~= {_.filterNot(unusedWarnings.toSet)}
+)
+
 scalacOptions ++= (
   "-deprecation" ::
   "-unchecked" ::
