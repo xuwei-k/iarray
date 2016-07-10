@@ -1,27 +1,55 @@
+val enableSxr = SettingKey[Boolean]("enableSxr")
 val packageSxr = TaskKey[File]("packageSxr")
 
-def sxrSettings(c: Configuration): Seq[Def.Setting[_]] = {
-  val disableSxr = sys.props.isDefinedAt("disable_sxr")
-  println("disable_sxr = " + disableSxr)
-  if(disableSxr){
-    Nil
-  }else{
-    Defaults.packageTaskSettings(
-      packageSxr in c, (crossTarget in c).map{ dir =>
-        Path.allSubpaths(dir / "classes.sxr").toSeq
-      }
-    ) ++ Seq[Def.Setting[_]](
-      resolvers += "bintray/paulp" at "https://dl.bintray.com/paulp/maven",
-      addCompilerPlugin("org.improving" %% "sxr" % "1.0.1"),
-      packageSxr in c <<= (packageSxr in c).dependsOn(compile in c),
-      packagedArtifacts <++= Classpaths.packaged(Seq(packageSxr in c)),
-      artifacts <++= Classpaths.artifactDefs(Seq(packageSxr in c)),
-      artifactClassifier in packageSxr := Some("sxr"),
-      scalacOptions in c <+= scalaSource in c map {
-        "-P:sxr:base-directory:" + _.getAbsolutePath
-      }
-    )
+def ifSxrAvailable[A](key: SettingKey[A], value: Def.Initialize[A]): Setting[A] =
+  key <<= (key, enableSxr, value){ (k, enable, vv) =>
+    if (enable) {
+      vv
+    } else {
+      k
+    }
   }
+
+def ifSxrAvailable[A](key: TaskKey[A], value: Def.Initialize[Task[A]]): Setting[Task[A]] =
+  key := {
+    if (enableSxr.value) {
+      value.value
+    } else {
+      key.value
+    }
+  }
+
+enableSxr := {
+  !sys.props.isDefinedAt("disable_sxr") && !scalaVersion.value.startsWith("2.12")
 }
 
-sxrSettings(Compile)
+Defaults.packageTaskSettings(
+  packageSxr in Compile, (crossTarget in Compile).map{ dir =>
+    Path.allSubpaths(dir / "classes.sxr").toSeq
+  }
+)
+
+ifSxrAvailable(
+  resolvers,
+  Def.setting(resolvers.value :+ ("bintray/paulp" at "https://dl.bintray.com/paulp/maven"))
+)
+
+ifSxrAvailable(
+  libraryDependencies,
+  Def.setting(libraryDependencies.value :+ compilerPlugin("org.improving" %% "sxr" % "1.0.1"))
+)
+
+ifSxrAvailable(
+  packagedArtifacts,
+  Def.task(packagedArtifacts.value ++ Classpaths.packaged(Seq(packageSxr in Compile)).value)
+)
+
+ifSxrAvailable(
+  artifacts,
+  Def.setting(artifacts.value ++ Classpaths.artifactDefs(Seq(packageSxr in Compile)).value)
+)
+
+ifSxrAvailable(
+  artifactClassifier in packageSxr,
+  Def.setting(Option("sxr"))
+)
