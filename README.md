@@ -28,11 +28,11 @@ libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.3.1"
 ```scala
 resolvers += Opts.resolver.sonatypeSnapshots
 
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.3.1-SNAPSHOT"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.3.2-SNAPSHOT"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11/0.3.1-SNAPSHOT/iarray_2.11-0.3.1-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
-- [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11/0.3.1-SNAPSHOT/iarray_2.11-0.3.1-SNAPSHOT-sxr.jar/!/index.html)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11/0.3.2-SNAPSHOT/iarray_2.11-0.3.2-SNAPSHOT-javadoc.jar/!/index.html#iarray.IArray)
+- [sxr](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.11/0.3.2-SNAPSHOT/iarray_2.11-0.3.2-SNAPSHOT-sxr.jar/!/index.html)
 
 
 ### for Scalaz 7.1.x
