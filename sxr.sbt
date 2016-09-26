@@ -2,11 +2,11 @@ val enableSxr = SettingKey[Boolean]("enableSxr")
 val packageSxr = TaskKey[File]("packageSxr")
 
 def ifSxrAvailable[A](key: SettingKey[A], value: Def.Initialize[A]): Setting[A] =
-  key <<= (key, enableSxr, value){ (k, enable, vv) =>
-    if (enable) {
-      vv
+  key := {
+    if (enableSxr.value) {
+      value.value
     } else {
-      k
+      key.value
     }
   }
 
