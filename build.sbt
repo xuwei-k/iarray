@@ -97,12 +97,6 @@ sourceGenerators in Compile += task{
   }else Nil
 }
 
-val showDoc = TaskKey[Unit]("showDoc")
-
-showDoc in Compile <<= (doc in Compile, target in doc in Compile) map { (_, out) =>
-  java.awt.Desktop.getDesktop.open(out / "index.html")
-}
-
 enablePlugins(BuildInfoPlugin)
 
 buildInfoKeys := Seq[BuildInfoKey](
