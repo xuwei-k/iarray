@@ -2,7 +2,7 @@ val Scala211 = "2.11.8"
 
 scalaVersion := Scala211
 
-crossScalaVersions := Scala211 :: "2.10.6" :: "2.12.0-RC2" :: Nil
+crossScalaVersions := Scala211 :: "2.10.6" :: "2.12.0" :: Nil
 
 fullResolvers ~= {_.filterNot(_.name == "jcenter")}
 
@@ -73,7 +73,7 @@ val scalazV = "7.2.7"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
-  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
 )
 
 val valueClasses = Seq("IArray.scala", "WithIndex.scala")
