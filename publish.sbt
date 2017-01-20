@@ -36,7 +36,7 @@ val updateReadme: State => State  = { state =>
   IO.write(readmeFile, newReadme)
   val git = new Git(extracted get baseDirectory)
   git.add(readme) ! state.log
-  git.commit("update " + readme) ! state.log
+  git.commit(message = "update " + readme, sign = false) ! state.log
   "git diff HEAD^" ! state.log
   state
 }
