@@ -1,9 +1,6 @@
 import sbtrelease._
 import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
-import xerial.sbt.Sonatype
-
-Sonatype.sonatypeRootSettings
 
 val sonatypeURL =
 "https://oss.sonatype.org/service/local/repositories/"
@@ -63,7 +60,7 @@ releaseProcess := Seq[ReleaseStep](
   setNextVersion,
   commitNextVersion,
   updateReadmeProcess,
-  releaseStepCross(Sonatype.SonatypeKeys.sonatypeReleaseAll),
+  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
 
