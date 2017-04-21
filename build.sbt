@@ -1,8 +1,8 @@
-val Scala211 = "2.11.8"
+val Scala211 = "2.11.11"
 
 scalaVersion := Scala211
 
-crossScalaVersions := Scala211 :: "2.10.6" :: "2.12.1" :: Nil
+crossScalaVersions := Scala211 :: "2.10.6" :: "2.12.2" :: Nil
 
 fullResolvers ~= {_.filterNot(_.name == "jcenter")}
 
