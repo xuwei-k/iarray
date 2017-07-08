@@ -69,7 +69,7 @@ scalacOptions ++= (
   Nil
 )
 
-val scalazV = "7.2.11"
+val scalazV = "7.2.14"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazV,
