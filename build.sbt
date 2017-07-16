@@ -169,7 +169,11 @@ val updateReadme: State => State = { state =>
     .map { line =>
       val matchReleaseOrSnapshot = line.contains("SNAPSHOT") == v.contains("SNAPSHOT")
       if (line.startsWith("libraryDependencies") && matchReleaseOrSnapshot) {
-        s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
+        if (line.contains(" %%% ")) {
+          s"""libraryDependencies += "${org}" %%% "${n}" % "$v""""
+        } else {
+          s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
+        }
       } else if (line.contains(sonatypeURL) && matchReleaseOrSnapshot) {
         val n = extracted get (name in LocalRootProject)
         val sxrIndexHtml = "-sxr.jar/!/index.html"

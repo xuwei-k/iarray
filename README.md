@@ -21,6 +21,12 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.4.0"
 ```
 
+for scala-js, scala-native
+
+```scala
+libraryDependencies += "com.github.xuwei-k" %%% "iarray" % "0.4.0"
+```
+
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.12/0.4.0/iarray_2.12-0.4.0-javadoc.jar/!/iarray/IArray.html)
 
 ### snapshot version
@@ -29,6 +35,14 @@ libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.4.0"
 resolvers += Opts.resolver.sonatypeSnapshots
 
 libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.4.1-SNAPSHOT"
+```
+
+for scala-js, scala-native
+
+```scala
+resolvers += Opts.resolver.sonatypeSnapshots
+
+libraryDependencies += "com.github.xuwei-k" %%% "iarray" % "0.4.1-SNAPSHOT"
 ```
 
 - [API Documentation](https://oss.sonatype.org/service/local/repositories/snapshots/archive/com/github/xuwei-k/iarray_2.12/0.4.1-SNAPSHOT/iarray_2.12-0.4.1-SNAPSHOT-javadoc.jar/!/iarray/IArray.html)
