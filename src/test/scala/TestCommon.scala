@@ -17,8 +17,8 @@ trait TestCommon extends Scalaprops {
   implicit val alphaOrd: Order[String @@ AlphaNum] = Order.orderBy(a => Tag.unwrap(a).toList)
   implicit val alphaOrdering = alphaOrd.toScalaOrdering
 
-  val tryEitherIso: ({type λ[α] = Throwable \/ α})#λ <~> scala.util.Try =
-    new IsoFunctorTemplate[({type λ[α] = Throwable \/ α})#λ, scala.util.Try] {
+  val tryEitherIso: ({ type λ[α] = Throwable \/ α })#λ <~> scala.util.Try =
+    new IsoFunctorTemplate[({ type λ[α] = Throwable \/ α })#λ, scala.util.Try] {
       def from[A](ga: scala.util.Try[A]) = ga match {
         case scala.util.Success(a) => \/-(a)
         case scala.util.Failure(e) => -\/(e)

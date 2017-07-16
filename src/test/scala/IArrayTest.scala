@@ -8,7 +8,7 @@ import scalaprops._
 import scalaprops.GenTags.AlphaNum
 import scalaprops.Property.forAll
 
-object IArrayTest extends TestCommon{
+object IArrayTest extends TestCommon {
 
   val withIndex = forAll { a: IArray[Int] =>
     a.withIndex.map((x, y) => (x, y)) must_=== a.zipWithIndex
@@ -50,9 +50,7 @@ object IArrayTest extends TestCommon{
   }
 
   val unfold = forAll {
-    val a = IArray.unfold(0)(a =>
-      if(a < 10) Some((a + 1, a + 1)) else None
-    ).toList
+    val a = IArray.unfold(0)(a => if (a < 10) Some((a + 1, a + 1)) else None).toList
     val b = List.iterate(1, 10)(_ + 1)
     a must_=== b
   }
@@ -72,11 +70,11 @@ object IArrayTest extends TestCommon{
   }
 
   val `oneAnd toOneAnd` = forAll { a: IArray[Byte] =>
-    a.oneAnd must_=== a.toNel.map{ nel =>
+    a.oneAnd must_=== a.toNel.map { nel =>
       OneAnd(nel.head, IArray.fromIList(nel.tail))
     }
     a.toOneAnd[IArray] must_=== a.oneAnd
-    a.toOneAnd[List].map{
+    a.toOneAnd[List].map {
       case OneAnd(h, t) => NonEmptyList.nel(h, IList.fromList(t))
     } must_=== a.toNel
   }
@@ -116,8 +114,10 @@ object IArrayTest extends TestCommon{
     IArray.zipApply.tuple3(IArray.empty[Int], undefined[Int], undefined[Int]) must_=== IArray.empty[(Int, Int, Int)]
 
     IArray.zipApply.apply2(IArray.empty[Int], undefined[Int])(Tuple2.apply) must_=== IArray.empty[(Int, Int)]
-    IArray.zipApply.apply3(IArray.empty[Int], undefined[Int], undefined[Int])(Tuple3.apply) must_=== IArray.empty[(Int, Int, Int)]
-    IArray.zipApply.apply3(IArray(1), IArray.empty[Int], undefined[Int])(Tuple3.apply) must_=== IArray.empty[(Int, Int, Int)]
+    IArray.zipApply.apply3(IArray.empty[Int], undefined[Int], undefined[Int])(Tuple3.apply) must_=== IArray
+      .empty[(Int, Int, Int)]
+    IArray.zipApply.apply3(IArray(1), IArray.empty[Int], undefined[Int])(Tuple3.apply) must_=== IArray
+      .empty[(Int, Int, Int)]
   }
 
   val `zip3 zipWith3` = forAll { (a: IArray[Int], b: IArray[String], c: IArray[Long]) =>
@@ -126,42 +126,45 @@ object IArrayTest extends TestCommon{
     IArray.zipWith3(a, b, c)(T3) must_=== (a.toList, b.toList, c.toList).zipped.map(T3).to[IArray]
   }
 
-  val `zip4 zipWith4` = forAll { (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]]) =>
-    val x = Zip[List].ap.tuple4(a.toList, b.toList, c.toList, d.toList).to[IArray]
-    IArray.zipApply.apply4(a, b, c, d)(Tuple4.apply) must_=== x
-    IArray.zipApply.tuple4(a, b, c, d) must_=== x
+  val `zip4 zipWith4` = forAll {
+    (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]]) =>
+      val x = Zip[List].ap.tuple4(a.toList, b.toList, c.toList, d.toList).to[IArray]
+      IArray.zipApply.apply4(a, b, c, d)(Tuple4.apply) must_=== x
+      IArray.zipApply.tuple4(a, b, c, d) must_=== x
   }
 
-  val `zip5 zipWith5` = forAll { (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]], e: IArray[(Int, Int)]) =>
-    val x = Zip[List].ap.tuple5(a.toList, b.toList, c.toList, d.toList, e.toList).to[IArray]
-    IArray.zipApply.apply5(a, b, c, d, e)(Tuple5.apply) must_=== x
-    IArray.zipApply.tuple5(a, b, c, d, e) must_=== x
+  val `zip5 zipWith5` = forAll {
+    (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]], e: IArray[(Int, Int)]) =>
+      val x = Zip[List].ap.tuple5(a.toList, b.toList, c.toList, d.toList, e.toList).to[IArray]
+      IArray.zipApply.apply5(a, b, c, d, e)(Tuple5.apply) must_=== x
+      IArray.zipApply.tuple5(a, b, c, d, e) must_=== x
   }
 
   val `unzip firsts seconds` = forAll { a: IArray[(Int, String)] =>
     val (left1, right1) = a.unzip
     val (left2, right2) = a.toList.unzip
-    left1.toList  must_=== left2
+    left1.toList must_=== left2
     right1.toList must_=== right2
 
-    left1  must_=== a.firsts
+    left1 must_=== a.firsts
     right1 must_=== a.seconds
   }
 
   final case class T2(_1: Int, _2: String) extends Product2[Int, String]
-  object T2 extends Function2[Int, String, T2] with ShowAndEq[T2]{
+  object T2 extends Function2[Int, String, T2] with ShowAndEq[T2] {
     implicit val a = scalaprops.Gen[(Int, String)].map(T2.tupled)
   }
   final case class T3(_1: Int, _2: String, _3: Long) extends Product3[Int, String, Long]
-  object T3 extends Function3[Int, String, Long, T3] with ShowAndEq[T3]{
+  object T3 extends Function3[Int, String, Long, T3] with ShowAndEq[T3] {
     implicit val a: scalaprops.Gen[T3] = scalaprops.Gen[(Int, String, Long)].map(T3.tupled)
   }
   final case class T4(_1: String, _2: Int, _3: Long, _4: List[Int]) extends Product4[String, Int, Long, List[Int]]
-  object T4 extends Function4[String, Int, Long, List[Int], T4] with ShowAndEq[T4]{
+  object T4 extends Function4[String, Int, Long, List[Int], T4] with ShowAndEq[T4] {
     implicit val a: scalaprops.Gen[T4] = scalaprops.Gen[(String, Int, Long, List[Int])].map(T4.tupled)
   }
-  final case class T5(_1: String, _2: Int, _3: Long, _4: List[Int], _5: (Int, Byte)) extends Product5[String, Int, Long, List[Int], (Int, Byte)]
-  object T5 extends Function5[String, Int, Long, List[Int], (Int, Byte), T5] with ShowAndEq[T5]{
+  final case class T5(_1: String, _2: Int, _3: Long, _4: List[Int], _5: (Int, Byte))
+      extends Product5[String, Int, Long, List[Int], (Int, Byte)]
+  object T5 extends Function5[String, Int, Long, List[Int], (Int, Byte), T5] with ShowAndEq[T5] {
     implicit val a: scalaprops.Gen[T5] = scalaprops.Gen[(String, Int, Long, List[Int], (Int, Byte))].map(T5.tupled)
   }
 
@@ -240,12 +243,12 @@ object IArrayTest extends TestCommon{
 
   val collectBy = forAll { a: IArray[Int \/ String] =>
     implicit val (s, e) = (Show.showA[\/-[String]], Equal.equalA[\/-[String]])
-    a.collectBy[\/-[String]] must_=== a.collect{case r @ \/-(_) => r}
+    a.collectBy[\/-[String]] must_=== a.collect { case r @ \/-(_) => r }
   }
 
   val collect = forAll { a: IArray[Int] =>
     var sideEffect = 0
-    val f: PartialFunction[Int, String] = {case i if { sideEffect += 1; i % 2 == 0} => (i * 3).toString}
+    val f: PartialFunction[Int, String] = { case i if { sideEffect += 1; i % 2 == 0 } => (i * 3).toString }
     val x = a.collect(f).toList
     sideEffect must_=== a.length
     x must_=== a.toList.collect(f)
@@ -285,8 +288,8 @@ object IArrayTest extends TestCommon{
 
   val foreach = forAll { a: IArray[Int] =>
     val buf1, buf2 = new collection.mutable.ListBuffer[Int]
-    val f1 = buf1 += (_:Int)
-    val f2 = buf2 += (_:Int)
+    val f1 = buf1 += (_: Int)
+    val f2 = buf2 += (_: Int)
     a.foreach(f1)
     a.toList.foreach(f2)
     buf1.toList must_=== buf2.toList
@@ -393,7 +396,7 @@ object IArrayTest extends TestCommon{
   }
 
   val updated = forAll { (a: IArray[Int], index: Int, elem: Int) =>
-    if(0 <= index && index < a.length)
+    if (0 <= index && index < a.length)
       a.updated(index, elem).toList must_=== a.toList.updated(index, elem)
     else
       a.updated(index, elem).mustThrowA[iarray.Platform.IndexOutOfBoundsError]
@@ -416,7 +419,7 @@ object IArrayTest extends TestCommon{
   }
 
   val sortBy = forAll { a: IArray[Int] =>
-    a.sortBy(- _).toList must_=== a.toList.sortBy(- _)
+    a.sortBy(-_).toList must_=== a.toList.sortBy(-_)
     a.sortBy(_.toHexString).toList must_=== a.toList.sortBy(_.toHexString)
   }
 
@@ -456,7 +459,6 @@ object IArrayTest extends TestCommon{
     a.fold1Opt must_=== Foldable[List].foldMap1Opt(a.toList)(conform)
   }.mapSize(_ / 4)
 
-
   val `foldl foldl1` = forAll { (a: IArray[Int], z: Int) =>
     a.foldl(z)(_ - _) must_=== a.toList.foldLeft(z)(_ - _)
     a.foldl1(_ - _) must_=== a.toList.reduceLeftOption(_ - _)
@@ -486,7 +488,7 @@ object IArrayTest extends TestCommon{
   val foldMapL1 = forAll { a: IArray[Int] =>
     val z = (a: Int) => Vector(a)
     a.foldMapL1(z)(_ :+ _) must_=== {
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.tailOption.get.toList.foldLeft(z(a.headOption.get))(_ :+ _))
     }
   }
@@ -494,7 +496,7 @@ object IArrayTest extends TestCommon{
   val foldMapR1Opt = forAll { a: IArray[Int] =>
     val z = (a: Int) => List(a)
     a.foldMapR1Opt(z)(_ :: _) must_=== {
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.initOption.get.toList.foldRight(z(a.lastOption.get))(_ :: _))
     }
   }
@@ -509,14 +511,14 @@ object IArrayTest extends TestCommon{
 
   val scanLeft1 = forAll { a: IArray[Int] =>
     a.scanLeft1(_ - _).toList must_=== (
-      if(a.isEmpty) List()
+      if (a.isEmpty) List()
       else a.toList.tail.scanLeft(a.headOption.get)(_ - _)
     )
   }
 
   val scanRight1 = forAll { a: IArray[String] =>
     a.scanRight1(_ + _).toList must_=== (
-      if(a.isEmpty) List()
+      if (a.isEmpty) List()
       else a.toList.init.scanRight(a.lastOption.get)(_ + _)
     )
   }
@@ -528,7 +530,7 @@ object IArrayTest extends TestCommon{
 
   val tailOption = forAll { a: IArray[Int] =>
     a.tailOption.map(_.toList) must_=== (
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.toList.tail)
     )
   }
@@ -555,7 +557,7 @@ object IArrayTest extends TestCommon{
 
   val initOption = forAll { a: IArray[Int] =>
     a.initOption.map(_.toList) must_=== (
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.toList.init)
     )
   }
@@ -578,42 +580,42 @@ object IArrayTest extends TestCommon{
 
   val maxBy = forAll { a: IArray[Int] =>
     a.maxBy(_.toString) must_=== (
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.toList.maxBy(_.toString))
     )
   }
 
   val minBy = forAll { a: IArray[Int] =>
     a.minBy(_.toString) must_=== (
-      if(a.isEmpty) None
+      if (a.isEmpty) None
       else Some(a.toList.minBy(_.toString))
     )
   }
 
   val max = forAll { a: IArray[Int] =>
-    if(a.isEmpty){
+    if (a.isEmpty) {
       a.max must_=== None
-    }else{
+    } else {
       a.max must_=== Some(a.toList.max)
     }
   }
 
   val min = forAll { a: IArray[Int] =>
-    if(a.isEmpty){
+    if (a.isEmpty) {
       a.min must_=== None
-    }else{
+    } else {
       a.min must_=== Some(a.toList.min)
     }
   }
 
-  val interleave = forAll{ (xs: IArray[Int], ys: IArray[Int]) =>
+  val interleave = forAll { (xs: IArray[Int], ys: IArray[Int]) =>
     import std.stream._
     val z = xs.interleave(ys)
     z.length must_=== (xs.length + ys.length)
     std.stream.interleave(xs.to[Stream], ys.to[Stream]) must_=== z.to[Stream]
   }
 
-  val intersperse = forAll{ xs: IArray[String @@ AlphaNum] =>
+  val intersperse = forAll { xs: IArray[String @@ AlphaNum] =>
     import syntax.std.list._
     xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
   }
@@ -634,11 +636,11 @@ object IArrayTest extends TestCommon{
   }.mapSize(_ / 4)
 
   val startsWith = forAll { (a: IArray[Int], b: IArray[Int], n: Int) =>
-   if(n >= 0){
-     a.startsWith(b, n) must_=== a.toList.startsWith(b.toList, n)
-   }else{
-     a.startsWith(b, n).mustThrowA[IllegalArgumentException]
-   }
+    if (n >= 0) {
+      a.startsWith(b, n) must_=== a.toList.startsWith(b.toList, n)
+    } else {
+      a.startsWith(b, n).mustThrowA[IllegalArgumentException]
+    }
   }
 
   val endsWith = forAll { (a: IArray[Int], b: IArray[Int]) =>
@@ -646,20 +648,20 @@ object IArrayTest extends TestCommon{
   }
 
   val `for comprehension` = forAll { (xs: IArray[Int], ys: IArray[String]) =>
-    val a = for{ x <- xs; if x % 2 == 0; y <- ys } yield (x, y)
-    val b = for{ x <- xs.toList; if x % 2 == 0; y <- ys.toList} yield (x, y)
+    val a = for { x <- xs; if x % 2 == 0; y <- ys } yield (x, y)
+    val b = for { x <- xs.toList; if x % 2 == 0; y <- ys.toList } yield (x, y)
 
     a must_=== b.to[IArray]
 
     val buf1, buf2 = List.newBuilder[(Int, String)]
 
-    for{
+    for {
       x <- xs.toList; if x % 2 == 0; y <- ys.toList; if true
-    }{ buf1 += ((x, y)) }
+    } { buf1 += ((x, y)) }
 
-    for{
+    for {
       x <- xs; if x % 2 == 0; y <- ys; if true
-    }{ buf2 += ((x, y)) }
+    } { buf2 += ((x, y)) }
 
     buf1.result must_=== buf2.result
   }
@@ -669,9 +671,11 @@ object IArrayTest extends TestCommon{
     import F.bifunctorSyntax._
     MonadPlus[IArray].separate(eithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(eithers.toList)
     val validations = eithers.map(_.validation)
-    MonadPlus[IArray].separate(validations).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(validations.toList)
+    MonadPlus[IArray].separate(validations).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
+      validations.toList)
     val stdEithers = eithers.map(_.toEither)
-    MonadPlus[IArray].separate(stdEithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(stdEithers.toList)
+    MonadPlus[IArray].separate(stdEithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
+      stdEithers.toList)
   }
 
   val `partitionTry` = forAll { xs: IArray[scala.util.Try[Int]] =>
@@ -684,8 +688,9 @@ object IArrayTest extends TestCommon{
     val F = Bifunctor[Tuple2]
     import F.bifunctorSyntax._
     MonadPlus[IArray].separate(tuples).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(tuples.toList)
-    val lazyTuples = tuples.map{case (a, b) => LazyTuple2(a, b)}
-    MonadPlus[IArray].separate(lazyTuples).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(lazyTuples.toList)
+    val lazyTuples = tuples.map { case (a, b) => LazyTuple2(a, b) }
+    MonadPlus[IArray].separate(lazyTuples).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
+      lazyTuples.toList)
   }
 
   val `separate These` = forAll { these: IArray[Int \&/ String] =>
@@ -694,12 +699,12 @@ object IArrayTest extends TestCommon{
     MonadPlus[IArray].separate(these).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(these.toList)
   }
 
-  val partitionLazyTuples = forAll{
+  val partitionLazyTuples = forAll {
     IArray.partitionLazyTuples(IArray(LazyTuple2(1, sys.error("error"): String)))._1 must_=== IArray(1)
-    IArray.partitionLazyTuples(IArray(LazyTuple2(sys.error("error"): Int, "a")))._2  must_=== IArray("a")
+    IArray.partitionLazyTuples(IArray(LazyTuple2(sys.error("error"): Int, "a")))._2 must_=== IArray("a")
   }
 
-  val partitionLazyTuple3 = forAll{
+  val partitionLazyTuple3 = forAll {
     def e: Int = sys.error("error")
     IArray.partitionLazyTuple3(IArray(LazyTuple3(1, e, e)))._1 must_=== IArray(1)
     IArray.partitionLazyTuple3(IArray(LazyTuple3(e, 1, e)))._2 must_=== IArray(1)
@@ -707,14 +712,14 @@ object IArrayTest extends TestCommon{
   }
 
   val groupBy1 = forAll { (xs: IArray[Int], x: Int) =>
-    val f = (a: Int) => if(x == 0) a else a % x
+    val f = (a: Int) => if (x == 0) a else a % x
     xs.groupBy1(f).map(_.toNel) must_=== ==>>.fromList(std.list.groupBy1(xs.toList)(f).toList)
   }
 
   val traverseS = forAll { (xs: IArray[Int], n: Int, z: Int) =>
     val F = Traverse[List]
     import F.traverseSyntax._
-    val f = (a: Int) => State.gets[Int, Int](b => if(b % 2 == 0) b - a + n else a - b )
+    val f = (a: Int) => State.gets[Int, Int](b => if (b % 2 == 0) b - a + n else a - b)
     val x = Traverse[IArray].traverseS(xs)(f)(z)
     x must_=== Bifunctor[Tuple2].rightMap(xs.toList.traverseS(f)(z))(_.to[IArray])
 
@@ -730,9 +735,7 @@ object IArrayTest extends TestCommon{
     Gen[IArray[Int]],
     Gen.choose(-10, 10),
     Gen.choose(-10, 10)
-  ){
-    (xs, a, b) =>
-
+  ) { (xs, a, b) =>
     import syntax.monoid._
     val i = IArray.initOptionEndo[Int].multiply(b)
     val t = IArray.tailOptionEndo[Int].multiply(a)
@@ -751,4 +754,3 @@ object IArrayTest extends TestCommon{
   }
 
 }
-

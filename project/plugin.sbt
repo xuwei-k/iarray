@@ -1,13 +1,12 @@
 resolvers += Opts.resolver.sonatypeReleases
 
-scalacOptions ++= (
-  "-deprecation" ::
-  "-unchecked" ::
-  "-Xlint" ::
-  "-language:existentials" ::
-  "-language:higherKinds" ::
-  "-language:implicitConversions" ::
-  Nil
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-unchecked",
+  "-Xlint",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-language:implicitConversions"
 )
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.1")
@@ -28,4 +27,4 @@ addSbtPlugin("org.scala-native" % "sbt-scalajs-crossproject" % "0.2.0")
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.3.1")
 
-fullResolvers ~= {_.filterNot(_.name == "jcenter")}
+addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "0.6.8")

@@ -4,11 +4,12 @@ import scalaz._
 import scala.collection.mutable.ArrayBuilder
 import scala.collection.generic.CanBuildFrom
 import java.util.Arrays
-import java.util.Arrays.{copyOfRange, copyOf}
+import java.util.Arrays.{copyOf, copyOfRange}
 
 object IArray1 {
 
-  implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
+  implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[
+    IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
 
   /**
    * @example{{{
@@ -57,20 +58,25 @@ object IArray1 {
   def zip4[A, B, C, D](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D]): IArray1[(A, B, C, D)] =
     IArray1((a.head, b.head, c.head, d.head), IArray.zip4(a.tail, b.tail, c.tail, d.tail))
 
-  def zip5[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E]): IArray1[(A, B, C, D, E)] =
+  def zip5[A, B, C, D, E](a: IArray1[A],
+                          b: IArray1[B],
+                          c: IArray1[C],
+                          d: IArray1[D],
+                          e: IArray1[E]): IArray1[(A, B, C, D, E)] =
     IArray1((a.head, b.head, c.head, d.head, e.head), IArray.zip5(a.tail, b.tail, c.tail, d.tail, e.tail))
 
   def zipWith3[A, B, C, D](a: IArray1[A], b: IArray1[B], c: IArray1[C])(f: (A, B, C) => D): IArray1[D] =
     IArray1(f(a.head, b.head, c.head), IArray.zipWith3(a.tail, b.tail, c.tail)(f))
 
-  def zipWith4[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D])(f: (A, B, C, D) => E): IArray1[E] =
+  def zipWith4[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D])(
+    f: (A, B, C, D) => E): IArray1[E] =
     IArray1(f(a.head, b.head, c.head, d.head), IArray.zipWith4(a.tail, b.tail, c.tail, d.tail)(f))
 
-  def zipWith5[A, B, C, D, E, F](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E])(f: (A, B, C, D, E) => F): IArray1[F] =
+  def zipWith5[A, B, C, D, E, F](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E])(
+    f: (A, B, C, D, E) => F): IArray1[F] =
     IArray1(f(a.head, b.head, c.head, d.head, e.head), IArray.zipWith5(a.tail, b.tail, c.tail, d.tail, e.tail)(f))
 
 }
-
 
 /** Non empty immutable array
  */
@@ -78,17 +84,17 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
 
   def partition(f: A => Boolean): (IArray[A], IArray[A]) = {
     val l, r = new ArrayBuilder.ofRef[AnyRef]()
-    (if(f(head)) l else r) += head.asInstanceOf[AnyRef]
+    (if (f(head)) l else r) += head.asInstanceOf[AnyRef]
     var i = 0
-    while(i < tail.self.length){
-      (if(f(tail.self(i).asInstanceOf[A])) l else r) += tail.self(i)
+    while (i < tail.self.length) {
+      (if (f(tail.self(i).asInstanceOf[A])) l else r) += tail.self(i)
       i += 1
     }
     (new IArray(l.result), new IArray(r.result))
   }
 
   def dropL(n: Int): IArray[A] =
-    if(n <= 0) toIArray
+    if (n <= 0) toIArray
     else tail.dropL(n - 1)
 
   def alignWith[B, C](that: IArray1[B])(f: A \&/ B => C): IArray1[C] =
@@ -109,7 +115,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   def zipWithIndex: IArray1[(A, Int)] = {
     var i = 0
     val array = new Array[AnyRef](tail.self.length)
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       array(i) = (tail.self(i), i + 1)
       i += 1
     }
@@ -134,14 +140,15 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4))
   }
 
-  def unzip5[B, C, D, E, F](implicit e: A <:< Product5[B, C, D, E, F]): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
+  def unzip5[B, C, D, E, F](
+    implicit e: A <:< Product5[B, C, D, E, F]): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
     val h = e(head)
     val t = tail.unzip5
     (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4), IArray1(h._5, t._5))
   }
 
   @inline def apply(i: Int): A =
-    if(i == 0) head else tail(i - 1)
+    if (i == 0) head else tail(i - 1)
 
   def map[B](f: A => B): IArray1[B] =
     IArray1(f(head), tail map f)
@@ -150,7 +157,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val buf = C()
     var i = 0
     buf += f(head)
-    while(i < tail.length){
+    while (i < tail.length) {
       buf += f(tail(i))
       i += 1
     }
@@ -162,7 +169,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     var i = 0
     val f0 = f.asInstanceOf[PartialFunction[AnyRef, AnyRef]].runWith(builder += _)
     f0(head.asInstanceOf[AnyRef])
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       f0(tail.self(i))
       i += 1
     }
@@ -170,30 +177,33 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   }
 
   def collectFirst[B](f: PartialFunction[A, B]): Option[B] =
-    if(f isDefinedAt head) Some(f(head))
+    if (f isDefinedAt head) Some(f(head))
     else tail collectFirst f
 
   def collectLast[B](f: PartialFunction[A, B]): Option[B] = {
     val x = tail collectLast f
-    if(x.isDefined) x
+    if (x.isDefined) x
     else f.lift(head)
   }
 
   // TODO optimize?
   def traverse1[F[_], B](f: A => F[B])(implicit F: Apply[F]): F[IArray1[B]] =
-    if(tail.self.length == 0)
+    if (tail.self.length == 0)
       F.map(f(head))(x => IArray1(x, IArray.empty[B]))
-    else F.apply2(
-      f(head),
-      OneAnd.oneAndTraverse[IArray].traverse1(OneAnd(tail.head, tail.tail))(f)
-    ){ (h, t) => IArray1(h, t.head +: t.tail) }
+    else
+      F.apply2(
+        f(head),
+        OneAnd.oneAndTraverse[IArray].traverse1(OneAnd(tail.head, tail.tail))(f)
+      ) { (h, t) =>
+        IArray1(h, t.head +: t.tail)
+      }
 
   def scanRight[B](z: B)(f: (A, B) => B): IArray1[B] = {
     var i = tail.self.length
     val array = new Array[AnyRef](i + 1)
     val f0 = f.asInstanceOf[(AnyRef, AnyRef) => AnyRef]
     array(i) = z.asInstanceOf[AnyRef]
-    while(0 < i){
+    while (0 < i) {
       array(i - 1) = f0(tail.self(i - 1), array(i))
       i -= 1
     }
@@ -205,7 +215,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val f0 = f.asInstanceOf[(AnyRef, AnyRef) => AnyRef]
     array(0) = f(z, head).asInstanceOf[AnyRef]
     var i = 0
-    while(i < tail.length){
+    while (i < tail.length) {
       array(i + 1) = f0(array(i), tail.self(i))
       i += 1
     }
@@ -225,14 +235,14 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     tail.foldl(f(z, head))(f)
 
   def foldMapRight1[B](z: A => B)(f: (A, B) => B): B =
-    if(tail.length == 0) z(head)
+    if (tail.length == 0) z(head)
     else f(head, tail.foldMapR1(z)(f))
 
   def foldMapLeft1[B](z: A => B)(f: (B, A) => B): B =
     tail.foldl(z(head))(f)
 
   def foldMap1[B](f: A => B)(implicit B: Semigroup[B]): B =
-    if(tail.self.length == 0) f(head)
+    if (tail.self.length == 0) f(head)
     else B.append(f(head), tail.foldMap1(f))
 
   def unite1[G[_], B](implicit A: A <:< G[B], G: Foldable1[G]): IArray1[B] =
@@ -246,7 +256,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val h = head.asInstanceOf[IArray1[B]]
     var n = h.tail.length
     val len = tail.self.length
-    while(i < len){
+    while (i < len) {
       n += tail.self(i).asInstanceOf[IArray1[B]].length
       i += 1
     }
@@ -254,7 +264,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     System.arraycopy(h.tail.self, 0, array, 0, h.tail.length)
     i = 0
     n = h.tail.self.length
-    while(i < len){
+    while (i < len) {
       val elem = tail.self(i).asInstanceOf[IArray1[B]]
       array(n) = elem.head.asInstanceOf[AnyRef]
       System.arraycopy(elem.tail.self, 0, array, n + 1, elem.tail.length)
@@ -269,11 +279,11 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     builder ++= h.tail.self
     var i = 0
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       val x = f(tail(i))
       var j = 0
       val len = x.length
-      while(j < len){
+      while (j < len) {
         builder += x(j).asInstanceOf[AnyRef]
         j += 1
       }
@@ -286,11 +296,12 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     var i = 0
     val len = tail.self.length
     val array = new Array[AnyRef](len)
-    while(i < len){
-      array(i) = f(IArray1(
-        tail.self(i).asInstanceOf[A],
-        new IArray[A](copyOfRange(tail.self, i + 1, len))
-      )).asInstanceOf[AnyRef]
+    while (i < len) {
+      array(i) = f(
+        IArray1(
+          tail.self(i).asInstanceOf[A],
+          new IArray[A](copyOfRange(tail.self, i + 1, len))
+        )).asInstanceOf[AnyRef]
       i += 1
     }
     IArray1(f(this), new IArray[B](array))
@@ -300,7 +311,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     var i = 0
     val len = tail.self.length
     val array = new Array[AnyRef](len)
-    while(i < len){
+    while (i < len) {
       array(i) = IArray1(
         tail.self(i),
         new IArray[AnyRef](copyOfRange(tail.self, i + 1, len))
@@ -341,35 +352,35 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     sort0((O contramap f).toScalaOrdering)
 
   def max(implicit O: Order[A]): A =
-    if(tail.self.length == 0) head
+    if (tail.self.length == 0) head
     else O.max(head, tail.unsafeMax)
 
   def min(implicit O: Order[A]): A =
-    if(tail.self.length == 0) head
+    if (tail.self.length == 0) head
     else O.min(head, tail.unsafeMin)
 
   def maxBy[B](f: A => B)(implicit O: scalaz.Order[B]): A =
-    if(tail.self.length == 0) head
+    if (tail.self.length == 0) head
     else {
       val x = tail.unsafeMaxBy(f)
-      if(O.greaterThan(f(x), f(head))) x
+      if (O.greaterThan(f(x), f(head))) x
       else head
     }
 
   def minBy[B](f: A => B)(implicit O: scalaz.Order[B]): A =
-    if(tail.self.length == 0) head
+    if (tail.self.length == 0) head
     else {
       val x = tail.unsafeMinBy(f)
-      if(O.lessThan(f(x), f(head))) x
+      if (O.lessThan(f(x), f(head))) x
       else head
     }
 
   def maxOf[B](f: A => B)(implicit O: scalaz.Order[B]): B =
-    if(tail.self.length == 0) f(head)
+    if (tail.self.length == 0) f(head)
     else O.max(f(head), tail.unsafeMaxOf(f))
 
   def minOf[B](f: A => B)(implicit O: scalaz.Order[B]): B =
-    if(tail.self.length == 0) f(head)
+    if (tail.self.length == 0) f(head)
     else O.min(f(head), tail.unsafeMinOf(f))
 
   def toNel: NonEmptyList[A] =
@@ -402,13 +413,13 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val array = new Array[A](length)
     array(0) = head
     val len = tail.self.length
-    if(A.runtimeClass.isPrimitive){
+    if (A.runtimeClass.isPrimitive) {
       var i = 0
-      while(i < len){
+      while (i < len) {
         array(i + 1) = tail.self(i).asInstanceOf[A]
         i += 1
       }
-    }else{
+    } else {
       System.arraycopy(tail.self, 0, array, 1, len)
     }
     array
@@ -418,7 +429,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val buf = C()
     buf += head
     var i = 0
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       buf += tail.self(i).asInstanceOf[A]
       i += 1
     }
@@ -435,7 +446,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   @inline def size: Int = tail.length + 1
 
   def count(f: A => Boolean): Int =
-    (if(f(head)) 1 else 0) + tail.count(f)
+    (if (f(head)) 1 else 0) + tail.count(f)
 
   def contains(a: A)(implicit E: Equal[A]): Boolean =
     E.equal(head, a) || tail.contains(a)
@@ -447,25 +458,25 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     f(head) || tail.exists(f)
 
   def find(f: A => Boolean): Option[A] =
-    if(f(head)) Some(head)
+    if (f(head)) Some(head)
     else tail.find(f)
 
   def findRight(f: A => Boolean): Option[A] = {
     val x = tail.findRight(f)
-    if(x.isDefined) x
-    else if(f(head)) Some(head)
+    if (x.isDefined) x
+    else if (f(head)) Some(head)
     else None
   }
 
   def indexOfL(a: A)(implicit E: Equal[A]): Option[Int] = {
-    if(E.equal(head, a)) Some(0)
+    if (E.equal(head, a)) Some(0)
     else tail.indexOfL(a).map(_ + 1)
   }
 
   def indexOfR(a: A)(implicit E: Equal[A]): Option[Int] = {
     val t = tail.indexOfR(a)
-    if(t.isDefined) t.map(_ + 1)
-    else if(E.equal(head, a)) Some(0)
+    if (t.isDefined) t.map(_ + 1)
+    else if (E.equal(head, a)) Some(0)
     else None
   }
 
@@ -475,7 +486,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   }
 
   def init: IArray[A] = {
-    if(tail.self.length == 0) IArray.empty
+    if (tail.self.length == 0) IArray.empty
     else {
       val array = new Array[AnyRef](tail.self.length)
       array(0) = head.asInstanceOf[AnyRef]
@@ -485,17 +496,17 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   }
 
   def last: A =
-    if(tail.self.length == 0) head
+    if (tail.self.length == 0) head
     else tail.unsafeLast
 
   def reverseMap[B](f: A => B): IArray1[B] =
-    if(tail.self.length == 0) IArray1(f(head), IArray.empty[B])
+    if (tail.self.length == 0) IArray1(f(head), IArray.empty[B])
     else {
       val array = new Array[AnyRef](tail.self.length)
       array(tail.self.length - 1) = f(head).asInstanceOf[AnyRef]
       val len = tail.self.length - 2
       var i = len
-      while(0 <= i){
+      while (0 <= i) {
         array(len - i) = f(tail.self(i).asInstanceOf[A]).asInstanceOf[AnyRef]
         i -= 1
       }
@@ -503,13 +514,13 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     }
 
   def reverse: IArray1[A] = {
-    if(tail.self.length == 0) this
+    if (tail.self.length == 0) this
     else {
       val array = new Array[AnyRef](tail.self.length)
       array(tail.self.length - 1) = head.asInstanceOf[AnyRef]
       val len = tail.self.length - 2
       var i = len
-      while(0 <= i){
+      while (0 <= i) {
         array(len - i) = tail.self(i)
         i -= 1
       }
@@ -520,7 +531,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
     val buf = C()
     var i = tail.self.length - 1
-    while(i >= 0){
+    while (i >= 0) {
       buf += tail.self(i).asInstanceOf[A]
       i -= 1
     }
@@ -531,7 +542,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   def intercalate1(a: A)(implicit A: Semigroup[A]): A = {
     var i = 0
     var acc = head
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       acc = A.append(A.append(acc, a), tail.self(i).asInstanceOf[A])
       i += 1
     }
@@ -542,7 +553,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     val array = new Array[AnyRef](tail.self.length * 2)
     var i = 0
     java.util.Arrays.fill(array, a)
-    while(i < tail.self.length){
+    while (i < tail.self.length) {
       array((i * 2) + 1) = tail.self(i)
       i += 1
     }
@@ -575,7 +586,6 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     mkString("", sep, "")
 
   def mkString(start: String, sep: String, end: String): String =
-    if(tail.isEmpty) start + head + end
+    if (tail.isEmpty) start + head + end
     else tail.mkString(start + head + sep, sep, end)
 }
-

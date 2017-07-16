@@ -13,7 +13,7 @@ script:
   - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
   - git show --oneline --check
   - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
-  - sbt ++${TRAVIS_SCALA_VERSION} ${TEST_PROJECT}/test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo ${TEST_PROJECT}/publish ; fi)
+  - sbt ++${TRAVIS_SCALA_VERSION} scalafmtTest ${TEST_PROJECT}/test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo ${TEST_PROJECT}/publish ; fi)
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
 

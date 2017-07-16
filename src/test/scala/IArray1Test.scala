@@ -61,7 +61,7 @@ object IArray1Test extends TestCommon {
     a.minBy(f) must_=== a.toList.minBy(f)
   }
 
-  val foldl = forAll { (a: IArray1[Int], f: (List[Int], Int) => List[Int])  =>
+  val foldl = forAll { (a: IArray1[Int], f: (List[Int], Int) => List[Int]) =>
     a.foldl(List[Int]())(f) must_=== a.toList.foldLeft(List[Int]())(f)
   }.mapSize(_ / 4)
 
@@ -77,111 +77,113 @@ object IArray1Test extends TestCommon {
     a.zipWithIndex.toList must_=== a.toList.zipWithIndex
   }
 
-  val `collectFirst collectLast` = forAll{ (a: IArray1[Int], f: PartialFunction[Int, String]) =>
+  val `collectFirst collectLast` = forAll { (a: IArray1[Int], f: PartialFunction[Int, String]) =>
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
     a.collectLast(f) must_=== a.toList.reverse.collectFirst(f)
   }
 
-  val merge = forAll{ (a: IArray1[Int], b: IArray1[Int]) =>
+  val merge = forAll { (a: IArray1[Int], b: IArray1[Int]) =>
     Align[IArray1].merge(a, b).toList must_=== Align[List].merge(a.toList, b.toList)
   }
 
-  val `cojoin cobind` = forAll{ a: IArray1[Int] =>
+  val `cojoin cobind` = forAll { a: IArray1[Int] =>
     a.cojoin must_=== a.cobind(conform)
     a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
   }
 
-  val sorted = forAll{ (a: IArray1[Int], b: IArray[String]) =>
+  val sorted = forAll { (a: IArray1[Int], b: IArray[String]) =>
     a.sorted.toList must_=== a.toList.sorted
     b.sorted.toList must_=== b.toList.sorted
   }
 
-  val sortBy = forAll{ a: IArray1[Int] =>
-    a.sortBy(- _).toList must_=== a.toList.sortBy(- _)
+  val sortBy = forAll { a: IArray1[Int] =>
+    a.sortBy(-_).toList must_=== a.toList.sortBy(-_)
     val f = (_: Int).toString.reverse
     a.sortBy(f).toList must_=== a.toList.sortBy(f)
   }
 
-  val sortWith = forAll{ a: IArray1[Int] =>
+  val sortWith = forAll { a: IArray1[Int] =>
     a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _)
   }
 
-  val `max min` = forAll{ a: IArray1[Int] =>
+  val `max min` = forAll { a: IArray1[Int] =>
     import syntax.foldable1._
     a.max must_=== a.toNel.maximum1
     a.min must_=== a.toNel.minimum1
   }
 
-  val `toIterator` = forAll{ a: IArray1[Int] =>
+  val `toIterator` = forAll { a: IArray1[Int] =>
     a.toIterator.toList must_=== a.toList
   }
 
-  val `toArray Int` = forAll{ (a: Int, as: Array[Int]) =>
+  val `toArray Int` = forAll { (a: Int, as: Array[Int]) =>
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
-  val `toArray String` = forAll{ (a: String @@ AlphaNum, as: Array[String @@ AlphaNum]) =>
+  val `toArray String` = forAll { (a: String @@ AlphaNum, as: Array[String @@ AlphaNum]) =>
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
-  val `+: :+` = forAll{ (a: Int, as: IArray1[Int]) =>
+  val `+: :+` = forAll { (a: Int, as: IArray1[Int]) =>
     (a +: as).toList must_=== a +: as.toList
     (as :+ a).toList must_=== as.toList :+ a
   }
 
-  val to = forAll{ as: IArray1[Int] =>
+  val to = forAll { as: IArray1[Int] =>
     import syntax.id._
     as.to[List] must_=== as.toList
-    (as.toOneAnd[List] |> { x => NonEmptyList.nel(x.head, IList.fromList(x.tail)) }) must_=== as.toNel
+    (as.toOneAnd[List] |> { x =>
+      NonEmptyList.nel(x.head, IList.fromList(x.tail))
+    }) must_=== as.toNel
   }
 
-  val init = forAll{ as: IArray1[Int] =>
+  val init = forAll { as: IArray1[Int] =>
     as.init must_=== as.to[IArray].initOption.get
   }
 
-  val forall = forAll{ (as: IArray1[Int], a: Int) =>
+  val forall = forAll { (as: IArray1[Int], a: Int) =>
     as.forall(_ > a) must_=== as.toList.forall(_ > a)
   }
 
-  val exists = forAll{ (as: IArray1[Int], a: Int) =>
+  val exists = forAll { (as: IArray1[Int], a: Int) =>
     as.exists(_ > a) must_=== as.toList.exists(_ > a)
   }
 
-  val find = forAll{ (as: IArray1[Int], f: Int => Boolean) =>
+  val find = forAll { (as: IArray1[Int], f: Int => Boolean) =>
     as.find(f) must_=== as.toList.find(f)
   }
 
-  val findRight = forAll{ (as: IArray1[Int], f: Int => Boolean) =>
+  val findRight = forAll { (as: IArray1[Int], f: Int => Boolean) =>
     as.findRight(f) must_=== as.reverse.find(f)
   }
 
-  val contains = forAll{ (as: IArray1[Int], a: Int) =>
+  val contains = forAll { (as: IArray1[Int], a: Int) =>
     as.contains(a) must_=== as.toList.contains(a)
   }
 
-  val reversed = forAll{ as: IArray1[Int] =>
+  val reversed = forAll { as: IArray1[Int] =>
     as.reversed[List] must_=== as.reverse.toList
   }
 
-  val reverse = forAll{ as: IArray1[Int] =>
+  val reverse = forAll { as: IArray1[Int] =>
     as.reverse.toNel must_=== as.toNel.reverse
   }
 
-  val reverseMap = forAll{ (as: IArray1[Int], f: Int => Byte) =>
+  val reverseMap = forAll { (as: IArray1[Int], f: Int => Byte) =>
     as.reverseMap(f).toList must_=== as.toList.reverseMap(f)
   }
 
-  val flatten = forAll{ as: IArray1[IArray1[Int]] =>
+  val flatten = forAll { as: IArray1[IArray1[Int]] =>
     as.flatten.toList must_=== as.toList.flatMap(_.toList)
   }.mapSize(_ / 4)
 
-  val `indexOfL indexOfR` = forAll{ (as: IArray1[Int], a: Int) =>
-    def toOpt(n: Int) = if(n < 0) None else Some(n)
+  val `indexOfL indexOfR` = forAll { (as: IArray1[Int], a: Int) =>
+    def toOpt(n: Int) = if (n < 0) None else Some(n)
     as.indexOfL(a) must_=== toOpt(as.toList.indexOf(a))
     as.indexOfR(a) must_=== toOpt(as.toList.lastIndexOf(a))
   }
 
-  val intersperse = forAll{ xs: IArray1[String @@ AlphaNum] =>
+  val intersperse = forAll { xs: IArray1[String @@ AlphaNum] =>
     import syntax.std.list._
     xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
   }
@@ -214,4 +216,3 @@ object IArray1Test extends TestCommon {
   }
 
 }
-

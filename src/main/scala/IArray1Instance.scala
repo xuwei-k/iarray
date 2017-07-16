@@ -2,14 +2,14 @@ package iarray
 
 import scalaz._
 
-private object IArray1Instance extends
-  Monad[IArray1] with
-  Plus[IArray1] with
-  Traverse1[IArray1] with
-  Zip[IArray1] with
-  Align[IArray1] with
-  Unzip[IArray1] with
-  Comonad[IArray1] {
+private object IArray1Instance
+    extends Monad[IArray1]
+    with Plus[IArray1]
+    with Traverse1[IArray1]
+    with Zip[IArray1]
+    with Align[IArray1]
+    with Unzip[IArray1]
+    with Comonad[IArray1] {
 
   private[this] val _semigroup: Semigroup[IArray1[AnyRef]] =
     Semigroup.instance(_ plus _)
@@ -26,8 +26,9 @@ private object IArray1Instance extends
   override def map[A, B](fa: IArray1[A])(f: A => B) =
     fa map f
 
-  override def alignWith[A, B, C](f: A \&/ B => C): (IArray1[A], IArray1[B]) => IArray1[C] =
-    { (a, b) => a.alignWith(b)(f) }
+  override def alignWith[A, B, C](f: A \&/ B => C): (IArray1[A], IArray1[B]) => IArray1[C] = { (a, b) =>
+    a.alignWith(b)(f)
+  }
 
   override def align[A, B](fa: IArray1[A], fb: IArray1[B]): IArray1[A \&/ B] =
     fa align fb
@@ -105,7 +106,7 @@ private object IArray1Instance extends
     fa.reverse
 
   override def index[A](fa: IArray1[A], i: Int) =
-    if(0 <= i && i < fa.length) Some(fa(i)) else None
+    if (0 <= i && i < fa.length) Some(fa(i)) else None
 
   override def all[A](fa: IArray1[A])(f: A => Boolean) =
     fa forall f
@@ -120,7 +121,7 @@ private object IArray1Instance extends
     fa.toList
 
   override def ap(implicit F: Functor[IArray1]) =
-    if(F eq (this: Functor[IArray1])) IArray1ZipApply
+    if (F eq (this: Functor[IArray1])) IArray1ZipApply
     else super.ap
 
   override def intercalate[A: Monoid](fa: IArray1[A], a: A) =
@@ -129,4 +130,3 @@ private object IArray1Instance extends
   override def intercalate1[A: Semigroup](fa: IArray1[A], a: A) =
     fa intercalate1 a
 }
-

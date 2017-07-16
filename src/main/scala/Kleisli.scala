@@ -71,4 +71,3 @@ private object kleisli {
   val initMaybeEndo = Endomorphic.endoKleisli(initMaybe.run)
 
 }
-

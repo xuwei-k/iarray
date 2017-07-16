@@ -3,7 +3,14 @@ package iarray
 import scalaz._
 import IArray._
 
-private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Align[IArray] with Unzip[IArray] with Cobind[IArray] {
+private object IArrayInstance
+    extends MonadPlus[IArray]
+    with IsEmpty[IArray]
+    with Traverse[IArray]
+    with Zip[IArray]
+    with Align[IArray]
+    with Unzip[IArray]
+    with Cobind[IArray] {
   override val flip =
     super.flip
   override val applyApplicative =
@@ -18,12 +25,12 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
     fa filter f
   override def reverse[A](fa: IArray[A]) =
     fa.reverse
-  override def traverseImpl[F[_], A, B](fa: IArray[A])(f: A => F[B])(implicit F:Applicative[F]) =
+  override def traverseImpl[F[_], A, B](fa: IArray[A])(f: A => F[B])(implicit F: Applicative[F]) =
     F.map(std.list.listInstance.traverseImpl(fa.toList)(f))(IArray.fromList)
   override def traverseS[S, A, B](l: IArray[A])(f: A => State[S, B]) =
     State((s: S) => {
       var cur = s
-      val result = l.map{ a =>
+      val result = l.map { a =>
         val bs = f(a)(cur)
         cur = bs._1
         bs._2
@@ -69,21 +76,21 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
   override def foldRightM[G[_], A, B](fa: IArray[A], z: => B)(f: (A, => B) => G[B])(implicit M: Monad[G]): G[B] = {
     def go(list: List[A]): Free.Trampoline[G[B]] = list match {
       case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(h, _)))
-      case Nil    => Trampoline.done(M.point(z))
+      case Nil => Trampoline.done(M.point(z))
     }
     go(fa.toList).run
   }
   override def foldLeftM[G[_], A, B](fa: IArray[A], z: B)(f: (B, A) => G[B])(implicit M: Monad[G]): G[B] = {
     def go(list: List[A]): Free.Trampoline[G[B]] = list match {
       case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(_, h)))
-      case Nil    => Trampoline.done(M.point(z))
+      case Nil => Trampoline.done(M.point(z))
     }
     go(fa.reverseList).run
   }
   override def empty[A](fa: IArray[A]) =
     fa.isEmpty
   override def index[A](fa: IArray[A], i: Int) =
-    if(0 <= i && i < fa.length) Some(fa(i)) else None
+    if (0 <= i && i < fa.length) Some(fa(i)) else None
   override def length[A](fa: IArray[A]) =
     fa.length
   def zip[A, B](a: => IArray[A], b: => IArray[B]) =
@@ -109,13 +116,13 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
     val len = Math.max(a1.length, a2.length)
     val array = new Array[AnyRef](len)
     var i = 0
-    while(i < min){
+    while (i < min) {
       array(i) = A.append(a1(i), a2(i)).asInstanceOf[AnyRef]
       i += 1
     }
-    if(min == a1.length){
+    if (min == a1.length) {
       System.arraycopy(a2.self, i, array, min, len - min)
-    }else{
+    } else {
       System.arraycopy(a1.self, i, array, min, len - min)
     }
     new IArray(array)
@@ -139,18 +146,18 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
   override def unite[T[_], A](value: IArray[T[A]])(implicit T: Foldable[T]) =
     bind(value)(ta => T.foldMap(ta)(singleF)(iarrayMonoid))
   override def separate[G[_, _], A, B](value: IArray[G[A, B]])(implicit G: Bifoldable[G]) = {
-    if(G eq (\/.DisjunctionInstances2: Bifoldable[\/]))
+    if (G eq (\/.DisjunctionInstances2: Bifoldable[\/]))
       partitionEithers(value.asInstanceOf[IArray[A \/ B]])
-    else if(G eq (std.tuple.tuple2Bitraverse: Bifoldable[Tuple2]))
+    else if (G eq (std.tuple.tuple2Bitraverse: Bifoldable[Tuple2]))
       value.asInstanceOf[IArray[(A, B)]].unzip
-    else if(G eq (Validation.ValidationInstances0: Bifoldable[Validation]))
+    else if (G eq (Validation.ValidationInstances0: Bifoldable[Validation]))
       partitionValidations(value.asInstanceOf[IArray[Validation[A, B]]])
-    else if(G eq (std.either.eitherInstance: Bifoldable[Either]))
+    else if (G eq (std.either.eitherInstance: Bifoldable[Either]))
       partitionStdEithers(value.asInstanceOf[IArray[A Either B]])
-    else if(G eq (LazyTuple2.lazyTuple2Instance: Bifoldable[LazyTuple2])){
+    else if (G eq (LazyTuple2.lazyTuple2Instance: Bifoldable[LazyTuple2])) {
       val t = partitionLazyTuples(value.asInstanceOf[IArray[LazyTuple2[A, B]]])
       (t._1, t._2)
-    }else if(G eq (\&/.TheseBitraverse: Bifoldable[\&/]))
+    } else if (G eq (\&/.TheseBitraverse: Bifoldable[\&/]))
       partitionThese(value.asInstanceOf[IArray[A \&/ B]])
     else super.separate(value)
   }
@@ -159,7 +166,6 @@ private object IArrayInstance extends MonadPlus[IArray] with IsEmpty[IArray] wit
   override def any[A](fa: IArray[A])(f: A => Boolean) =
     fa exists f
   override def ap(implicit F: Functor[IArray]) =
-    if(F eq (this: Functor[IArray])) zipApply
+    if (F eq (this: Functor[IArray])) zipApply
     else super.ap
 }
-
