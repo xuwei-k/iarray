@@ -1,13 +1,8 @@
 language: scala
 
-scala:
-  - 2.11.11
-  - 2.10.6
-
 sudo: false
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 cache:
@@ -18,10 +13,9 @@ script:
   - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
   - git show --oneline --check
   - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
-  - sbt ++${TRAVIS_SCALA_VERSION} test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo "publish" ; fi)
+  - sbt ++${TRAVIS_SCALA_VERSION} ${TEST_PROJECT}/test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo ${TEST_PROJECT}/publish ; fi)
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
-  - if [[ ${JAVA_HOME} == $(jdk_switcher home oraclejdk7) ]]; then rm -rf $HOME/.ivy2/cache ; fi
 
 env:
   global:
@@ -35,24 +29,23 @@ addons:
 
 matrix:
   include:
-    - scala: 2.12.2
-      jdk: oraclejdk8
-    - scala: 2.13.0-M1
-      jdk: oraclejdk8
-    - dist: trusty
-      group: edge
-      sudo: required
-      scala: 2.12.2
-      jdk: oraclejdk9
-      script:
-      # https://github.com/sbt/sbt/pull/2951
-      - git clone https://github.com/retronym/java9-rt-export
-      - cd java9-rt-export/
-      - git checkout 1019a2873d057dd7214f4135e84283695728395d
-      - jdk_switcher use oraclejdk8
-      - sbt package
-      - jdk_switcher use oraclejdk9
-      - mkdir -p $HOME/.sbt/0.13/java9-rt-ext; java -jar target/java9-rt-export-*.jar $HOME/.sbt/0.13/java9-rt-ext/rt.jar
-      - jar tf $HOME/.sbt/0.13/java9-rt-ext/rt.jar | grep java/lang/Object
-      - cd ..
-      - sbt -Dscala.ext.dirs=$HOME/.sbt/0.13/java9-rt-ext ++$TRAVIS_SCALA_VERSION test
+  - env: TEST_PROJECT="iarrayJVM"
+    scala: "2.11.11"
+    jdk: oraclejdk7
+  - env: TEST_PROJECT="iarrayJVM"
+    scala: "2.12.2"
+  - env: TEST_PROJECT="iarrayJVM"
+    scala: "2.13.0-M1"
+  - env: TEST_PROJECT="iarrayJS"
+    scala: "2.11.11"
+    jdk: oraclejdk7
+  - env: TEST_PROJECT="iarrayJS"
+    scala: "2.12.2"
+  - env: TEST_PROJECT="iarrayJS"
+    scala: "2.13.0-M1"
+  - env: TEST_PROJECT="iarrayNative"
+    scala: "2.11.11"
+    dist: trusty
+    sudo: required
+    before_install:
+    - curl https://raw.githubusercontent.com/scala-native/scala-native/v0.3.1/bin/travis_setup.sh | bash -x

@@ -289,11 +289,17 @@ private[iarray] abstract class IArrayFunctions{
 
   final def apply[A](xs: A*): IArray[A] =
     if(xs.isEmpty) empty[A]
-    else new IArray[A](
-      toRefArray(
-        xs.asInstanceOf[collection.mutable.WrappedArray[A]].array
-      )
-    )
+    else {
+      if (xs.isInstanceOf[collection.mutable.WrappedArray[_]]) {
+        new IArray[A](
+          toRefArray(
+            xs.asInstanceOf[collection.mutable.WrappedArray[A]].array
+          )
+        )
+      } else {
+        from(xs)
+      }
+    }
 
   final def fromRefArray[A <: AnyRef](xs: Array[A]): IArray[A] =
     new IArray[A](xs.clone.asInstanceOf[Array[AnyRef]])

@@ -396,7 +396,7 @@ object IArrayTest extends TestCommon{
     if(0 <= index && index < a.length)
       a.updated(index, elem).toList must_=== a.toList.updated(index, elem)
     else
-      a.updated(index, elem).mustThrowA[IndexOutOfBoundsException]
+      a.updated(index, elem).mustThrowA[iarray.Platform.IndexOutOfBoundsError]
   }
 
   val indexOfL = forAll { (a: IArray[Byte], z: Byte) =>

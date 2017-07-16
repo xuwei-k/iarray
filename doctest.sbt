@@ -1,3 +1,0 @@
-enablePlugins(DoctestPlugin)
-
-doctestWithDependencies := false
