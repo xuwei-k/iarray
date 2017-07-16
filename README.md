@@ -18,10 +18,10 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 ### latest stable version
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.3.1"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.4.0"
 ```
 
-- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.11/0.3.1/iarray_2.11-0.3.1-javadoc.jar/!/index.html#iarray.IArray)
+- [API Documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/xuwei-k/iarray_2.12/0.4.0/iarray_2.12-0.4.0-javadoc.jar/!/iarray/IArray.html)
 
 ### snapshot version
 
