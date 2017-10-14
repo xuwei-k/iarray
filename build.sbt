@@ -39,7 +39,7 @@ val unusedWarnings = Seq(
   "-Ywarn-unused-import"
 )
 
-val scalazV = "7.2.15"
+val scalazV = "7.2.16"
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
@@ -228,7 +228,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     commonSettings,
     scalapropsCoreSettings,
-    scalapropsVersion := "0.5.0",
+    scalapropsVersion := "0.5.2",
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalazlaws" % scalapropsVersion.value % "test")
