@@ -34,14 +34,14 @@ matrix:
     scala: "2.11.11"
     jdk: openjdk7
   - env: TEST_PROJECT="iarrayJVM"
-    scala: "2.12.3"
+    scala: "2.12.4"
   - env: TEST_PROJECT="iarrayJVM"
     scala: "2.13.0-M2"
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.11.11"
     jdk: openjdk7
   - env: TEST_PROJECT="iarrayJS"
-    scala: "2.12.3"
+    scala: "2.12.4"
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.13.0-M2"
   - env: TEST_PROJECT="iarrayNative"
