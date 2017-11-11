@@ -712,7 +712,8 @@ object IArrayTest extends TestCommon {
   }
 
   val groupBy1 = forAll { (xs: IArray[Int], x: Int) =>
-    val f = (a: Int) => if (x == 0) a else a % x
+    // https://github.com/scala-native/scala-native/issues/1078
+    val f = (a: Int) => if (x == 0 || a == Int.MinValue) a else a % x
     xs.groupBy1(f).map(_.toNel) must_=== ==>>.fromList(std.list.groupBy1(xs.toList)(f).toList)
   }
 
