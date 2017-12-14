@@ -22,11 +22,12 @@ private object IArray1ZipApply extends Apply[IArray1] {
     f: (A, B, C, D) => E) =
     IArray1.zipWith4(fa, fb, fc, fd)(f)
 
-  override def apply5[A, B, C, D, E, F](fa: => IArray1[A],
-                                        fb: => IArray1[B],
-                                        fc: => IArray1[C],
-                                        fd: => IArray1[D],
-                                        fe: => IArray1[E])(f: (A, B, C, D, E) => F) =
+  override def apply5[A, B, C, D, E, F](
+    fa: => IArray1[A],
+    fb: => IArray1[B],
+    fc: => IArray1[C],
+    fd: => IArray1[D],
+    fe: => IArray1[E])(f: (A, B, C, D, E) => F) =
     IArray1.zipWith5(fa, fb, fc, fd, fe)(f)
 
   override def tuple2[A, B](fa: => IArray1[A], fb: => IArray1[B]) =
@@ -38,11 +39,12 @@ private object IArray1ZipApply extends Apply[IArray1] {
   override def tuple4[A, B, C, D](fa: => IArray1[A], fb: => IArray1[B], fc: => IArray1[C], fd: => IArray1[D]) =
     IArray1.zip4(fa, fb, fc, fd)
 
-  override def tuple5[A, B, C, D, E](fa: => IArray1[A],
-                                     fb: => IArray1[B],
-                                     fc: => IArray1[C],
-                                     fd: => IArray1[D],
-                                     fe: => IArray1[E]) =
+  override def tuple5[A, B, C, D, E](
+    fa: => IArray1[A],
+    fb: => IArray1[B],
+    fc: => IArray1[C],
+    fd: => IArray1[D],
+    fe: => IArray1[E]) =
     IArray1.zip5(fa, fb, fc, fd, fe)
 
 }

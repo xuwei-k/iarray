@@ -14,7 +14,7 @@ script:
   - git config core.whitespace tab-in-indent,trailing-space,space-before-tab,cr-at-eol
   - git show --oneline --check
   - if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ${JAVA_HOME} == $(jdk_switcher home oraclejdk8) && "${TRAVIS_BRANCH}" == "master" ]]; then export PUBLISH_SONATYPE=true; fi
-  - sbt ++${TRAVIS_SCALA_VERSION} scalafmtTest ${TEST_PROJECT}/test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo ${TEST_PROJECT}/publish ; fi)
+  - sbt "++${TRAVIS_SCALA_VERSION}!" scalafmtSbtCheck scalafmtCheck test:scalafmtCheck ${TEST_PROJECT}/test $(if [[ "${PUBLISH_SONATYPE}" == "true" ]]; then echo ${TEST_PROJECT}/publish ; fi)
 before_cache:
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
   - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
@@ -32,15 +32,9 @@ addons:
 matrix:
   include:
   - env: TEST_PROJECT="iarrayJVM"
-    scala: "2.11.12"
-    jdk: openjdk7
-  - env: TEST_PROJECT="iarrayJVM"
     scala: "2.12.4"
   - env: TEST_PROJECT="iarrayJVM"
     scala: "2.13.0-M2"
-  - env: TEST_PROJECT="iarrayJS"
-    scala: "2.11.12"
-    jdk: openjdk7
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.12.4"
   - env: TEST_PROJECT="iarrayJS"
@@ -54,4 +48,4 @@ matrix:
   - scala: "2.12.4"
     jdk: oraclejdk9
     script:
-    - sbt -Dsbt.scala.version=2.10.7 ++$TRAVIS_SCALA_VERSION iarrayJVM/test iarrayJS/test
+    - sbt "++${TRAVIS_SCALA_VERSION}!" iarrayJVM/test iarrayJS/test

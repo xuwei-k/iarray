@@ -38,11 +38,12 @@ private object IArrayZipApply extends Apply[IArray] {
       }
     }
   }
-  override def apply5[A, B, C, D, E, F](fa: => IArray[A],
-                                        fb: => IArray[B],
-                                        fc: => IArray[C],
-                                        fd: => IArray[D],
-                                        fe: => IArray[E])(f: (A, B, C, D, E) => F) = {
+  override def apply5[A, B, C, D, E, F](
+    fa: => IArray[A],
+    fb: => IArray[B],
+    fc: => IArray[C],
+    fd: => IArray[D],
+    fe: => IArray[E])(f: (A, B, C, D, E) => F) = {
     val _fa = fa
     if (_fa.isEmpty) empty
     else {
@@ -86,11 +87,12 @@ private object IArrayZipApply extends Apply[IArray] {
       }
     }
   }
-  override def tuple5[A, B, C, D, E](fa: => IArray[A],
-                                     fb: => IArray[B],
-                                     fc: => IArray[C],
-                                     fd: => IArray[D],
-                                     fe: => IArray[E]) = {
+  override def tuple5[A, B, C, D, E](
+    fa: => IArray[A],
+    fb: => IArray[B],
+    fc: => IArray[C],
+    fd: => IArray[D],
+    fe: => IArray[E]) = {
     val _fa = fa
     if (_fa.isEmpty) empty
     else {

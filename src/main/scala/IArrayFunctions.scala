@@ -274,9 +274,8 @@ private[iarray] abstract class IArrayFunctions {
   implicit final def iarrayMonoid[A]: Monoid[IArray[A]] =
     _iarrayMonoid.asInstanceOf[Monoid[IArray[A]]]
 
-  implicit val iarrayInstance
-    : MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Align[IArray] with Unzip[
-      IArray] with Cobind[IArray] = IArrayInstance
+  implicit val iarrayInstance: MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Align[
+    IArray] with Unzip[IArray] with Cobind[IArray] = IArrayInstance
 
   final val zipApply: Apply[IArray] =
     IArrayZipApply
@@ -414,11 +413,12 @@ private[iarray] abstract class IArrayFunctions {
     new IArray(array)
   }
 
-  final def zip5[A, B, C, D, E](a: IArray[A],
-                                b: IArray[B],
-                                c: IArray[C],
-                                d: IArray[D],
-                                e: IArray[E]): IArray[(A, B, C, D, E)] = {
+  final def zip5[A, B, C, D, E](
+    a: IArray[A],
+    b: IArray[B],
+    c: IArray[C],
+    d: IArray[D],
+    e: IArray[E]): IArray[(A, B, C, D, E)] = {
     val len = Math.min(Math.min(Math.min(Math.min(a.length, b.length), c.length), d.length), e.length)
     var i = 0
     val array = new Array[AnyRef](len)

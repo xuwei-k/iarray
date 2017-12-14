@@ -33,7 +33,7 @@ val CustomCrossType = new sbtcrossproject.CrossType {
 
 val Scala211 = "2.11.12"
 
-def gitHash(): String = sys.process.Process("git rev-parse HEAD").lines_!.head
+def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
 val unusedWarnings = Seq(
   "-Ywarn-unused-import"
@@ -43,7 +43,7 @@ val scalazV = "7.2.18"
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
-    sys.process.Process("git rev-parse HEAD").lines_!.head
+    sys.process.Process("git rev-parse HEAD").lineStream_!.head
   } else {
     "v" + version.value
   }
@@ -198,7 +198,7 @@ val updateReadme: State => State = { state =>
   val git = new Git(extracted get baseDirectory)
   git.add(readme) ! state.log
   git.commit(message = "update " + readme, sign = false) ! state.log
-  "git diff HEAD^" ! state.log
+  sys.process.Process("git diff HEAD^") ! state.log
   state
 }
 
@@ -221,9 +221,9 @@ def ifSxrAvailable[A](key: SettingKey[A], value: Def.Initialize[A]): Setting[A] 
 def ifSxrAvailable[A](key: TaskKey[A], value: Def.Initialize[Task[A]]): Setting[Task[A]] =
   key := {
     if (enableSxr.value) {
-      value.value
+      value.value: @sbtUnchecked
     } else {
-      key.value
+      key.value: @sbtUnchecked
     }
   }
 
