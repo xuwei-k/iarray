@@ -50,6 +50,12 @@ lazy val gitTagOrHash = Def.setting {
 }
 
 val commonSettings = Seq[SettingsDefinition](
+  publishTo := Some(
+    if (isSnapshot.value)
+      Opts.resolver.sonatypeSnapshots
+    else
+      Opts.resolver.sonatypeStaging
+  ),
   unmanagedResources in Compile += (baseDirectory in LocalRootProject).value / "LICENSE.txt",
   credentials in Global ++= PartialFunction
     .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
