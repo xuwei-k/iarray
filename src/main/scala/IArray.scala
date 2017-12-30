@@ -2057,7 +2057,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    * res0: Boolean = true
    * }}}
    */
-  def ===(that: IArray[A])(implicit A: Equal[A]): Boolean =
+  def ===(that: IArray[A])(implicit A: Equal[A]): Boolean = (self eq that.self) || {
     (self.length == that.length) && {
       var i = 0
       while (i < self.length) {
@@ -2068,6 +2068,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       }
       true
     }
+  }
 
   /**
    * @example{{{

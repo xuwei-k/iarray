@@ -567,11 +567,13 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     A.plus(head, tail.sum)
 
   def ===(that: IArray1[A])(implicit E: Equal[A]): Boolean =
-    E.equal(head, that.head) && (tail === that.tail)
+    (this eq that) || (E.equal(head, that.head) && (tail === that.tail))
 
   override def equals(that: Any): Boolean = that match {
-    case IArray1(h, t) =>
-      (head == h) && (t.self.length == tail.self.length) && java.util.Arrays.equals(t.self, tail.self)
+    case other @ IArray1(h, t) =>
+      (this eq other) || (
+        (head == h) && (t.self.length == tail.self.length) && java.util.Arrays.equals(t.self, tail.self)
+      )
     case _ => false
   }
 
