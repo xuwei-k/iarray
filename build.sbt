@@ -31,7 +31,7 @@ val CustomCrossType = new sbtcrossproject.CrossType {
     Some(shared(projectBase, conf))
 }
 
-val Scala211 = "2.11.11"
+val Scala211 = "2.11.12"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lines_!.head
 
@@ -291,6 +291,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .nativeSettings(
     scalapropsNativeSettings,
+    scalaVersion := Scala211,
     crossScalaVersions := Scala211 :: Nil,
     selectMainClass in Test := Some("scalaprops.NativeTestMain")
   )
