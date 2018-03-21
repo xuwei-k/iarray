@@ -32,11 +32,11 @@ addons:
 matrix:
   include:
   - env: TEST_PROJECT="iarrayJVM"
-    scala: "2.12.4"
+    scala: "2.12.5"
   - env: TEST_PROJECT="iarrayJVM"
     scala: "2.13.0-M3"
   - env: TEST_PROJECT="iarrayJS"
-    scala: "2.12.4"
+    scala: "2.12.5"
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.13.0-M3"
   - env: TEST_PROJECT="iarrayNative"
@@ -45,7 +45,7 @@ matrix:
     sudo: required
     before_install:
     - curl https://raw.githubusercontent.com/scala-native/scala-native/9ea8ba3610ef4eba2c7/bin/travis_setup.sh | bash -x
-  - scala: "2.12.4"
+  - scala: "2.12.5"
     jdk: oraclejdk9
     script:
     - sbt "++${TRAVIS_SCALA_VERSION}!" iarrayJVM/test iarrayJS/test
