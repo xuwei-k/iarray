@@ -2,7 +2,6 @@ package iarray
 
 import annotation.tailrec
 import scalaz._
-import collection.generic.CanBuildFrom
 import scala.collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions {
@@ -211,27 +210,6 @@ private[iarray] abstract class IArrayFunctions {
     }
     LazyTuple3(a, b, c)
   }
-
-  private[this] val _canBuildFrom: CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] =
-    new CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] {
-      import scala.collection.mutable.Builder
-
-      def apply() =
-        new Builder[AnyRef, IArray[AnyRef]] {
-          private[this] val buf: ArrayBuilder.ofRef[AnyRef] =
-            new ArrayBuilder.ofRef[AnyRef]()
-          def +=(elem: Object) = {
-            buf += elem
-            this
-          }
-          def clear() = buf.clear
-          def result() = new IArray(buf.result)
-        }
-      def apply(from: Nothing) = apply()
-    }
-
-  implicit final def canBuildFrom[A]: CanBuildFrom[Nothing, A, IArray[A]] =
-    _canBuildFrom.asInstanceOf[CanBuildFrom[Nothing, A, IArray[A]]]
 
   final def fillAll[A](size: Int)(elem: A): IArray[A] = {
     val array = new Array[AnyRef](size)

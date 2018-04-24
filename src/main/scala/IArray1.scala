@@ -2,7 +2,6 @@ package iarray
 
 import scalaz._
 import scala.collection.mutable.ArrayBuilder
-import scala.collection.generic.CanBuildFrom
 import java.util.Arrays
 import java.util.Arrays.{copyOf, copyOfRange}
 
@@ -44,7 +43,7 @@ object IArray1 {
     IArray1(nel.head, IArray.fromIList(nel.tail))
 
   def fromOneAnd[F[_], A](a: OneAnd[F, A])(implicit F: Foldable[F]): IArray1[A] =
-    IArray1(a.head, F.to[A, IArray](a.tail))
+    IArray1(a.head, IArray.fromList(F.toList(a.tail)))
 
   def apply[A](head: A, tail: A*): IArray1[A] =
     IArray1(head, IArray.apply(tail: _*))
@@ -153,17 +152,6 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
 
   def map[B](f: A => B): IArray1[B] =
     IArray1(f(head), tail map f)
-
-  def mapTo[C, B](f: A => B)(implicit C: CanBuildFrom[Nothing, B, C]): C = {
-    val buf = C()
-    var i = 0
-    buf += f(head)
-    while (i < tail.length) {
-      buf += f(tail(i))
-      i += 1
-    }
-    buf.result
-  }
 
   def collect[B](f: PartialFunction[A, B]): IArray[B] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
@@ -426,20 +414,6 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     array
   }
 
-  def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
-    val buf = C()
-    buf += head
-    var i = 0
-    while (i < tail.self.length) {
-      buf += tail.self(i).asInstanceOf[A]
-      i += 1
-    }
-    buf.result
-  }
-
-  def toOneAnd[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): OneAnd[F, A] =
-    OneAnd(head, tail.to[F])
-
   def oneAnd: OneAnd[IArray, A] =
     OneAnd(head, tail)
 
@@ -527,17 +501,6 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
       }
       IArray1(tail.unsafeLast, new IArray[A](array))
     }
-  }
-
-  def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
-    val buf = C()
-    var i = tail.self.length - 1
-    while (i >= 0) {
-      buf += tail.self(i).asInstanceOf[A]
-      i -= 1
-    }
-    buf += head
-    buf.result
   }
 
   def intercalate1(a: A)(implicit A: Semigroup[A]): A = {

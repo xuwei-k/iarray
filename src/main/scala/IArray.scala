@@ -4,7 +4,6 @@ import annotation.tailrec
 import scalaz._
 import java.util.Arrays
 import Arrays.{copyOf, copyOfRange}
-import scala.collection.generic.CanBuildFrom
 import scala.collection.mutable.ArrayBuilder
 
 object IArray extends IArrayFunctions {}
@@ -349,6 +348,22 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       i -= 1
     }
     acc
+  }
+
+  // TODO use Builder
+  def toVector: Vector[A] =
+    toList.toVector
+
+  def toStream: Stream[A] = {
+    @tailrec
+    def loop(i: Int, acc: Stream[A]): Stream[A] = {
+      if (0 <= i) {
+        loop(i - 1, new Stream.Cons(self(i).asInstanceOf[A], acc))
+      } else {
+        acc
+      }
+    }
+    loop(self.length - 1, Stream.Empty)
   }
 
   /**
@@ -974,60 +989,6 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
 
   /**
    * @example{{{
-   * scala> IArray(10, 20, 30, 40).reversed[List]
-   * res0: List[Int] = List(40, 30, 20, 10)
-   * }}}
-   */
-  def reversed[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
-    val buf = C()
-    var i = self.length - 1
-    while (i >= 0) {
-      buf += self(i).asInstanceOf[A]
-      i -= 1
-    }
-    buf.result
-  }
-
-  /**
-   * @example{{{
-   * scala> IArray(10, 20, 30, 40).to[Vector]
-   * res0: Vector[Int] = Vector(10, 20, 30, 40)
-   * }}}
-   */
-  def to[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): F[A] = {
-    val buf = C()
-    var i = 0
-    while (i < self.length) {
-      buf += self(i).asInstanceOf[A]
-      i += 1
-    }
-    buf.result
-  }
-
-  /**
-   * @example{{{
-   * scala> import scalaz.OneAnd
-   * scala> IArray(10, 20, 30, 40).toOneAnd[Vector]
-   * res0: Option[OneAnd[Vector, Int]] = Some(OneAnd(10,Vector(20, 30, 40)))
-   * scala> IArray.empty[String].toOneAnd[Vector]
-   * res1: Option[OneAnd[Vector, String]] = None
-   * }}}
-   */
-  def toOneAnd[F[_]](implicit C: CanBuildFrom[Nothing, A, F[A]]): Option[OneAnd[F, A]] =
-    if (isEmpty) {
-      None
-    } else {
-      val buf = C()
-      var i = 1
-      while (i < self.length) {
-        buf += self(i).asInstanceOf[A]
-        i += 1
-      }
-      Some(OneAnd(self(0).asInstanceOf[A], buf.result))
-    }
-
-  /**
-   * @example{{{
    * scala> IArray(1, 2, 3, 4, 5).filter(_ % 3 != 1)
    * res0: IArray[Int] = IArray(2, 3, 5)
    * }}}
@@ -1052,22 +1013,6 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    */
   def withFilter(f: A => Boolean): WithFilter[A] =
     new WithFilter[A](self, f)
-
-  /**
-   * @example{{{
-   * scala> IArray(1, 2, 3).mapTo(_ * 10): List[Int]
-   * res0: List[Int] = List(10, 20, 30)
-   * }}}
-   */
-  def mapTo[C, B](f: A => B)(implicit C: CanBuildFrom[Nothing, B, C]): C = {
-    val buf = C()
-    var i = 0
-    while (i < self.length) {
-      buf += f(self(i).asInstanceOf[A])
-      i += 1
-    }
-    buf.result
-  }
 
   /**
    * @example{{{

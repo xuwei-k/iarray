@@ -9,5 +9,5 @@ private final class IArrayIterator[A](array: Array[AnyRef]) extends Iterator[A] 
       val r = array(i).asInstanceOf[A]
       i += 1
       r
-    } else Iterator.empty.next
+    } else Iterator.empty.next()
 }

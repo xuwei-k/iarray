@@ -17,14 +17,7 @@ object IArray1Test extends TestCommon {
   }
 
   val toIArray = forAll { a: IArray1[Int] =>
-    a.toIArray must_=== a.to[IArray]
-  }
-
-  val mapTo = forAll { (a: IArray1[Int], f: Int => String) =>
-    val list: List[String] = a.mapTo(f)
-    val vector: Vector[String] = a.mapTo(f)
-    list must_=== a.to[List].map(f)
-    vector must_=== a.map(f).to[Vector]
+    a.toIArray must_=== IArray.fromList(a.toList)
   }
 
   val collect = forAll { (a: IArray1[Int], f: PartialFunction[Int, String]) =>
@@ -36,11 +29,13 @@ object IArray1Test extends TestCommon {
   }.mapSize(_ / 4)
 
   val unite = forAll { a: IArray1[List[Int]] =>
-    a.unite must_=== a.toList.flatten.to[IArray]
+    a.unite must_=== IArray.fromList(a.toList.flatten)
   }.mapSize(_ / 4)
 
   val fromOneAnd = forAll { a: OneAnd[Vector, Int] =>
-    IArray1.fromOneAnd(a).toOneAnd[Vector] must_=== a
+    val x = IArray1.fromOneAnd(a)
+    x.head must_=== a.head
+    x.tail.toVector must_=== a.tail
   }
 
   val maxOf = forAll { (a: IArray1[Int], f: Int => Int) =>
@@ -117,11 +112,11 @@ object IArray1Test extends TestCommon {
   }
 
   val `toArray Int` = forAll { (a: Int, as: Array[Int]) =>
-    IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
+    IArray1(a, IArray.from(as)).toArray.toList must_=== (a +: as).toList
   }
 
   val `toArray String` = forAll { (a: String, as: Array[String]) =>
-    IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
+    IArray1(a, IArray.from(as)).toArray.toList must_=== (a +: as).toList
   }
 
   val `+: :+` = forAll { (a: Int, as: IArray1[Int]) =>
@@ -129,16 +124,8 @@ object IArray1Test extends TestCommon {
     (as :+ a).toList must_=== as.toList :+ a
   }
 
-  val to = forAll { as: IArray1[Int] =>
-    import syntax.id._
-    as.to[List] must_=== as.toList
-    (as.toOneAnd[List] |> { x =>
-      NonEmptyList.nel(x.head, IList.fromList(x.tail))
-    }) must_=== as.toNel
-  }
-
   val init = forAll { as: IArray1[Int] =>
-    as.init must_=== as.to[IArray].initOption.get
+    as.init must_=== as.toIArray.initOption.get
   }
 
   val forall = forAll { (as: IArray1[Int], a: Int) =>
@@ -159,10 +146,6 @@ object IArray1Test extends TestCommon {
 
   val contains = forAll { (as: IArray1[Int], a: Int) =>
     as.contains(a) must_=== as.toList.contains(a)
-  }
-
-  val reversed = forAll { as: IArray1[Int] =>
-    as.reversed[List] must_=== as.reverse.toList
   }
 
   val reverse = forAll { as: IArray1[Int] =>
