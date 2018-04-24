@@ -252,7 +252,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .jvmSettings(
     libraryDependencies ++= Seq(
-      "org.scalacheck" %% "scalacheck" % "1.13.5" % "test" // use in doctest
+      "org.scalacheck" %% "scalacheck" % "1.14.0" % "test" // use in doctest
     ),
     enableSxr := {
       CrossVersion.partialVersion(scalaVersion.value) match {
