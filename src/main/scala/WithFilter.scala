@@ -1,6 +1,6 @@
 package iarray
 
-import collection.mutable.ArrayBuilder
+import scala.collection.mutable.ArrayBuilder
 import collection.generic.CanBuildFrom
 
 final class WithFilter[A] private[iarray] (self: Array[AnyRef], f: A => Boolean) {

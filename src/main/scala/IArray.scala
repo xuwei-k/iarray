@@ -4,8 +4,8 @@ import annotation.tailrec
 import scalaz._
 import java.util.Arrays
 import Arrays.{copyOf, copyOfRange}
-import collection.generic.CanBuildFrom
-import collection.mutable.ArrayBuilder
+import scala.collection.generic.CanBuildFrom
+import scala.collection.mutable.ArrayBuilder
 
 object IArray extends IArrayFunctions {}
 

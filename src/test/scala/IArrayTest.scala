@@ -287,7 +287,7 @@ object IArrayTest extends TestCommon {
   }
 
   val foreach = forAll { a: IArray[Int] =>
-    val buf1, buf2 = new collection.mutable.ListBuffer[Int]
+    val buf1, buf2 = new scala.collection.mutable.ListBuffer[Int]
     val f1 = buf1 += (_: Int)
     val f2 = buf2 += (_: Int)
     a.foreach(f1)

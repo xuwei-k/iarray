@@ -3,7 +3,7 @@ package iarray
 import annotation.tailrec
 import scalaz._
 import collection.generic.CanBuildFrom
-import collection.mutable.ArrayBuilder
+import scala.collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions {
 
@@ -214,7 +214,7 @@ private[iarray] abstract class IArrayFunctions {
 
   private[this] val _canBuildFrom: CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] =
     new CanBuildFrom[Nothing, AnyRef, IArray[AnyRef]] {
-      import collection.mutable.Builder
+      import scala.collection.mutable.Builder
 
       def apply() =
         new Builder[AnyRef, IArray[AnyRef]] {
@@ -292,10 +292,10 @@ private[iarray] abstract class IArrayFunctions {
   final def apply[A](xs: A*): IArray[A] =
     if (xs.isEmpty) empty[A]
     else {
-      if (xs.isInstanceOf[collection.mutable.WrappedArray[_]]) {
+      if (xs.isInstanceOf[scala.collection.mutable.WrappedArray[_]]) {
         new IArray[A](
           toRefArray(
-            xs.asInstanceOf[collection.mutable.WrappedArray[A]].array
+            xs.asInstanceOf[scala.collection.mutable.WrappedArray[A]].array
           )
         )
       } else {
