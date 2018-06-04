@@ -39,7 +39,7 @@ val unusedWarnings = Seq(
   "-Ywarn-unused-import"
 )
 
-val scalazV = "7.2.23"
+val scalazV = "7.2.24"
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
