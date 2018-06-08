@@ -35,10 +35,6 @@ val Scala211 = "2.11.12"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
-val unusedWarnings = Seq(
-  "-Ywarn-unused-import"
-)
-
 val scalazV = "7.2.24"
 
 lazy val gitTagOrHash = Def.setting {
@@ -131,8 +127,6 @@ val commonSettings = Seq[SettingsDefinition](
       <tag>{gitTagOrHash.value}</tag>
     </scm>,
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-  scalacOptions ++= unusedWarnings,
-  Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) --= unusedWarnings),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
