@@ -35,7 +35,7 @@ val Scala211 = "2.11.12"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
-val scalazV = "7.2.24" // Don't update
+val scalazV = "7.2.26" // Don't update
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
