@@ -20,7 +20,7 @@ addSbtPlugin("com.github.tkawachi" % "sbt-doctest" % "0.7.0")
 
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.2.6")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.24")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.25")
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.5.0")
 
