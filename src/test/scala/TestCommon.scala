@@ -3,19 +3,15 @@ package iarray
 import scala.reflect.ClassTag
 import scalaz._
 import scalaprops._
+import scalaprops.ScalapropsScalaz._
 import Isomorphism._
 import std.list._, std.anyVal._
-import scalaprops.GenTags.AlphaNum
 
 trait TestCommon extends Scalaprops {
   trait ShowAndEq[A] {
     implicit val e: Equal[A] = Equal.equalA[A]
     implicit val s: Show[A] = Show.showA[A]
   }
-
-  implicit val alphaShow: Show[String @@ AlphaNum] = Show.showA
-  implicit val alphaOrd: Order[String @@ AlphaNum] = Order.orderBy(a => Tag.unwrap(a).toList)
-  implicit val alphaOrdering = alphaOrd.toScalaOrdering
 
   val tryEitherIso: ({ type λ[α] = Throwable \/ α })#λ <~> scala.util.Try =
     new IsoFunctorTemplate[({ type λ[α] = Throwable \/ α })#λ, scala.util.Try] {

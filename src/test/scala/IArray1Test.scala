@@ -1,7 +1,7 @@
 package iarray
 
-import scalaprops.GenTags.AlphaNum
 import scalaprops.Property.forAll
+import scalaprops.ScalapropsScalaz._
 import scalaz._
 import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.vector._
 import IArray.conform
@@ -120,7 +120,7 @@ object IArray1Test extends TestCommon {
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
-  val `toArray String` = forAll { (a: String @@ AlphaNum, as: Array[String @@ AlphaNum]) =>
+  val `toArray String` = forAll { (a: String, as: Array[String]) =>
     IArray1(a, as.to[IArray]).toArray.toList must_=== (a +: as).toList
   }
 
@@ -183,14 +183,13 @@ object IArray1Test extends TestCommon {
     as.indexOfR(a) must_=== toOpt(as.toList.lastIndexOf(a))
   }
 
-  val intersperse = forAll { xs: IArray1[String @@ AlphaNum] =>
+  val intersperse = forAll { xs: IArray1[String] =>
     import syntax.std.list._
-    xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
+    xs.intersperse(",").toList must_=== xs.toList.intersperse(",")
   }
 
-  val intercalate1 = forAll { xs: IArray1[String @@ AlphaNum] =>
-    val xs0: IArray1[String] = Tag.unsubst(xs)
-    xs0.intercalate1(",") must_=== Foldable[NonEmptyList].intercalate(xs0.toNel, ",")
+  val intercalate1 = forAll { xs: IArray1[String] =>
+    xs.intercalate1(",") must_=== Foldable[NonEmptyList].intercalate(xs.toNel, ",")
   }
 
   val `equals hashCode law` = forAll { (a1: IArray1[Int], a2: IArray1[Int], a3: IArray1[Int]) =>

@@ -5,7 +5,7 @@ import std.tuple._, std.anyVal._, std.string._
 import std.vector._, std.list._, std.option._, std.either._
 import IArray.conform
 import scalaprops._
-import scalaprops.GenTags.AlphaNum
+import scalaprops.ScalapropsScalaz._
 import scalaprops.Property.forAll
 
 object IArrayTest extends TestCommon {
@@ -64,7 +64,7 @@ object IArrayTest extends TestCommon {
     a.toNel must_=== a.toList.toNel
   }
 
-  val toIList = forAll { a: IList[String @@ AlphaNum] =>
+  val toIList = forAll { a: IList[String] =>
     import syntax.foldable._
     a.to[IArray].toIList must_=== a
   }
@@ -126,15 +126,14 @@ object IArrayTest extends TestCommon {
     IArray.zipWith3(a, b, c)(T3) must_=== (a.toList, b.toList, c.toList).zipped.map(T3).to[IArray]
   }
 
-  val `zip4 zipWith4` = forAll {
-    (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]]) =>
-      val x = Zip[List].ap.tuple4(a.toList, b.toList, c.toList, d.toList).to[IArray]
-      IArray.zipApply.apply4(a, b, c, d)(Tuple4.apply) must_=== x
-      IArray.zipApply.tuple4(a, b, c, d) must_=== x
+  val `zip4 zipWith4` = forAll { (a: IArray[Int], b: IArray[String], c: IArray[Long], d: IArray[List[Int]]) =>
+    val x = Zip[List].ap.tuple4(a.toList, b.toList, c.toList, d.toList).to[IArray]
+    IArray.zipApply.apply4(a, b, c, d)(Tuple4.apply) must_=== x
+    IArray.zipApply.tuple4(a, b, c, d) must_=== x
   }
 
   val `zip5 zipWith5` = forAll {
-    (a: IArray[Int], b: IArray[String @@ AlphaNum], c: IArray[Long], d: IArray[List[Int]], e: IArray[(Int, Int)]) =>
+    (a: IArray[Int], b: IArray[String], c: IArray[Long], d: IArray[List[Int]], e: IArray[(Int, Int)]) =>
       val x = Zip[List].ap.tuple5(a.toList, b.toList, c.toList, d.toList, e.toList).to[IArray]
       IArray.zipApply.apply5(a, b, c, d, e)(Tuple5.apply) must_=== x
       IArray.zipApply.tuple5(a, b, c, d, e) must_=== x
@@ -615,13 +614,12 @@ object IArrayTest extends TestCommon {
     std.stream.interleave(xs.to[Stream], ys.to[Stream]) must_=== z.to[Stream]
   }
 
-  val intersperse = forAll { xs: IArray[String @@ AlphaNum] =>
+  val intersperse = forAll { xs: IArray[String] =>
     import syntax.std.list._
-    xs.intersperse(Tag(",")).toList must_=== xs.toList.intersperse(Tag(","))
+    xs.intersperse(",").toList must_=== xs.toList.intersperse(",")
   }
 
-  val intercalate = forAll { xs0: IArray[String @@ AlphaNum] =>
-    val xs: IArray[String] = Tag.unsubst(xs0)
+  val intercalate = forAll { xs: IArray[String] =>
     xs.intercalate(" , ") must_=== Foldable[List].intercalate(xs.toList, " , ")
     xs.intercalate(",") must_=== xs.mkString(",")
     xs.intercalate(",") must_=== xs.intercalate1Opt(",").getOrElse(Monoid[String].zero)
@@ -749,7 +747,7 @@ object IArrayTest extends TestCommon {
     }
   }
 
-  val zipperEnd = forAll { xs: IArray[String @@ AlphaNum] =>
+  val zipperEnd = forAll { xs: IArray[String] =>
     import syntax.std.list._
     xs.zipperEnd must_=== xs.toList.zipperEnd
   }

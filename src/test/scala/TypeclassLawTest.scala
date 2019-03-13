@@ -1,6 +1,7 @@
 package iarray
 
 import scalaprops._
+import scalaprops.ScalapropsScalaz._
 import scalaz.std.anyVal._
 
 object ScalapropsTest extends TestCommon {
