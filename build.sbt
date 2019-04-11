@@ -79,7 +79,6 @@ val commonSettings = Seq[SettingsDefinition](
     runClean,
     releaseStepCommandAndRemaining(";scalafmtSbtCheck;scalafmtCheck;test:scalafmtCheck"),
     runTest,
-    releaseStepCommandAndRemaining("iarrayNative/test"),
     setReleaseVersion,
     commitReleaseVersion,
     updateReadmeProcess,
