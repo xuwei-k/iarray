@@ -77,7 +77,7 @@ val commonSettings = Seq[SettingsDefinition](
     checkSnapshotDependencies,
     inquireVersions,
     runClean,
-    releaseStepCommandAndRemaining("scalafmtTest"),
+    releaseStepCommandAndRemaining(";scalafmtSbtCheck;scalafmtCheck;test:scalafmtCheck"),
     runTest,
     releaseStepCommandAndRemaining("iarrayNative/test"),
     setReleaseVersion,
