@@ -644,10 +644,12 @@ object IArrayTest extends TestCommon {
     MonadPlus[IArray].separate(eithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(eithers.toList)
     val validations = eithers.map(_.validation)
     MonadPlus[IArray].separate(validations).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
-      validations.toList)
+      validations.toList
+    )
     val stdEithers = eithers.map(_.toEither)
     MonadPlus[IArray].separate(stdEithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
-      stdEithers.toList)
+      stdEithers.toList
+    )
   }
 
   val `partitionTry` = forAll { xs: IArray[scala.util.Try[Int]] =>
@@ -662,7 +664,8 @@ object IArrayTest extends TestCommon {
     MonadPlus[IArray].separate(tuples).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(tuples.toList)
     val lazyTuples = tuples.map { case (a, b) => LazyTuple2(a, b) }
     MonadPlus[IArray].separate(lazyTuples).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
-      lazyTuples.toList)
+      lazyTuples.toList
+    )
   }
 
   val `separate These` = forAll { these: IArray[Int \&/ String] =>

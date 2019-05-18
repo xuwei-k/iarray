@@ -7,8 +7,13 @@ import java.util.Arrays.{copyOf, copyOfRange}
 
 object IArray1 {
 
-  implicit val iarray1Instance: Monad[IArray1] with Plus[IArray1] with Traverse1[IArray1] with Zip[IArray1] with Align[
-    IArray1] with Unzip[IArray1] with Comonad[IArray1] = IArray1Instance
+  implicit val iarray1Instance: Monad[IArray1]
+    with Plus[IArray1]
+    with Traverse1[IArray1]
+    with Zip[IArray1]
+    with Align[IArray1]
+    with Unzip[IArray1]
+    with Comonad[IArray1] = IArray1Instance
 
   /**
    * @example{{{
@@ -62,18 +67,21 @@ object IArray1 {
     b: IArray1[B],
     c: IArray1[C],
     d: IArray1[D],
-    e: IArray1[E]): IArray1[(A, B, C, D, E)] =
+    e: IArray1[E]
+  ): IArray1[(A, B, C, D, E)] =
     IArray1((a.head, b.head, c.head, d.head, e.head), IArray.zip5(a.tail, b.tail, c.tail, d.tail, e.tail))
 
   def zipWith3[A, B, C, D](a: IArray1[A], b: IArray1[B], c: IArray1[C])(f: (A, B, C) => D): IArray1[D] =
     IArray1(f(a.head, b.head, c.head), IArray.zipWith3(a.tail, b.tail, c.tail)(f))
 
   def zipWith4[A, B, C, D, E](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D])(
-    f: (A, B, C, D) => E): IArray1[E] =
+    f: (A, B, C, D) => E
+  ): IArray1[E] =
     IArray1(f(a.head, b.head, c.head, d.head), IArray.zipWith4(a.tail, b.tail, c.tail, d.tail)(f))
 
   def zipWith5[A, B, C, D, E, F](a: IArray1[A], b: IArray1[B], c: IArray1[C], d: IArray1[D], e: IArray1[E])(
-    f: (A, B, C, D, E) => F): IArray1[F] =
+    f: (A, B, C, D, E) => F
+  ): IArray1[F] =
     IArray1(f(a.head, b.head, c.head, d.head, e.head), IArray.zipWith5(a.tail, b.tail, c.tail, d.tail, e.tail)(f))
 
 }
@@ -141,7 +149,8 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   }
 
   def unzip5[B, C, D, E, F](
-    implicit e: A <:< Product5[B, C, D, E, F]): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
+    implicit e: A <:< Product5[B, C, D, E, F]
+  ): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
     val h = e(head)
     val t = tail.unzip5
     (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4), IArray1(h._5, t._5))
@@ -290,7 +299,8 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
         IArray1(
           tail.self(i).asInstanceOf[A],
           new IArray[A](copyOfRange(tail.self, i + 1, len))
-        )).asInstanceOf[AnyRef]
+        )
+      ).asInstanceOf[AnyRef]
       i += 1
     }
     IArray1(f(this), new IArray[B](array))

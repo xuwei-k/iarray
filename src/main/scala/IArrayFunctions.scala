@@ -180,7 +180,8 @@ private[iarray] abstract class IArrayFunctions {
   }
 
   final def partitionLazyTuple3[A, B, C](
-    tuples: IArray[LazyTuple3[A, B, C]]): LazyTuple3[IArray[A], IArray[B], IArray[C]] = {
+    tuples: IArray[LazyTuple3[A, B, C]]
+  ): LazyTuple3[IArray[A], IArray[B], IArray[C]] = {
     lazy val a = {
       var i = 0
       val array = new Array[AnyRef](tuples.length)
@@ -252,8 +253,13 @@ private[iarray] abstract class IArrayFunctions {
   implicit final def iarrayMonoid[A]: Monoid[IArray[A]] =
     _iarrayMonoid.asInstanceOf[Monoid[IArray[A]]]
 
-  implicit val iarrayInstance: MonadPlus[IArray] with IsEmpty[IArray] with Traverse[IArray] with Zip[IArray] with Align[
-    IArray] with Unzip[IArray] with Cobind[IArray] = IArrayInstance
+  implicit val iarrayInstance: MonadPlus[IArray]
+    with IsEmpty[IArray]
+    with Traverse[IArray]
+    with Zip[IArray]
+    with Align[IArray]
+    with Unzip[IArray]
+    with Cobind[IArray] = IArrayInstance
 
   final val zipApply: Apply[IArray] =
     IArrayZipApply
@@ -396,7 +402,8 @@ private[iarray] abstract class IArrayFunctions {
     b: IArray[B],
     c: IArray[C],
     d: IArray[D],
-    e: IArray[E]): IArray[(A, B, C, D, E)] = {
+    e: IArray[E]
+  ): IArray[(A, B, C, D, E)] = {
     val len = Math.min(Math.min(Math.min(Math.min(a.length, b.length), c.length), d.length), e.length)
     var i = 0
     val array = new Array[AnyRef](len)
@@ -419,7 +426,8 @@ private[iarray] abstract class IArrayFunctions {
   }
 
   final def zipWith4[A, B, C, D, E](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D])(
-    f: (A, B, C, D) => E): IArray[E] = {
+    f: (A, B, C, D) => E
+  ): IArray[E] = {
     val len = Math.min(Math.min(a.length, b.length), Math.min(c.length, d.length))
     var i = 0
     val array = new Array[AnyRef](len)
@@ -431,7 +439,8 @@ private[iarray] abstract class IArrayFunctions {
   }
 
   final def zipWith5[A, B, C, D, E, F](a: IArray[A], b: IArray[B], c: IArray[C], d: IArray[D], e: IArray[E])(
-    f: (A, B, C, D, E) => F): IArray[F] = {
+    f: (A, B, C, D, E) => F
+  ): IArray[F] = {
     val len = Math.min(Math.min(Math.min(Math.min(a.length, b.length), c.length), d.length), e.length)
     var i = 0
     val array = new Array[AnyRef](len)

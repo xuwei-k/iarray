@@ -940,7 +940,8 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    * }}}
    */
   def unzip5[B, C, D, E, F](
-    implicit e: A <:< Product5[B, C, D, E, F]): (IArray[B], IArray[C], IArray[D], IArray[E], IArray[F]) = {
+    implicit e: A <:< Product5[B, C, D, E, F]
+  ): (IArray[B], IArray[C], IArray[D], IArray[E], IArray[F]) = {
     var i = 0
     val _1, _2, _3, _4, _5 = new Array[AnyRef](self.length)
     while (i < self.length) {
