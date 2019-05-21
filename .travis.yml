@@ -25,16 +25,13 @@ matrix:
   - env: TEST_PROJECT="iarrayJVM"
     scala: "2.12.8"
   - env: TEST_PROJECT="iarrayJVM"
-    scala: "2.13.0-RC1"
+    scala: "2.13.0-RC2"
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.11.12"
   - env: TEST_PROJECT="iarrayJS"
     scala: "2.12.8"
   - env: TEST_PROJECT="iarrayJS"
-    scala: "2.13.0-RC1"
-  - scala: 2.13.0-RC2
-    script:
-    - sbt "++${TRAVIS_SCALA_VERSION}!" scalafmtSbtCheck scalafmtCheck test:scalafmtCheck compile
+    scala: "2.13.0-RC2"
   - env: TEST_PROJECT="iarrayNative"
     scala: "2.11.12"
     dist: trusty
