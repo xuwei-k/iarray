@@ -99,7 +99,7 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   scalaVersion := Scala211,
-  crossScalaVersions := Scala211 :: "2.12.8" :: "2.13.0-RC1" :: Nil,
+  crossScalaVersions := Scala211 :: "2.12.8" :: "2.13.0-RC2" :: Nil,
   name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
@@ -245,12 +245,9 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .jvmSettings(
     libraryDependencies ++= {
-      if (scalaVersion.value == "2.13.0-RC2")
-        Nil
-      else
-        Seq(
-          "org.scalacheck" %% "scalacheck" % "1.14.0" % "test" // use in doctest
-        )
+      Seq(
+        "org.scalacheck" %% "scalacheck" % "1.14.0" % "test" // use in doctest
+      )
     },
     enableSxr := {
       CrossVersion.partialVersion(scalaVersion.value) match {
