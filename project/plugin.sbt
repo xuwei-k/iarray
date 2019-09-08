@@ -1,5 +1,3 @@
-resolvers += Opts.resolver.sonatypeReleases
-
 scalacOptions ++= Seq(
   "-deprecation",
   "-unchecked",
