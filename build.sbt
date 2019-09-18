@@ -246,7 +246,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .jvmSettings(
     libraryDependencies ++= {
       Seq(
-        "org.scalacheck" %% "scalacheck" % "1.14.0" % "test" // use in doctest
+        "org.scalacheck" %% "scalacheck" % "1.14.1" % "test" // use in doctest
       )
     },
     enableSxr := {
