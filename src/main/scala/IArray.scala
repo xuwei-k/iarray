@@ -2046,5 +2046,4 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
     }
     -1
   }
-
 }

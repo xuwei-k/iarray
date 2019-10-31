@@ -67,7 +67,6 @@ trait TestCommon extends Scalaprops {
           }
       }
     }
-
   }
 
   final implicit val throwableGen: Gen[Throwable] =

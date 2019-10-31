@@ -5,7 +5,6 @@ import scalaz._
 import scala.collection.mutable.ArrayBuilder
 
 private[iarray] abstract class IArrayFunctions {
-
   /**
    * @example{{{
    * scala> import scalaz._, std.anyVal._

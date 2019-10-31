@@ -4,7 +4,6 @@ import scalaz._
 import scalaz.std.option._
 
 private object kleisli {
-
   val toList: Kleisli[List, IArray[AnyRef], AnyRef] =
     Kleisli(_.toList)
 
@@ -69,5 +68,4 @@ private object kleisli {
   val initOptionEndo = Endomorphic.endoKleisli(initOption.run)
 
   val initMaybeEndo = Endomorphic.endoKleisli(initMaybe.run)
-
 }

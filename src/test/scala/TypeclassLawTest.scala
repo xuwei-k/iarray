@@ -5,7 +5,6 @@ import scalaprops.ScalapropsScalaz._
 import scalaz.std.anyVal._
 
 object ScalapropsTest extends TestCommon {
-
   val laws = Properties.list(
     scalazlaws.monadPlus.all[IArray],
     scalazlaws.isEmpty.all[IArray],
@@ -14,5 +13,4 @@ object ScalapropsTest extends TestCommon {
     scalazlaws.traverse.all[IArray],
     scalazlaws.cobind.all[IArray]
   )
-
 }

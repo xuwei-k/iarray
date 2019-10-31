@@ -10,7 +10,6 @@ private object IArray1Instance
     with Align[IArray1]
     with Unzip[IArray1]
     with Comonad[IArray1] {
-
   private[this] val _semigroup: Semigroup[IArray1[AnyRef]] =
     Semigroup.instance(_ plus _)
 

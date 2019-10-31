@@ -6,7 +6,6 @@ import java.util.Arrays
 import java.util.Arrays.{copyOf, copyOfRange}
 
 object IArray1 {
-
   implicit val iarray1Instance: Monad[IArray1]
     with Plus[IArray1]
     with Traverse1[IArray1]
@@ -83,7 +82,6 @@ object IArray1 {
     f: (A, B, C, D, E) => F
   ): IArray1[F] =
     IArray1(f(a.head, b.head, c.head, d.head, e.head), IArray.zipWith5(a.tail, b.tail, c.tail, d.tail, e.tail)(f))
-
 }
 
 /** Non empty immutable array
