@@ -9,7 +9,6 @@ import scalaprops.ScalapropsScalaz._
 import scalaprops.Property.forAll
 
 object IArrayTest extends TestCommon {
-
   val withIndex = forAll { a: IArray[Int] =>
     a.withIndex.map((x, y) => (x, y)) must_=== a.zipWithIndex
   }
@@ -728,5 +727,4 @@ object IArrayTest extends TestCommon {
     import syntax.std.list._
     xs.zipperEnd must_=== xs.toList.zipperEnd
   }
-
 }

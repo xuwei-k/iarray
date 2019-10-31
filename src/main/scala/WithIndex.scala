@@ -18,5 +18,4 @@ final class WithIndex[A](private val self: Array[AnyRef]) extends AnyVal {
       i += 1
     }
   }
-
 }

@@ -7,7 +7,6 @@ import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.ve
 import IArray.conform
 
 object IArray1Test extends TestCommon {
-
   val partition = forAll { (a: IArray1[Int], f: Int => Boolean) =>
     a.partition(f) must_=== a.toIArray.partition(f)
   }
@@ -196,5 +195,4 @@ object IArray1Test extends TestCommon {
     xs.scanRight(z)(f).toList must_=== xs.toList.scanRight(z)(f)
     xs.scanRight(z)(f) must_=== xs.reverse.scanLeft(z)((a, b) => f(b, a)).reverse
   }
-
 }

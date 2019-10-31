@@ -3,7 +3,6 @@ package iarray
 import scalaz._
 
 private object IArray1ZipApply extends Apply[IArray1] {
-
   override val applyApplicative = super.applyApplicative
 
   override def map[A, B](fa: IArray1[A])(f: A => B) =
@@ -49,5 +48,4 @@ private object IArray1ZipApply extends Apply[IArray1] {
     fe: => IArray1[E]
   ) =
     IArray1.zip5(fa, fb, fc, fd, fe)
-
 }
