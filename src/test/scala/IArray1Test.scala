@@ -15,7 +15,7 @@ object IArray1Test extends TestCommon {
     a.dropL(n).toList must_=== a.toList.drop(n)
   }
 
-  val toIArray = forAll { a: IArray1[Int] =>
+  val toIArray = forAll { (a: IArray1[Int]) =>
     a.toIArray must_=== IArray.fromList(a.toList)
   }
 
@@ -23,15 +23,15 @@ object IArray1Test extends TestCommon {
     a.collect(f).toList must_=== a.toList.collect(f)
   }
 
-  val unite1 = forAll { a: IArray1[NonEmptyList[Int]] =>
+  val unite1 = forAll { (a: IArray1[NonEmptyList[Int]]) =>
     a.unite1.toNel must_=== Bind[NonEmptyList].join(a.toNel)
   }.mapSize(_ / 4)
 
-  val unite = forAll { a: IArray1[List[Int]] =>
+  val unite = forAll { (a: IArray1[List[Int]]) =>
     a.unite must_=== IArray.fromList(a.toList.flatten)
   }.mapSize(_ / 4)
 
-  val fromOneAnd = forAll { a: OneAnd[Vector, Int] =>
+  val fromOneAnd = forAll { (a: OneAnd[Vector, Int]) =>
     val x = IArray1.fromOneAnd(a)
     x.head must_=== a.head
     x.tail.toVector must_=== a.tail
@@ -67,7 +67,7 @@ object IArray1Test extends TestCommon {
     as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
   }
 
-  val zipWithIndex = forAll { a: IArray1[Int] =>
+  val zipWithIndex = forAll { (a: IArray1[Int]) =>
     a.zipWithIndex.toList must_=== a.toList.zipWithIndex
   }
 
@@ -80,7 +80,7 @@ object IArray1Test extends TestCommon {
     Align[IArray1].merge(a, b).toList must_=== Align[List].merge(a.toList, b.toList)
   }
 
-  val `cojoin cobind` = forAll { a: IArray1[Int] =>
+  val `cojoin cobind` = forAll { (a: IArray1[Int]) =>
     a.cojoin must_=== a.cobind(conform)
     a.cojoin.map(_.toNel).toNel must_=== Comonad[NonEmptyList].cojoin(a.toNel)
   }
@@ -90,23 +90,23 @@ object IArray1Test extends TestCommon {
     b.sorted.toList must_=== b.toList.sorted
   }
 
-  val sortBy = forAll { a: IArray1[Int] =>
+  val sortBy = forAll { (a: IArray1[Int]) =>
     a.sortBy(-_).toList must_=== a.toList.sortBy(-_)
     val f = (_: Int).toString.reverse
     a.sortBy(f).toList must_=== a.toList.sortBy(f)
   }
 
-  val sortWith = forAll { a: IArray1[Int] =>
+  val sortWith = forAll { (a: IArray1[Int]) =>
     a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _)
   }
 
-  val `max min` = forAll { a: IArray1[Int] =>
+  val `max min` = forAll { (a: IArray1[Int]) =>
     import syntax.foldable1._
     a.max must_=== a.toNel.maximum1
     a.min must_=== a.toNel.minimum1
   }
 
-  val `toIterator` = forAll { a: IArray1[Int] =>
+  val `toIterator` = forAll { (a: IArray1[Int]) =>
     a.toIterator.toList must_=== a.toList
   }
 
@@ -123,7 +123,7 @@ object IArray1Test extends TestCommon {
     (as :+ a).toList must_=== as.toList :+ a
   }
 
-  val init = forAll { as: IArray1[Int] =>
+  val init = forAll { (as: IArray1[Int]) =>
     as.init must_=== as.toIArray.initOption.get
   }
 
@@ -147,7 +147,7 @@ object IArray1Test extends TestCommon {
     as.contains(a) must_=== as.toList.contains(a)
   }
 
-  val reverse = forAll { as: IArray1[Int] =>
+  val reverse = forAll { (as: IArray1[Int]) =>
     as.reverse.toNel must_=== as.toNel.reverse
   }
 
@@ -155,7 +155,7 @@ object IArray1Test extends TestCommon {
     as.reverseMap(f).toList must_=== as.toList.reverseMap(f)
   }
 
-  val flatten = forAll { as: IArray1[IArray1[Int]] =>
+  val flatten = forAll { (as: IArray1[IArray1[Int]]) =>
     as.flatten.toList must_=== as.toList.flatMap(_.toList)
   }.mapSize(_ / 4)
 
@@ -165,12 +165,12 @@ object IArray1Test extends TestCommon {
     as.indexOfR(a) must_=== toOpt(as.toList.lastIndexOf(a))
   }
 
-  val intersperse = forAll { xs: IArray1[String] =>
+  val intersperse = forAll { (xs: IArray1[String]) =>
     import syntax.std.list._
     xs.intersperse(",").toList must_=== xs.toList.intersperse(",")
   }
 
-  val intercalate1 = forAll { xs: IArray1[String] =>
+  val intercalate1 = forAll { (xs: IArray1[String]) =>
     xs.intercalate1(",") must_=== Foldable[NonEmptyList].intercalate(xs.toNel, ",")
   }
 
@@ -181,7 +181,7 @@ object IArray1Test extends TestCommon {
     std.boolean.conditional(a1 == a2, a1.## == a2.##) must_=== true
   }
 
-  val `fromNel toNel` = forAll { xs: NonEmptyList[Int] =>
+  val `fromNel toNel` = forAll { (xs: NonEmptyList[Int]) =>
     IArray1.fromNel(xs).toNel must_=== xs
   }
 
