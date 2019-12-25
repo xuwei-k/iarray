@@ -915,8 +915,8 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
 
   /**
    * @example{{{
-   * scala> IArray(("a", 1, true, 'x), ("b", 2, false, 'y)).unzip4
-   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[Symbol]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray('x, 'y))
+   * scala> IArray(("a", 1, true, List(3)), ("b", 2, false, List(4))).unzip4
+   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[List[Int]]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray(List(3), List(4)))
    * }}}
    */
   def unzip4[B, C, D, E](implicit e: A <:< Product4[B, C, D, E]): (IArray[B], IArray[C], IArray[D], IArray[E]) = {
@@ -935,8 +935,8 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
 
   /**
    * @example{{{
-   * scala> IArray(("a", 1, true, 'x, 'f'), ("b", 2, false, 'y, 'g')).unzip5
-   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[Symbol], IArray[Char]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray('x, 'y),IArray(f, g))
+   * scala> IArray(("a", 1, true, List(3), 'f'), ("b", 2, false, List(4), 'g')).unzip5
+   * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[List[Int]], IArray[Char]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray(List(3), List(4)),IArray(f, g))
    * }}}
    */
   def unzip5[B, C, D, E, F](
