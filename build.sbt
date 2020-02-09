@@ -1,4 +1,3 @@
-import com.typesafe.sbt.pgp.PgpKeys
 import sbtcrossproject.crossProject
 import sbtrelease._
 import ReleaseStateTransformations._
