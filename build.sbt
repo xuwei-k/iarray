@@ -46,12 +46,7 @@ lazy val gitTagOrHash = Def.setting {
 }
 
 val commonSettings = Seq[SettingsDefinition](
-  publishTo := Some(
-    if (isSnapshot.value)
-      Opts.resolver.sonatypeSnapshots
-    else
-      Opts.resolver.sonatypeStaging
-  ),
+  publishTo := sonatypePublishToBundle.value,
   unmanagedResources in Compile += (baseDirectory in LocalRootProject).value / "LICENSE.txt",
   credentials in Global ++= PartialFunction
     .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
@@ -85,10 +80,10 @@ val commonSettings = Seq[SettingsDefinition](
     tagRelease,
     releaseStepCross(PgpKeys.publishSigned),
     releaseStepCommandAndRemaining("iarrayNative/publishSigned"),
+    releaseStepCommandAndRemaining("sonatypeBundleRelease"),
     setNextVersion,
     commitNextVersion,
     updateReadmeProcess,
-    releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   ),
   TaskKey[Unit]("checkPackage", "show pom.xml and sources.jar") := {
