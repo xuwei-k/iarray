@@ -190,9 +190,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
       F.apply2(
         f(head),
         OneAnd.oneAndTraverse[IArray].traverse1(OneAnd(tail.head, tail.tail))(f)
-      ) { (h, t) =>
-        IArray1(h, t.head +: t.tail)
-      }
+      ) { (h, t) => IArray1(h, t.head +: t.tail) }
 
   def scanRight[B](z: B)(f: (A, B) => B): IArray1[B] = {
     var i = tail.self.length
