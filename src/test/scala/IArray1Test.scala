@@ -7,29 +7,20 @@ import std.anyVal._, std.list._, std.option._, std.string._, std.tuple._, std.ve
 import IArray.conform
 
 object IArray1Test extends TestCommon {
-  val partition = forAll { (a: IArray1[Int], f: Int => Boolean) =>
-    a.partition(f) must_=== a.toIArray.partition(f)
-  }
+  val partition = forAll { (a: IArray1[Int], f: Int => Boolean) => a.partition(f) must_=== a.toIArray.partition(f) }
 
-  val dropL = forAll { (a: IArray1[Int], n: Int) =>
-    a.dropL(n).toList must_=== a.toList.drop(n)
-  }
+  val dropL = forAll { (a: IArray1[Int], n: Int) => a.dropL(n).toList must_=== a.toList.drop(n) }
 
-  val toIArray = forAll { (a: IArray1[Int]) =>
-    a.toIArray must_=== IArray.fromList(a.toList)
-  }
+  val toIArray = forAll { (a: IArray1[Int]) => a.toIArray must_=== IArray.fromList(a.toList) }
 
   val collect = forAll { (a: IArray1[Int], f: PartialFunction[Int, String]) =>
     a.collect(f).toList must_=== a.toList.collect(f)
   }
 
-  val unite1 = forAll { (a: IArray1[NonEmptyList[Int]]) =>
-    a.unite1.toNel must_=== Bind[NonEmptyList].join(a.toNel)
-  }.mapSize(_ / 4)
+  val unite1 = forAll { (a: IArray1[NonEmptyList[Int]]) => a.unite1.toNel must_=== Bind[NonEmptyList].join(a.toNel) }
+    .mapSize(_ / 4)
 
-  val unite = forAll { (a: IArray1[List[Int]]) =>
-    a.unite must_=== IArray.fromList(a.toList.flatten)
-  }.mapSize(_ / 4)
+  val unite = forAll { (a: IArray1[List[Int]]) => a.unite must_=== IArray.fromList(a.toList.flatten) }.mapSize(_ / 4)
 
   val fromOneAnd = forAll { (a: OneAnd[Vector, Int]) =>
     val x = IArray1.fromOneAnd(a)
@@ -37,13 +28,9 @@ object IArray1Test extends TestCommon {
     x.tail.toVector must_=== a.tail
   }
 
-  val maxOf = forAll { (a: IArray1[Int], f: Int => Int) =>
-    a.maxOf(f) must_=== a.toList.map(f).max
-  }
+  val maxOf = forAll { (a: IArray1[Int], f: Int => Int) => a.maxOf(f) must_=== a.toList.map(f).max }
 
-  val minOf = forAll { (a: IArray1[Int], f: Int => Int) =>
-    a.minOf(f) must_=== a.toList.map(f).min
-  }
+  val minOf = forAll { (a: IArray1[Int], f: Int => Int) => a.minOf(f) must_=== a.toList.map(f).min }
 
   val maxBy = forAll { (a: IArray1[Int], f: Int => Int) =>
     a.maxBy(conform) must_=== a.toList.maxBy(conform)
@@ -67,9 +54,7 @@ object IArray1Test extends TestCommon {
     as.zipAll(bs, a, b).toList must_=== as.toList.zipAll(bs.toList, a, b)
   }
 
-  val zipWithIndex = forAll { (a: IArray1[Int]) =>
-    a.zipWithIndex.toList must_=== a.toList.zipWithIndex
-  }
+  val zipWithIndex = forAll { (a: IArray1[Int]) => a.zipWithIndex.toList must_=== a.toList.zipWithIndex }
 
   val `collectFirst collectLast` = forAll { (a: IArray1[Int], f: PartialFunction[Int, String]) =>
     a.collectFirst(f) must_=== a.toList.collectFirst(f)
@@ -96,9 +81,7 @@ object IArray1Test extends TestCommon {
     a.sortBy(f).toList must_=== a.toList.sortBy(f)
   }
 
-  val sortWith = forAll { (a: IArray1[Int]) =>
-    a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _)
-  }
+  val sortWith = forAll { (a: IArray1[Int]) => a.sortWith(_ > _).toList must_=== a.toList.sortWith(_ > _) }
 
   val `max min` = forAll { (a: IArray1[Int]) =>
     import syntax.foldable1._
@@ -106,9 +89,7 @@ object IArray1Test extends TestCommon {
     a.min must_=== a.toNel.minimum1
   }
 
-  val `toIterator` = forAll { (a: IArray1[Int]) =>
-    a.toIterator.toList must_=== a.toList
-  }
+  val `toIterator` = forAll { (a: IArray1[Int]) => a.toIterator.toList must_=== a.toList }
 
   val `toArray Int` = forAll { (a: Int, as: Array[Int]) =>
     IArray1(a, IArray.from(as)).toArray.toList must_=== (a +: as).toList
@@ -123,41 +104,26 @@ object IArray1Test extends TestCommon {
     (as :+ a).toList must_=== as.toList :+ a
   }
 
-  val init = forAll { (as: IArray1[Int]) =>
-    as.init must_=== as.toIArray.initOption.get
-  }
+  val init = forAll { (as: IArray1[Int]) => as.init must_=== as.toIArray.initOption.get }
 
-  val forall = forAll { (as: IArray1[Int], a: Int) =>
-    as.forall(_ > a) must_=== as.toList.forall(_ > a)
-  }
+  val forall = forAll { (as: IArray1[Int], a: Int) => as.forall(_ > a) must_=== as.toList.forall(_ > a) }
 
-  val exists = forAll { (as: IArray1[Int], a: Int) =>
-    as.exists(_ > a) must_=== as.toList.exists(_ > a)
-  }
+  val exists = forAll { (as: IArray1[Int], a: Int) => as.exists(_ > a) must_=== as.toList.exists(_ > a) }
 
-  val find = forAll { (as: IArray1[Int], f: Int => Boolean) =>
-    as.find(f) must_=== as.toList.find(f)
-  }
+  val find = forAll { (as: IArray1[Int], f: Int => Boolean) => as.find(f) must_=== as.toList.find(f) }
 
-  val findRight = forAll { (as: IArray1[Int], f: Int => Boolean) =>
-    as.findRight(f) must_=== as.reverse.find(f)
-  }
+  val findRight = forAll { (as: IArray1[Int], f: Int => Boolean) => as.findRight(f) must_=== as.reverse.find(f) }
 
-  val contains = forAll { (as: IArray1[Int], a: Int) =>
-    as.contains(a) must_=== as.toList.contains(a)
-  }
+  val contains = forAll { (as: IArray1[Int], a: Int) => as.contains(a) must_=== as.toList.contains(a) }
 
-  val reverse = forAll { (as: IArray1[Int]) =>
-    as.reverse.toNel must_=== as.toNel.reverse
-  }
+  val reverse = forAll { (as: IArray1[Int]) => as.reverse.toNel must_=== as.toNel.reverse }
 
   val reverseMap = forAll { (as: IArray1[Int], f: Int => Byte) =>
     as.reverseMap(f).toList must_=== as.toList.reverseMap(f)
   }
 
-  val flatten = forAll { (as: IArray1[IArray1[Int]]) =>
-    as.flatten.toList must_=== as.toList.flatMap(_.toList)
-  }.mapSize(_ / 4)
+  val flatten = forAll { (as: IArray1[IArray1[Int]]) => as.flatten.toList must_=== as.toList.flatMap(_.toList) }
+    .mapSize(_ / 4)
 
   val `indexOfL indexOfR` = forAll { (as: IArray1[Int], a: Int) =>
     def toOpt(n: Int) = if (n < 0) None else Some(n)
@@ -181,9 +147,7 @@ object IArray1Test extends TestCommon {
     std.boolean.conditional(a1 == a2, a1.## == a2.##) must_=== true
   }
 
-  val `fromNel toNel` = forAll { (xs: NonEmptyList[Int]) =>
-    IArray1.fromNel(xs).toNel must_=== xs
-  }
+  val `fromNel toNel` = forAll { (xs: NonEmptyList[Int]) => IArray1.fromNel(xs).toNel must_=== xs }
 
   val scanLeft = forAll { (xs: IArray1[Int], n: Int, z: List[Int]) =>
     val f = (a: List[Int], b: Int) => (n + b) :: a
