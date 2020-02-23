@@ -60,9 +60,7 @@ val commonSettings = Seq[SettingsDefinition](
       override def transform(n: Node) =
         if (f(n)) NodeSeq.Empty else n
     }
-    val stripTestScope = stripIf { n =>
-      n.label == "dependency" && (n \ "scope").text == "test"
-    }
+    val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
     new RuleTransformer(stripTestScope).transform(node)(0)
   },
   releaseTagName := gitTagOrHash.value,
@@ -253,9 +251,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     },
     Defaults.packageTaskSettings(
       packageSxr in Compile,
-      (crossTarget in Compile).map { dir =>
-        Path.allSubpaths(dir / "classes.sxr").toSeq
-      }
+      (crossTarget in Compile).map { dir => Path.allSubpaths(dir / "classes.sxr").toSeq }
     ),
     ifSxrAvailable(
       resolvers,
