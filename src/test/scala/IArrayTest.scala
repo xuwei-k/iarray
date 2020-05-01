@@ -352,8 +352,8 @@ object IArrayTest extends TestCommon {
     a.mapAccumR(List[Int]())(f).rightMap(_.toList) must_=== F.mapAccumR(a.toList, List[Int]())(f)
   }.mapSize(_ / 4)
 
-  val fold = forAll { (a: IArray[List[Int]]) => Foldable[IArray].fold(a) must_=== Foldable[List].fold(a.toList) }
-    .mapSize(_ / 4)
+  val fold =
+    forAll { (a: IArray[List[Int]]) => Foldable[IArray].fold(a) must_=== Foldable[List].fold(a.toList) }.mapSize(_ / 4)
 
   val fold1Opt = forAll { (a: IArray[NonEmptyList[Int]]) =>
     a.fold1Opt must_=== Foldable[List].foldMap1Opt(a.toList)(conform)

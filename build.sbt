@@ -2,13 +2,14 @@ import sbtcrossproject.crossProject
 import sbtrelease._
 import ReleaseStateTransformations._
 
-def releaseStepCross[A](key: TaskKey[A]) = ReleaseStep(
-  action = { state =>
-    val extracted = Project extract state
-    extracted.runAggregated(key in Global in extracted.get(thisProjectRef), state)
-  },
-  enableCrossBuild = true
-)
+def releaseStepCross[A](key: TaskKey[A]) =
+  ReleaseStep(
+    action = { state =>
+      val extracted = Project extract state
+      extracted.runAggregated(key in Global in extracted.get(thisProjectRef), state)
+    },
+    enableCrossBuild = true
+  )
 
 val CustomCrossType = new sbtcrossproject.CrossType {
   override def projectDir(crossBase: File, projectType: String) =
@@ -56,10 +57,11 @@ val commonSettings = Seq[SettingsDefinition](
   pomPostProcess := { node =>
     import scala.xml._
     import scala.xml.transform._
-    def stripIf(f: Node => Boolean) = new RewriteRule {
-      override def transform(n: Node) =
-        if (f(n)) NodeSeq.Empty else n
-    }
+    def stripIf(f: Node => Boolean) =
+      new RewriteRule {
+        override def transform(n: Node) =
+          if (f(n)) NodeSeq.Empty else n
+      }
     val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
     new RuleTransformer(stripTestScope).transform(node)(0)
   },

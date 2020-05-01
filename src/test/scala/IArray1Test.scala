@@ -122,8 +122,8 @@ object IArray1Test extends TestCommon {
     as.reverseMap(f).toList must_=== as.toList.reverseMap(f)
   }
 
-  val flatten = forAll { (as: IArray1[IArray1[Int]]) => as.flatten.toList must_=== as.toList.flatMap(_.toList) }
-    .mapSize(_ / 4)
+  val flatten =
+    forAll { (as: IArray1[IArray1[Int]]) => as.flatten.toList must_=== as.toList.flatMap(_.toList) }.mapSize(_ / 4)
 
   val `indexOfL indexOfR` = forAll { (as: IArray1[Int], a: Int) =>
     def toOpt(n: Int) = if (n < 0) None else Some(n)

@@ -15,14 +15,16 @@ trait TestCommon extends Scalaprops {
 
   val tryEitherIso: ({ type λ[α] = Throwable \/ α })#λ <~> scala.util.Try =
     new IsoFunctorTemplate[({ type λ[α] = Throwable \/ α })#λ, scala.util.Try] {
-      def from[A](ga: scala.util.Try[A]) = ga match {
-        case scala.util.Success(a) => \/-(a)
-        case scala.util.Failure(e) => -\/(e)
-      }
-      def to[A](fa: Throwable \/ A) = fa match {
-        case \/-(a) => scala.util.Success(a)
-        case -\/(e) => scala.util.Failure(e)
-      }
+      def from[A](ga: scala.util.Try[A]) =
+        ga match {
+          case scala.util.Success(a) => \/-(a)
+          case scala.util.Failure(e) => -\/(e)
+        }
+      def to[A](fa: Throwable \/ A) =
+        fa match {
+          case \/-(a) => scala.util.Success(a)
+          case -\/(e) => scala.util.Failure(e)
+        }
     }
 
   final implicit def iarrayGen[A: Gen]: Gen[IArray[A]] =
