@@ -939,8 +939,8 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    * res0: (IArray[String], IArray[Int], IArray[Boolean], IArray[List[Int]], IArray[Char]) = (IArray(a, b),IArray(1, 2),IArray(true, false),IArray(List(3), List(4)),IArray(f, g))
    * }}}
    */
-  def unzip5[B, C, D, E, F](
-    implicit e: A <:< Product5[B, C, D, E, F]
+  def unzip5[B, C, D, E, F](implicit
+    e: A <:< Product5[B, C, D, E, F]
   ): (IArray[B], IArray[C], IArray[D], IArray[E], IArray[F]) = {
     var i = 0
     val _1, _2, _3, _4, _5 = new Array[AnyRef](self.length)
@@ -1834,10 +1834,13 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    */
   def groupBy1[B](f: A => B)(implicit O: Order[B]): B ==>> IArray1[A] =
     foldl(==>>.empty[B, OneAnd[List, A]]) { (m, a) =>
-      m.alter(f(a), {
-        case Some(OneAnd(h, t)) => Some(OneAnd(a, h :: t))
-        case None => Some(OneAnd[List, A](a, Nil))
-      })
+      m.alter(
+        f(a),
+        {
+          case Some(OneAnd(h, t)) => Some(OneAnd(a, h :: t))
+          case None => Some(OneAnd[List, A](a, Nil))
+        }
+      )
     }.map {
       case OneAnd(h, t) =>
         if (t.isEmpty) {
@@ -1846,14 +1849,15 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
           val len = t.size
           val array = new Array[AnyRef](len)
           @tailrec
-          def go(i: Int, list: List[A]): IArray1[A] = (list: @unchecked) match {
-            case a :: last :: Nil =>
-              array(i) = a.asInstanceOf[AnyRef]
-              IArray1(last, new IArray[A](array))
-            case a :: tail =>
-              array(i) = a.asInstanceOf[AnyRef]
-              go(i - 1, tail)
-          }
+          def go(i: Int, list: List[A]): IArray1[A] =
+            (list: @unchecked) match {
+              case a :: last :: Nil =>
+                array(i) = a.asInstanceOf[AnyRef]
+                IArray1(last, new IArray[A](array))
+              case a :: tail =>
+                array(i) = a.asInstanceOf[AnyRef]
+                go(i - 1, tail)
+            }
           go(len - 1, h :: t)
         }
     }
@@ -2003,18 +2007,19 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
    * res0: Boolean = true
    * }}}
    */
-  def ===(that: IArray[A])(implicit A: Equal[A]): Boolean = (self eq that.self) || {
-    (self.length == that.length) && {
-      var i = 0
-      while (i < self.length) {
-        if (!A.equal(that(i), this(i))) {
-          return false
+  def ===(that: IArray[A])(implicit A: Equal[A]): Boolean =
+    (self eq that.self) || {
+      (self.length == that.length) && {
+        var i = 0
+        while (i < self.length) {
+          if (!A.equal(that(i), this(i))) {
+            return false
+          }
+          i += 1
         }
-        i += 1
+        true
       }
-      true
     }
-  }
 
   /**
    * @example{{{

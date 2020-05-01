@@ -146,8 +146,8 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
     (IArray1(h._1, t._1), IArray1(h._2, t._2), IArray1(h._3, t._3), IArray1(h._4, t._4))
   }
 
-  def unzip5[B, C, D, E, F](
-    implicit e: A <:< Product5[B, C, D, E, F]
+  def unzip5[B, C, D, E, F](implicit
+    e: A <:< Product5[B, C, D, E, F]
   ): (IArray1[B], IArray1[C], IArray1[D], IArray1[E], IArray1[F]) = {
     val h = e(head)
     val t = tail.unzip5
@@ -384,15 +384,16 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   def toList: List[A] =
     head :: tail.toList
 
-  def toIterator: Iterator[A] = new Iterator[A] {
-    private[this] var i = 0
-    def hasNext: Boolean = i < self.length
-    def next(): A = {
-      val n = apply(i)
-      i += 1
-      n
+  def toIterator: Iterator[A] =
+    new Iterator[A] {
+      private[this] var i = 0
+      def hasNext: Boolean = i < self.length
+      def next(): A = {
+        val n = apply(i)
+        i += 1
+        n
+      }
     }
-  }
 
   def toIList: IList[A] =
     head +: tail.toIList
@@ -539,13 +540,14 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
   def ===(that: IArray1[A])(implicit E: Equal[A]): Boolean =
     (this eq that) || (E.equal(head, that.head) && (tail === that.tail))
 
-  override def equals(that: Any): Boolean = that match {
-    case other @ IArray1(h, t) =>
-      (this eq other) || (
-        (head == h) && (t.self.length == tail.self.length) && java.util.Arrays.equals(t.self, tail.self)
-      )
-    case _ => false
-  }
+  override def equals(that: Any): Boolean =
+    that match {
+      case other @ IArray1(h, t) =>
+        (this eq other) || (
+          (head == h) && (t.self.length == tail.self.length) && java.util.Arrays.equals(t.self, tail.self)
+        )
+      case _ => false
+    }
 
   override def hashCode: Int = {
     head.## + java.util.Arrays.hashCode(tail.self)

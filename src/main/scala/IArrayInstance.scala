@@ -74,17 +74,19 @@ private object IArrayInstance
   override def foldRight1Opt[A](fa: IArray[A])(f: (A, => A) => A) =
     fa.foldr1(byName2(f))
   override def foldRightM[G[_], A, B](fa: IArray[A], z: => B)(f: (A, => B) => G[B])(implicit M: Monad[G]): G[B] = {
-    def go(list: List[A]): Free.Trampoline[G[B]] = list match {
-      case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(h, _)))
-      case Nil => Trampoline.done(M.point(z))
-    }
+    def go(list: List[A]): Free.Trampoline[G[B]] =
+      list match {
+        case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(h, _)))
+        case Nil => Trampoline.done(M.point(z))
+      }
     go(fa.toList).run
   }
   override def foldLeftM[G[_], A, B](fa: IArray[A], z: B)(f: (B, A) => G[B])(implicit M: Monad[G]): G[B] = {
-    def go(list: List[A]): Free.Trampoline[G[B]] = list match {
-      case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(_, h)))
-      case Nil => Trampoline.done(M.point(z))
-    }
+    def go(list: List[A]): Free.Trampoline[G[B]] =
+      list match {
+        case h :: t => Trampoline.suspend(go(t)).map(gb => M.bind(gb)(f(_, h)))
+        case Nil => Trampoline.done(M.point(z))
+      }
     go(fa.reverseList).run
   }
   override def empty[A](fa: IArray[A]) =

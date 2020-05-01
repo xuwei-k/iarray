@@ -231,12 +231,13 @@ private[iarray] abstract class IArrayFunctions {
   final def unfold[A, B](z: B)(f: B => Option[(B, A)]): IArray[A] = {
     val builder = new ArrayBuilder.ofRef[AnyRef]()
     @tailrec
-    def loop(next: Option[(B, A)]): Unit = next match {
-      case Some((b, a)) =>
-        builder += a.asInstanceOf[AnyRef]
-        loop(f(b))
-      case None =>
-    }
+    def loop(next: Option[(B, A)]): Unit =
+      next match {
+        case Some((b, a)) =>
+          builder += a.asInstanceOf[AnyRef]
+          loop(f(b))
+        case None =>
+      }
     loop(f(z))
     new IArray(builder.result)
   }
@@ -311,12 +312,13 @@ private[iarray] abstract class IArrayFunctions {
 
   final def fromIList[A](xs: IList[A]): IArray[A] = {
     val array = new Array[AnyRef](xs.length)
-    @tailrec def loop(list: IList[A], i: Int): Unit = list match {
-      case ICons(h, t) =>
-        array(i) = h.asInstanceOf[AnyRef]
-        loop(t, i + 1)
-      case _ =>
-    }
+    @tailrec def loop(list: IList[A], i: Int): Unit =
+      list match {
+        case ICons(h, t) =>
+          array(i) = h.asInstanceOf[AnyRef]
+          loop(t, i + 1)
+        case _ =>
+      }
     loop(xs, 0)
     new IArray(array)
   }
@@ -360,20 +362,21 @@ private[iarray] abstract class IArrayFunctions {
       new IArray(array)
     }
 
-  final def from[A](xs: Iterable[A]): IArray[A] = xs match {
-    case list: List[A] => fromList(list)
-    case ixSq: IndexedSeq[A] => fromIndexedSeq(ixSq)
-    case _ => {
-      val ite = xs.iterator
-      val array = new Array[AnyRef](xs.size)
-      var i = 0
-      while (ite.hasNext) {
-        array(i) = ite.next.asInstanceOf[AnyRef]
-        i += 1
+  final def from[A](xs: Iterable[A]): IArray[A] =
+    xs match {
+      case list: List[A] => fromList(list)
+      case ixSq: IndexedSeq[A] => fromIndexedSeq(ixSq)
+      case _ => {
+        val ite = xs.iterator
+        val array = new Array[AnyRef](xs.size)
+        var i = 0
+        while (ite.hasNext) {
+          array(i) = ite.next.asInstanceOf[AnyRef]
+          i += 1
+        }
+        new IArray[A](array)
       }
-      new IArray[A](array)
     }
-  }
 
   final def zip3[A, B, C](a: IArray[A], b: IArray[B], c: IArray[C]): IArray[(A, B, C)] = {
     val len = Math.min(Math.min(a.length, b.length), c.length)
