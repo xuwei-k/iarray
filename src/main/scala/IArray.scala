@@ -380,7 +380,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
     if (isEmpty)
       None
     else
-      Some(NonEmptyList.nel(self(0).asInstanceOf[A], toIList.tailOption.get))
+      Some(NonEmptyList.nel(self(0).asInstanceOf[A], toIList.tailMaybe.toOption.get))
 
   /**
    * @example{{{
@@ -1837,8 +1837,10 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       m.alter(
         f(a),
         {
-          case Some(OneAnd(h, t)) => Some(OneAnd(a, h :: t))
-          case None => Some(OneAnd[List, A](a, Nil))
+          case Maybe.Just(x) =>
+            Maybe.just(OneAnd(a, x.head :: x.tail))
+          case Maybe.Empty() =>
+            Maybe.just(OneAnd[List, A](a, Nil))
         }
       )
     }.map {

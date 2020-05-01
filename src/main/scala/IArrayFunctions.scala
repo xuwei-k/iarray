@@ -18,8 +18,8 @@ private[iarray] abstract class IArrayFunctions {
    */
   implicit final def iarrayShow[A](implicit A: Show[A]): Show[IArray[A]] =
     new Show[IArray[A]] {
-      override def shows(a: IArray[A]) =
-        a.toIterator.map(A.shows).mkString("IArray(", ", ", ")")
+      override def show(a: IArray[A]) =
+        Cord(a.toIterator.map(A.shows).mkString("IArray(", ", ", ")"))
     }
 
   private[this] val _conform: AnyRef => AnyRef =
