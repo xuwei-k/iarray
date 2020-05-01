@@ -35,7 +35,7 @@ val Scala211 = "2.11.12"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
-val scalazV = "7.2.30"
+val scalazV = "7.3.0"
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
@@ -221,7 +221,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     commonSettings,
     scalapropsCoreSettings,
-    scalapropsVersion := "0.6.3",
+    scalapropsVersion := "0.8.0",
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")

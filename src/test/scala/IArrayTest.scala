@@ -39,7 +39,7 @@ object IArrayTest extends TestCommon {
 
   val toNel = forAll { (a: IArray[Byte]) =>
     import syntax.std.list._
-    a.toNel must_=== a.toList.toNel
+    a.toNel must_=== a.toList.toNel.toOption
   }
 
   val toIList = forAll { (a: IList[String]) => IArray.fromIList(a).toIList must_=== a }
@@ -190,8 +190,8 @@ object IArrayTest extends TestCommon {
   val filter = forAll { (a: IArray[Int], f: Int => Boolean) => a.filter(f).toList must_=== a.toList.filter(f) }
 
   val collectBy = forAll { (a: IArray[Int \/ String]) =>
-    implicit val (s, e) = (Show.showA[\/-[String]], Equal.equalA[\/-[String]])
-    a.collectBy[\/-[String]] must_=== a.collect { case r @ \/-(_) => r }
+    implicit val (s, e) = (Show.showA[Int \/- String], Equal.equalA[Int \/- String])
+    a.collectBy[Int \/- String] must_=== a.collect { case r @ \/-(_) => r }
   }
 
   val collect = forAll { (a: IArray[Int]) =>
@@ -547,7 +547,7 @@ object IArrayTest extends TestCommon {
     val F = Bifunctor[Tuple2]
     import F.bifunctorSyntax._
     MonadPlus[IArray].separate(eithers).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(eithers.toList)
-    val validations = eithers.map(_.validation)
+    val validations = eithers.map(_.toValidation)
     MonadPlus[IArray].separate(validations).bimap(_.toList, _.toList) must_=== MonadPlus[List].separate(
       validations.toList
     )
@@ -631,6 +631,6 @@ object IArrayTest extends TestCommon {
 
   val zipperEnd = forAll { (xs: IArray[String]) =>
     import syntax.std.list._
-    xs.zipperEnd must_=== xs.toList.zipperEnd
+    xs.zipperEnd must_=== xs.toList.zipperEnd.toOption
   }
 }

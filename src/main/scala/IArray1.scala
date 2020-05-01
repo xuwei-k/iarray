@@ -26,8 +26,8 @@ object IArray1 {
    */
   implicit def iarray1Show[A](implicit A: Show[A]): Show[IArray1[A]] =
     new Show[IArray1[A]] {
-      override def shows(a: IArray1[A]) =
-        a.toIterator.map(A.shows).mkString("IArray1(", ", ", ")")
+      override def show(a: IArray1[A]) =
+        Cord(a.toIterator.map(A.shows).mkString("IArray1(", ", ", ")"))
     }
 
   val zipApply: Apply[IArray1] = IArray1ZipApply
