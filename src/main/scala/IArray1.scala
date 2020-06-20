@@ -84,7 +84,8 @@ object IArray1 {
     IArray1(f(a.head, b.head, c.head, d.head, e.head), IArray.zipWith5(a.tail, b.tail, c.tail, d.tail, e.tail)(f))
 }
 
-/** Non empty immutable array
+/**
+ * Non empty immutable array
  */
 final case class IArray1[A](head: A, tail: IArray[A]) { self =>
 
