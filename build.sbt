@@ -121,6 +121,7 @@ val commonSettings = Seq[SettingsDefinition](
     </scm>,
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
   scalacOptions ++= Seq(
+    "-Xsource:3",
     "-deprecation",
     "-unchecked",
     "-Xlint",
