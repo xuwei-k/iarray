@@ -1,6 +1,6 @@
 # IArray
 
-[![Build Status](https://secure.travis-ci.org/xuwei-k/iarray.png?branch=master)](http://travis-ci.org/xuwei-k/iarray)
+[![Build Status](https://secure.travis-ci.com/xuwei-k/iarray.png?branch=master)](http://travis-ci.com/xuwei-k/iarray)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/iarray_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/iarray_2.12)
 [![Scaladoc](https://javadoc-badge.appspot.com/com.github.xuwei-k/iarray_2.12.svg?label=scaladoc)](https://javadoc-badge.appspot.com/com.github.xuwei-k/iarray_2.12/iarray/index.html?javadocio=true)
 
