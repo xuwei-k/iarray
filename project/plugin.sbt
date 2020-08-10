@@ -14,7 +14,7 @@ addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.9.4")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.10.0")
 
-addSbtPlugin("com.github.tkawachi" % "sbt-doctest" % "0.9.6")
+addSbtPlugin("com.github.tkawachi" % "sbt-doctest" % "0.9.7")
 
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.3.2")
 
