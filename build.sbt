@@ -121,17 +121,23 @@ val commonSettings = Seq[SettingsDefinition](
     </scm>,
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
   scalacOptions ++= Seq(
-    "-Xsource:3",
     "-deprecation",
     "-unchecked",
-    "-Xlint",
-    "-language:existentials",
-    "-language:higherKinds",
-    "-language:implicitConversions"
+    "-language:existentials,higherKinds,implicitConversions"
   ),
+  scalacOptions ++= {
+    if (isDotty.value) {
+      Nil
+    } else {
+      Seq(
+        "-Xsource:3",
+        "-Xlint"
+      )
+    }
+  },
   libraryDependencies ++= Seq(
     "org.scalaz" %% "scalaz-core" % scalazV
-  ),
+  ).map(_.withDottyCompat(scalaVersion.value)),
   buildInfoKeys := Seq[BuildInfoKey](
     organization,
     name,
@@ -226,23 +232,29 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
-    )
+    ).map(_.withDottyCompat(scalaVersion.value))
   )
   .configurePlatforms(NativePlatform, JSPlatform)(
     _.disablePlugins(DoctestPlugin)
   )
   .jsSettings(
-    scalacOptions += {
+    scalacOptions ++= {
       val a = (baseDirectory in LocalRootProject).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/iarray/" + gitTagOrHash.value
-      s"-P:scalajs:mapSourceURI:$a->$g/"
+      // TODO
+      // https://github.com/lampepfl/dotty/blob/4c99388e77be12ee6cc/compiler/src/dotty/tools/backend/sjs/JSPositions.scala#L64-L69
+      if (isDottyJS.value) {
+        Nil
+      } else {
+        Seq(s"-P:scalajs:mapSourceURI:$a->$g/")
+      }
     }
   )
   .jvmSettings(
     libraryDependencies ++= {
       Seq(
         "org.scalacheck" %% "scalacheck" % "1.14.3" % "test" // use in doctest
-      )
+      ).map(_.withDottyCompat(scalaVersion.value))
     },
     enableSxr := {
       CrossVersion.partialVersion(scalaVersion.value) match {
