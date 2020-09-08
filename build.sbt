@@ -49,9 +49,8 @@ val commonSettings = Seq[SettingsDefinition](
   publishTo := sonatypePublishToBundle.value,
   unmanagedResources in Compile += (baseDirectory in LocalRootProject).value / "LICENSE.txt",
   credentials in Global ++= PartialFunction
-    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
-      case (Some(user), Some(pass)) =>
-        Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
+    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) { case (Some(user), Some(pass)) =>
+      Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
     }
     .toList,
   pomPostProcess := { node =>
