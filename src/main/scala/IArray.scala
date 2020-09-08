@@ -1843,25 +1843,24 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
             Maybe.just(OneAnd[List, A](a, Nil))
         }
       )
-    }.map {
-      case OneAnd(h, t) =>
-        if (t.isEmpty) {
-          IArray1(h, empty[A])
-        } else {
-          val len = t.size
-          val array = new Array[AnyRef](len)
-          @tailrec
-          def go(i: Int, list: List[A]): IArray1[A] =
-            (list: @unchecked) match {
-              case a :: last :: Nil =>
-                array(i) = a.asInstanceOf[AnyRef]
-                IArray1(last, new IArray[A](array))
-              case a :: tail =>
-                array(i) = a.asInstanceOf[AnyRef]
-                go(i - 1, tail)
-            }
-          go(len - 1, h :: t)
-        }
+    }.map { case OneAnd(h, t) =>
+      if (t.isEmpty) {
+        IArray1(h, empty[A])
+      } else {
+        val len = t.size
+        val array = new Array[AnyRef](len)
+        @tailrec
+        def go(i: Int, list: List[A]): IArray1[A] =
+          (list: @unchecked) match {
+            case a :: last :: Nil =>
+              array(i) = a.asInstanceOf[AnyRef]
+              IArray1(last, new IArray[A](array))
+            case a :: tail =>
+              array(i) = a.asInstanceOf[AnyRef]
+              go(i - 1, tail)
+          }
+        go(len - 1, h :: t)
+      }
     }
 
   def interleave(that: IArray[A]): IArray[A] = {
