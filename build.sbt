@@ -70,7 +70,7 @@ val commonSettings = Seq[SettingsDefinition](
     checkSnapshotDependencies,
     inquireVersions,
     runClean,
-    releaseStepCommandAndRemaining(";scalafmtSbtCheck;scalafmtCheck;test:scalafmtCheck"),
+    releaseStepCommandAndRemaining(";scalafmtSbtCheck;scalafmtCheckAll"),
     runTest,
     setReleaseVersion,
     commitReleaseVersion,
