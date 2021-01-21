@@ -13,7 +13,7 @@ jobs:
         include:
           - args: '"+iarrayJVM/test"'
           - args: '"+iarrayJS/test"'
-          - args: '"++ 2.11.12!" iarrayNative/test'
+          - args: '"+iarrayNative/test"'
             name: scala-native
     steps:
     - uses: actions/checkout@v2.3.4
@@ -21,5 +21,4 @@ jobs:
       with:
         java-version: "adopt@1.8"
     - uses: coursier/cache-action@v5
-    - run: if [[ "${{ matrix.name }}" == "scala-native" ]] ; then ./.github/scala-native-setup.sh ; fi
     - run: sbt -v scalafmtSbtCheck scalafmtCheckAll ${{ matrix.args }}
