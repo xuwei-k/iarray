@@ -11,8 +11,8 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 `IArray` __always boxing__ primitive values in return for provide an abstraction(scalaz typeclasses).
 
 
-- [Maven Central Repository Search](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.xuwei-k%22)
-- [Maven Central](http://repo1.maven.org/maven2/com/github/xuwei-k/)
+- [Maven Central Repository Search](https://search.maven.org/search?q=g:com.github.xuwei-k)
+- [Maven Central](https://repo1.maven.org/maven2/com/github/xuwei-k/)
 
 ### latest stable version
 
