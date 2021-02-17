@@ -92,7 +92,7 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   scalaVersion := Scala211,
-  crossScalaVersions := Scala211 :: "2.12.13" :: "2.13.4" :: "3.0.0-M3" :: Nil,
+  crossScalaVersions := Scala211 :: "2.12.13" :: "2.13.4" :: "3.0.0-RC1" :: Nil,
   name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
