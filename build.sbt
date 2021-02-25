@@ -6,7 +6,7 @@ def releaseStepCross[A](key: TaskKey[A]) =
   ReleaseStep(
     action = { state =>
       val extracted = Project extract state
-      extracted.runAggregated(key in Global in extracted.get(thisProjectRef), state)
+      extracted.runAggregated(extracted.get(thisProjectRef) / (Global / key), state)
     },
     enableCrossBuild = true
   )
@@ -47,8 +47,8 @@ lazy val gitTagOrHash = Def.setting {
 
 val commonSettings = Seq[SettingsDefinition](
   publishTo := sonatypePublishToBundle.value,
-  unmanagedResources in Compile += (baseDirectory in LocalRootProject).value / "LICENSE.txt",
-  credentials in Global ++= PartialFunction
+  (Compile / unmanagedResources) += (LocalRootProject / baseDirectory).value / "LICENSE.txt",
+  Global / credentials ++= PartialFunction
     .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) { case (Some(user), Some(pass)) =>
       Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
     }
@@ -88,7 +88,7 @@ val commonSettings = Seq[SettingsDefinition](
     println(IO.read(makePom.value))
     println()
     IO.withTemporaryDirectory { dir =>
-      IO.unzip((packageSrc in Compile).value, dir).map(f => f.getName -> f.length) foreach println
+      IO.unzip((Compile / packageSrc).value, dir).map(f => f.getName -> f.length) foreach println
     }
   },
   scalaVersion := Scala211,
@@ -97,10 +97,10 @@ val commonSettings = Seq[SettingsDefinition](
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
   description := "Immutable array wrapper. does not use ClassTag. scalaz friendly",
-  scalacOptions in (Compile, doc) ++= {
+  (Compile / doc / scalacOptions) ++= {
     Seq(
       "-sourcepath",
-      (baseDirectory in LocalRootProject).value.getAbsolutePath,
+      (LocalRootProject / baseDirectory).value.getAbsolutePath,
       "-doc-source-url",
       s"https://github.com/xuwei-k/iarray/tree/${gitTagOrHash.value}€{FILE_PATH}.scala"
     )
@@ -174,7 +174,7 @@ val updateReadme: State => State = { state =>
           s"""libraryDependencies += "${org}" %% "${n}" % "$v""""
         }
       } else if (line.contains(sonatypeURL) && matchReleaseOrSnapshot) {
-        val n = extracted get (name in LocalRootProject)
+        val n = extracted.get(LocalRootProject / name)
         val sxrIndexHtml = "-sxr.jar/!/index.html"
         val javadocHtml = "-javadoc.jar/!/"
         val baseURL =
@@ -238,7 +238,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .jsSettings(
     scalacOptions ++= {
-      val a = (baseDirectory in LocalRootProject).value.toURI.toString
+      val a = (LocalRootProject / baseDirectory).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/iarray/" + gitTagOrHash.value
       if (isDottyJS.value) {
         Seq(s"-scalajs-mapSourceURI:$a->$g/")
@@ -262,8 +262,8 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       }
     },
     Defaults.packageTaskSettings(
-      packageSxr in Compile,
-      (crossTarget in Compile).map { dir => Path.allSubpaths(dir / "classes.sxr").toSeq }
+      (Compile / packageSxr),
+      (Compile / crossTarget).map { dir => Path.allSubpaths(dir / "classes.sxr").toSeq }
     ),
     ifSxrAvailable(
       resolvers,
@@ -275,14 +275,14 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     ),
     ifSxrAvailable(
       packagedArtifacts,
-      Def.task(packagedArtifacts.value ++ Classpaths.packaged(Seq(packageSxr in Compile)).value)
+      Def.task(packagedArtifacts.value ++ Classpaths.packaged(Seq(Compile / packageSxr)).value)
     ),
     ifSxrAvailable(
       artifacts,
-      Def.setting(artifacts.value ++ Classpaths.artifactDefs(Seq(packageSxr in Compile)).value)
+      Def.setting(artifacts.value ++ Classpaths.artifactDefs(Seq(Compile / packageSxr)).value)
     ),
     ifSxrAvailable(
-      artifactClassifier in packageSxr,
+      packageSxr / artifactClassifier,
       Def.setting(Option("sxr"))
     )
   )
@@ -303,8 +303,8 @@ val root = project
   )
   .settings(
     commonSettings,
-    scalaSource in Compile := file("dummy"),
-    scalaSource in Test := file("dummy"),
+    Compile / scalaSource := file("dummy"),
+    Test / scalaSource := file("dummy"),
     publishArtifact := false,
     publish := {},
     publishLocal := {},
