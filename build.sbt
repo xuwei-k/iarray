@@ -2,6 +2,10 @@ import sbtcrossproject.crossProject
 import sbtrelease._
 import ReleaseStateTransformations._
 
+val isScala3 = Def.setting(
+  CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3)
+)
+
 def releaseStepCross[A](key: TaskKey[A]) =
   ReleaseStep(
     action = { state =>
@@ -125,7 +129,7 @@ val commonSettings = Seq[SettingsDefinition](
     "-language:existentials,higherKinds,implicitConversions"
   ),
   scalacOptions ++= {
-    if (isDotty.value) {
+    if (isScala3.value) {
       Nil
     } else {
       Seq(
@@ -135,8 +139,8 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   libraryDependencies ++= Seq(
-    "org.scalaz" %% "scalaz-core" % scalazV
-  ).map(_.withDottyCompat(scalaVersion.value)),
+    "org.scalaz" %% "scalaz-core" % scalazV cross CrossVersion.for3Use2_13
+  ),
   buildInfoKeys := Seq[BuildInfoKey](
     organization,
     name,
@@ -231,7 +235,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
-    ).map(_.withDottyCompat(scalaVersion.value))
+    ).map(_ cross CrossVersion.for3Use2_13)
   )
   .configurePlatforms(NativePlatform, JSPlatform)(
     _.disablePlugins(DoctestPlugin)
@@ -240,7 +244,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     scalacOptions ++= {
       val a = (LocalRootProject / baseDirectory).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/iarray/" + gitTagOrHash.value
-      if (isDottyJS.value) {
+      if (isScala3.value) {
         Seq(s"-scalajs-mapSourceURI:$a->$g/")
       } else {
         Seq(s"-P:scalajs:mapSourceURI:$a->$g/")
@@ -251,7 +255,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= {
       Seq(
         "org.scalacheck" %% "scalacheck" % "1.15.2" % "test" // use in doctest
-      ).map(_.withDottyCompat(scalaVersion.value))
+      ).map(_ cross CrossVersion.for3Use2_13)
     },
     enableSxr := {
       CrossVersion.partialVersion(scalaVersion.value) match {
