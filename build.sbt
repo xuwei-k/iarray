@@ -235,7 +235,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
-    ).map(_ cross CrossVersion.for3Use2_13)
+    )
   )
   .configurePlatforms(NativePlatform, JSPlatform)(
     _.disablePlugins(DoctestPlugin)
