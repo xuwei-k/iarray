@@ -179,14 +179,11 @@ val updateReadme: State => State = { state =>
         }
       } else if (line.contains(sonatypeURL) && matchReleaseOrSnapshot) {
         val n = extracted.get(LocalRootProject / name)
-        val sxrIndexHtml = "-sxr.jar/!/index.html"
         val javadocHtml = "-javadoc.jar/!/"
         val baseURL =
           s"${sonatypeURL}${snapshotOrRelease}/archive/${org.replace('.', '/')}/${n}_${scalaV}/${v}/${n}_${scalaV}-${v}"
         if (line.contains(javadocHtml)) {
           s"- [API Documentation](${baseURL}${javadocHtml}iarray/IArray.html)"
-        } else if (line.contains(sxrIndexHtml)) {
-          s"- [sxr](${baseURL}${sxrIndexHtml})"
         } else line
       } else line
     }
@@ -202,27 +199,6 @@ val updateReadme: State => State = { state =>
 commands += Command.command("updateReadme")(updateReadme)
 
 val updateReadmeProcess: ReleaseStep = updateReadme
-
-val enableSxr = SettingKey[Boolean]("enableSxr")
-val packageSxr = TaskKey[File]("packageSxr")
-
-def ifSxrAvailable[A](key: SettingKey[A], value: Def.Initialize[A]): Setting[A] =
-  key := {
-    if (enableSxr.value) {
-      value.value
-    } else {
-      key.value
-    }
-  }
-
-def ifSxrAvailable[A](key: TaskKey[A], value: Def.Initialize[Task[A]]): Setting[Task[A]] =
-  key := {
-    if (enableSxr.value) {
-      value.value: @sbtUnchecked
-    } else {
-      key.value: @sbtUnchecked
-    }
-  }
 
 val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CustomCrossType)
@@ -256,39 +232,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       Seq(
         "org.scalacheck" %% "scalacheck" % "1.15.2" % "test" // use in doctest
       ).map(_ cross CrossVersion.for3Use2_13)
-    },
-    enableSxr := {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, v)) =>
-          v <= 11
-        case _ =>
-          false
-      }
-    },
-    Defaults.packageTaskSettings(
-      (Compile / packageSxr),
-      (Compile / crossTarget).map { dir => Path.allSubpaths(dir / "classes.sxr").toSeq }
-    ),
-    ifSxrAvailable(
-      resolvers,
-      Def.setting(resolvers.value :+ ("bintray/paulp" at "https://dl.bintray.com/paulp/maven"))
-    ),
-    ifSxrAvailable(
-      libraryDependencies,
-      Def.setting(libraryDependencies.value :+ compilerPlugin("org.improving" %% "sxr" % "1.0.2"))
-    ),
-    ifSxrAvailable(
-      packagedArtifacts,
-      Def.task(packagedArtifacts.value ++ Classpaths.packaged(Seq(Compile / packageSxr)).value)
-    ),
-    ifSxrAvailable(
-      artifacts,
-      Def.setting(artifacts.value ++ Classpaths.artifactDefs(Seq(Compile / packageSxr)).value)
-    ),
-    ifSxrAvailable(
-      packageSxr / artifactClassifier,
-      Def.setting(Option("sxr"))
-    )
+    }
   )
   .nativeSettings(
     scalapropsNativeSettings,
