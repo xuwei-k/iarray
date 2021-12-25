@@ -26,4 +26,4 @@ addSbtPlugin("org.portable-scala" % "sbt-scala-native-crossproject" % "1.1.0")
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.2")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.5")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
