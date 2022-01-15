@@ -228,10 +228,14 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .jvmSettings(
-    libraryDependencies ++= {
-      Seq(
-        "org.scalacheck" %% "scalacheck" % "1.15.2" % "test" // use in doctest
-      ).map(_ cross CrossVersion.for3Use2_13)
+    libraryDependencies += {
+      // use in doctest
+      scalaBinaryVersion.value match {
+        case "2.11" =>
+          "org.scalacheck" %% "scalacheck" % "1.15.2" % "test"
+        case _ =>
+          "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
+      }
     }
   )
   .nativeSettings(
