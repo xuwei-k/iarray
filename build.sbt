@@ -138,7 +138,7 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   libraryDependencies ++= Seq(
-    "org.scalaz" %% "scalaz-core" % scalazV cross CrossVersion.for3Use2_13
+    "org.scalaz" %% "scalaz-core" % scalazV
   ),
   buildInfoKeys := Seq[BuildInfoKey](
     organization,
