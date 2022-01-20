@@ -239,7 +239,6 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .nativeSettings(
     scalapropsNativeSettings,
-    crossScalaVersions ~= (_.filter(_ startsWith "2.1"))
   )
 
 val iarrayJVM = iarray.jvm
