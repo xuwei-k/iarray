@@ -95,7 +95,7 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   scalaVersion := Scala211,
-  crossScalaVersions := Scala211 :: "2.12.15" :: "2.13.8" :: "3.1.1" :: Nil,
+  crossScalaVersions := Scala211 :: "2.12.15" :: "2.13.8" :: Nil,
   name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
@@ -238,7 +238,11 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .nativeSettings(
-    scalapropsNativeSettings
+    scalapropsNativeSettings,
+    crossScalaVersions += "3.1.0"
+  )
+  .platformsSettings(JVMPlatform, JSPlatform)(
+    crossScalaVersions += "3.1.1"
   )
 
 val iarrayJVM = iarray.jvm
