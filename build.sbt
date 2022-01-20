@@ -238,7 +238,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .nativeSettings(
-    scalapropsNativeSettings,
+    scalapropsNativeSettings
   )
 
 val iarrayJVM = iarray.jvm
