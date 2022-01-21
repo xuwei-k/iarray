@@ -239,6 +239,15 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
   .nativeSettings(
     scalapropsNativeSettings,
+    Compile / doc / scalacOptions --= {
+      // TODO remove this workaround
+      // https://github.com/scala-native/scala-native/issues/2503
+      if (scalaBinaryVersion.value == "3") {
+        (Compile / doc / scalacOptions).value.filter(_.contains("-Xplugin"))
+      } else {
+        Nil
+      }
+    },
     crossScalaVersions += "3.1.0"
   )
   .platformsSettings(JVMPlatform, JSPlatform)(
