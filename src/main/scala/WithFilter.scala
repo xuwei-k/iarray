@@ -14,7 +14,7 @@ final class WithFilter[A] private[iarray] (self: Array[AnyRef], f: A => Boolean)
       }
       i += 1
     }
-    new IArray(buf.result)
+    new IArray(buf.result())
   }
 
   def flatMap[B](g: A => IArray[B]): IArray[B] = {
@@ -28,7 +28,7 @@ final class WithFilter[A] private[iarray] (self: Array[AnyRef], f: A => Boolean)
       }
       i += 1
     }
-    new IArray(buf.result)
+    new IArray(buf.result())
   }
 
   def foreach[U](g: A => U): Unit = {

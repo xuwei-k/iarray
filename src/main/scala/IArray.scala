@@ -1003,7 +1003,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       }
       i += 1
     }
-    new IArray[A](buf.result)
+    new IArray[A](buf.result())
   }
 
   /**

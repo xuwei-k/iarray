@@ -371,7 +371,7 @@ private[iarray] abstract class IArrayFunctions {
         val array = new Array[AnyRef](xs.size)
         var i = 0
         while (ite.hasNext) {
-          array(i) = ite.next.asInstanceOf[AnyRef]
+          array(i) = ite.next().asInstanceOf[AnyRef]
           i += 1
         }
         new IArray[A](array)
