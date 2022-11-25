@@ -5,7 +5,6 @@ import scalaz._
 import scalaprops._
 import scalaprops.ScalapropsScalaz._
 import Isomorphism._
-import std.list._, std.anyVal._
 
 trait TestCommon extends Scalaprops {
   trait ShowAndEq[A] {

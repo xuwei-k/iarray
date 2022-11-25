@@ -97,7 +97,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
       (if (f(tail.self(i).asInstanceOf[A])) l else r) += tail.self(i)
       i += 1
     }
-    (new IArray(l.result), new IArray(r.result))
+    (new IArray(l.result()), new IArray(r.result()))
   }
 
   def dropL(n: Int): IArray[A] =
@@ -170,7 +170,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
       f0(tail.self(i))
       i += 1
     }
-    new IArray[B](builder.result)
+    new IArray[B](builder.result())
   }
 
   def collectFirst[B](f: PartialFunction[A, B]): Option[B] =
@@ -284,7 +284,7 @@ final case class IArray1[A](head: A, tail: IArray[A]) { self =>
       }
       i += 1
     }
-    IArray1(h.head, new IArray[B](builder.result))
+    IArray1(h.head, new IArray[B](builder.result()))
   }
 
   def cobind[B](f: IArray1[A] => B): IArray1[B] = {

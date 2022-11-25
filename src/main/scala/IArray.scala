@@ -1318,7 +1318,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       }
       i += 1
     }
-    new IArray(builder.result)
+    new IArray(builder.result())
   }
 
   // unsafe
@@ -1603,7 +1603,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       }
       i += 1
     }
-    (new IArray(l.result), new IArray(r.result))
+    (new IArray(l.result()), new IArray(r.result()))
   }
 
   /**
@@ -1634,7 +1634,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       }
       i += 1
     }
-    new IArray[B](builder.result)
+    new IArray[B](builder.result())
   }
 
   /**
@@ -1651,7 +1651,7 @@ final class IArray[A] private[iarray] (private[iarray] val self: Array[AnyRef]) 
       f0(self(i))
       i += 1
     }
-    new IArray[B](builder.result)
+    new IArray[B](builder.result())
   }
 
   /**

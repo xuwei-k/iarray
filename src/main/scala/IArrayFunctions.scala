@@ -99,7 +99,7 @@ private[iarray] abstract class IArrayFunctions {
       }
       i += 1
     }
-    (new IArray(left.result), new IArray(right.result))
+    (new IArray(left.result()), new IArray(right.result()))
   }
 
   final def partitionStdEithers[L, R](eithers: IArray[L Either R]): (IArray[L], IArray[R]) = {
@@ -112,7 +112,7 @@ private[iarray] abstract class IArrayFunctions {
       }
       i += 1
     }
-    (new IArray(left.result), new IArray(right.result))
+    (new IArray(left.result()), new IArray(right.result()))
   }
 
   final def partitionTry[A](array: IArray[scala.util.Try[A]]): (IArray[Throwable], IArray[A]) = {
@@ -125,7 +125,7 @@ private[iarray] abstract class IArrayFunctions {
       }
       i += 1
     }
-    (new IArray(errors.result), new IArray(values.result))
+    (new IArray(errors.result()), new IArray(values.result()))
   }
 
   final def partitionValidations[E, A](validations: IArray[Validation[E, A]]): (IArray[E], IArray[A]) = {
@@ -138,7 +138,7 @@ private[iarray] abstract class IArrayFunctions {
       }
       i += 1
     }
-    (new IArray(failure.result), new IArray(success.result))
+    (new IArray(failure.result()), new IArray(success.result()))
   }
 
   final def partitionThese[A, B](these: IArray[A \&/ B]): (IArray[A], IArray[B]) = {
@@ -154,7 +154,7 @@ private[iarray] abstract class IArrayFunctions {
       }
       i += 1
     }
-    (new IArray(as.result), new IArray(bs.result))
+    (new IArray(as.result()), new IArray(bs.result()))
   }
 
   final def partitionLazyTuples[A, B](tuples: IArray[LazyTuple2[A, B]]): LazyTuple2[IArray[A], IArray[B]] = {
@@ -239,7 +239,7 @@ private[iarray] abstract class IArrayFunctions {
         case None =>
       }
     loop(f(z))
-    new IArray(builder.result)
+    new IArray(builder.result())
   }
 
   implicit final def iarrayEqual[A: Equal]: Equal[IArray[A]] =

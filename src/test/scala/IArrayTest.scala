@@ -540,7 +540,7 @@ object IArrayTest extends TestCommon {
       x <- xs; if x % 2 == 0; y <- ys; if true
     } { buf2 += ((x, y)) }
 
-    buf1.result must_=== buf2.result
+    buf1.result() must_=== buf2.result()
   }
 
   val `separate Eithers, Validations` = forAll { (eithers: IArray[Int \/ String]) =>
