@@ -34,7 +34,7 @@ val CustomCrossType = new sbtcrossproject.CrossType {
     Some(shared(projectBase, conf))
 }
 
-val Scala211 = "2.11.12"
+val Scala212 = "2.12.17"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
@@ -94,8 +94,8 @@ val commonSettings = Seq[SettingsDefinition](
       IO.unzip((Compile / packageSrc).value, dir).map(f => f.getName -> f.length) foreach println
     }
   },
-  scalaVersion := Scala211,
-  crossScalaVersions := Scala211 :: "2.12.17" :: "2.13.10" :: "3.2.2" :: Nil,
+  scalaVersion := Scala212,
+  crossScalaVersions := Scala212 :: "2.13.10" :: "3.2.2" :: Nil,
   name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
