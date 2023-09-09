@@ -17,7 +17,7 @@ private object IArrayInstance
     super.applyApplicative
   override def monoid[A] =
     iarrayMonoid[A]
-  override def semigroup[A] =
+  override def semigroup[A]: Semigroup[IArray[A]] =
     iarrayMonoid[A]
   override def map[A, B](fa: IArray[A])(f: A => B) =
     fa map f
