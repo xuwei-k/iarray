@@ -277,7 +277,7 @@ private[iarray] abstract class IArrayFunctions {
   final def apply[A](xs: A*): IArray[A] =
     if (xs.isEmpty) empty[A]
     else {
-      if (xs.isInstanceOf[scala.collection.mutable.WrappedArray[_]]) {
+      if (xs.isInstanceOf[scala.collection.mutable.WrappedArray[?]]) {
         new IArray[A](
           toRefArray(
             xs.asInstanceOf[scala.collection.mutable.WrappedArray[A]].array
@@ -454,7 +454,7 @@ private[iarray] abstract class IArrayFunctions {
     new IArray(array)
   }
 
-  private def copyAnyValArray(xs: Array[_]): Array[AnyRef] = {
+  private def copyAnyValArray(xs: Array[?]): Array[AnyRef] = {
     var i = xs.length - 1
     val array = new Array[AnyRef](xs.length)
     while (i >= 0) {
