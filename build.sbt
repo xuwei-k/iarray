@@ -233,7 +233,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
         case "2.11" =>
           "org.scalacheck" %% "scalacheck" % "1.15.2" % "test"
         case _ =>
-          "org.scalacheck" %% "scalacheck" % "1.18.0" % "test"
+          "org.scalacheck" %% "scalacheck" % "1.18.1" % "test"
       }
     }
   )
