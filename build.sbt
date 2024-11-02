@@ -227,15 +227,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .jvmSettings(
-    libraryDependencies += {
-      // use in doctest
-      scalaBinaryVersion.value match {
-        case "2.11" =>
-          "org.scalacheck" %% "scalacheck" % "1.15.2" % "test"
-        case _ =>
-          "org.scalacheck" %% "scalacheck" % "1.18.1" % "test"
-      }
-    }
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.18.1" % "test"
   )
   .nativeSettings(
     scalapropsNativeSettings,
