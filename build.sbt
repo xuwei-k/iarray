@@ -206,7 +206,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     commonSettings,
     scalapropsCoreSettings,
-    scalapropsVersion := "0.9.1",
+    scalapropsVersion := "0.10.0",
     libraryDependencies ++= Seq(
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
