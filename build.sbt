@@ -227,7 +227,7 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     }
   )
   .jvmSettings(
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.18.1" % "test"
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.19.0" % "test"
   )
   .nativeSettings(
     scalapropsNativeSettings,
