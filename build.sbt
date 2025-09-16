@@ -208,12 +208,10 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     scalapropsCoreSettings,
     scalapropsVersion := "0.10.0",
     libraryDependencies ++= Seq(
+      ("org.scalacheck" %%% "scalacheck" % "1.19.0" % "test"),
       ("com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test"),
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
     )
-  )
-  .configurePlatforms(NativePlatform, JSPlatform)(
-    _.disablePlugins(DoctestPlugin)
   )
   .jsSettings(
     scalacOptions ++= {
@@ -225,9 +223,6 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
         Seq(s"-P:scalajs:mapSourceURI:$a->$g/")
       }
     }
-  )
-  .jvmSettings(
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.19.0" % "test"
   )
   .nativeSettings(
     scalapropsNativeSettings,
