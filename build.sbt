@@ -34,7 +34,7 @@ val CustomCrossType = new sbtcrossproject.CrossType {
     Some(shared(projectBase, conf))
 }
 
-val Scala212 = "2.12.20"
+val Scala212 = "2.12.21"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
 
