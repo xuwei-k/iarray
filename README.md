@@ -1,6 +1,6 @@
 # IArray
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/iarray_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/iarray_2.12)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.xuwei-k/iarray_3)](https://central.sonatype.com/artifact/com.github.xuwei-k/iarray_3)
 [![scaladoc](https://javadoc.io/badge2/com.github.xuwei-k/iarray_2.13/javadoc.svg)](https://javadoc.io/doc/com.github.xuwei-k/iarray_2.13/latest/iarray/index.html)
 
 `IArray` is an Immutable Array wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala/blob/v2.12.13/src/library/scala/reflect/ClassTag.scala)
