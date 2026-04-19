@@ -16,7 +16,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.1")
 
 addSbtPlugin("io.github.sbt-doctest" % "sbt-doctest" % "0.12.5")
 
-addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.5.2")
+addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.5.3")
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.21.0")
 
