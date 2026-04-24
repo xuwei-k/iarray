@@ -50,7 +50,7 @@ object IArray1 {
     IArray1(a.head, IArray.fromList(F.toList(a.tail)))
 
   def apply[A](head: A, tail: A*): IArray1[A] =
-    IArray1(head, IArray.apply(tail: _*))
+    IArray1(head, IArray.apply(tail*))
 
   def iterate[A](start: A, size: Int)(f: A => A): IArray1[A] =
     IArray1(start, IArray.iterate(f(start), size - 1)(f))
