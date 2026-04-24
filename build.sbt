@@ -82,13 +82,6 @@ val commonSettings = Seq[SettingsDefinition](
     updateReadmeProcess,
     pushChanges
   ),
-  TaskKey[Unit]("checkPackage", "show pom.xml and sources.jar") := {
-    println(IO.read(makePom.value))
-    println()
-    IO.withTemporaryDirectory { dir =>
-      IO.unzip((Compile / packageSrc).value, dir).map(f => f.getName -> f.length).foreach(println)
-    }
-  },
   scalaVersion := Scala212,
   crossScalaVersions := Scala212 :: "2.13.18" :: "3.3.7" :: Nil,
   name := "iarray",
