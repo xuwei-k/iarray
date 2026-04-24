@@ -49,13 +49,8 @@ lazy val gitTagOrHash = Def.setting {
 }
 
 val commonSettings = Seq[SettingsDefinition](
-  publishTo := sonatypePublishToBundle.value,
+  publishTo := (if (isSnapshot.value) None else localStaging.value),
   (Compile / unmanagedResources) += (LocalRootProject / baseDirectory).value / "LICENSE.txt",
-  Global / credentials ++= PartialFunction
-    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) { case (Some(user), Some(pass)) =>
-      Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
-    }
-    .toList,
   pomPostProcess := { node =>
     import scala.xml._
     import scala.xml.transform._
@@ -81,7 +76,7 @@ val commonSettings = Seq[SettingsDefinition](
     tagRelease,
     releaseStepCross(PgpKeys.publishSigned),
     releaseStepCommandAndRemaining("+ iarrayNative/publishSigned"),
-    releaseStepCommandAndRemaining("sonatypeBundleRelease"),
+    releaseStepCommandAndRemaining("sonaRelease"),
     setNextVersion,
     commitNextVersion,
     updateReadmeProcess,
