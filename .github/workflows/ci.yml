@@ -10,16 +10,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - args: '"+iarrayJVM/test"'
-          - args: '"+iarrayJS/test"'
-          - args: '"+iarrayNative/test"'
+        java:
+          - 8
+          - 25
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-java@v5
       with:
-        java-version: 8
+        java-version: "${{ matrix.java }}"
         distribution: temurin
     - uses: coursier/cache-action@v8
     - uses: sbt/setup-sbt@v1
-    - run: sbt -v scalafmtSbtCheck "+scalafmtCheckAll" ${{ matrix.args }}
+    - run: sbt -v
+           -J-Xmx6G
+           "all scalafmtSbtCheck scalafmtCheckAll"
+           Test/compile
+           testSequential

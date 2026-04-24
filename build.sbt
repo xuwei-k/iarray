@@ -14,26 +14,6 @@ def releaseStepCross[A](key: TaskKey[A]) =
     enableCrossBuild = true
   )
 
-val CustomCrossType = new sbtcrossproject.CrossType {
-  override def projectDir(crossBase: File, projectType: String) =
-    crossBase / projectType
-
-  override def projectDir(crossBase: File, projectType: sbtcrossproject.Platform) = {
-    val dir = projectType match {
-      case JVMPlatform => "jvm"
-      case JSPlatform => "js"
-      case NativePlatform => "native"
-    }
-    crossBase / dir
-  }
-
-  def shared(projectBase: File, conf: String) =
-    projectBase.getParentFile / "src" / conf / "scala"
-
-  override def sharedSrcDir(projectBase: File, conf: String) =
-    Some(shared(projectBase, conf))
-}
-
 val Scala212 = "2.12.21"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
@@ -47,6 +27,8 @@ lazy val gitTagOrHash = Def.setting {
     "v" + version.value
   }
 }
+
+val scalaVersions = Scala212 :: "2.13.18" :: "3.3.7" :: Nil
 
 val commonSettings = Seq[SettingsDefinition](
   publishTo := (if (isSnapshot.value) None else localStaging.value),
@@ -90,7 +72,6 @@ val commonSettings = Seq[SettingsDefinition](
     }
   },
   scalaVersion := Scala212,
-  crossScalaVersions := Scala212 :: "2.13.18" :: "3.3.7" :: Nil,
   name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
@@ -182,10 +163,10 @@ commands += Command.command("updateReadme")(updateReadme)
 
 val updateReadmeProcess: ReleaseStep = updateReadme
 
-val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .crossType(CustomCrossType)
+val iarray = projectMatrix
   .in(file("."))
   .enablePlugins(BuildInfoPlugin)
+  .defaultAxes()
   .settings(
     commonSettings,
     scalapropsCoreSettings,
@@ -196,7 +177,11 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       ("com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test")
     )
   )
-  .jsSettings(
+  .jvmPlatform(
+    scalaVersions,
+  )
+  .jsPlatform(
+    scalaVersions,
     scalacOptions ++= {
       val a = (LocalRootProject / baseDirectory).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/iarray/" + gitTagOrHash.value
@@ -207,22 +192,23 @@ val iarray = crossProject(JSPlatform, JVMPlatform, NativePlatform)
       }
     }
   )
-  .nativeSettings(
+  .nativePlatform(
+    scalaVersions,
     scalapropsNativeSettings,
   )
-
-val iarrayJVM = iarray.jvm
-val iarrayJS = iarray.js
-val iarrayNative = iarray.native
 
 val root = project
   .in(file("."))
   .aggregate(
-    iarrayJVM,
-    iarrayJS // exclude iarrayNative on purpose
+    iarray.projectRefs *
   )
   .settings(
     commonSettings,
+    TaskKey[Unit]("testSequential") := Def
+      .sequential(
+        iarray.projectRefs.map(_ / Test / test)
+      )
+      .value,
     Compile / scalaSource := baseDirectory.value / "dummy",
     Test / scalaSource := baseDirectory.value / "dummy",
     publishArtifact := false,
