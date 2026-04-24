@@ -8,7 +8,7 @@ val isScala3 = Def.setting(
 def releaseStepCross[A](key: TaskKey[A]) =
   ReleaseStep(
     action = { state =>
-      val extracted = Project extract state
+      val extracted = Project.extract(state)
       extracted.runAggregated(extracted.get(thisProjectRef) / (Global / key), state)
     },
     enableCrossBuild = true
@@ -91,7 +91,7 @@ val commonSettings = Seq[SettingsDefinition](
     println(IO.read(makePom.value))
     println()
     IO.withTemporaryDirectory { dir =>
-      IO.unzip((Compile / packageSrc).value, dir).map(f => f.getName -> f.length) foreach println
+      IO.unzip((Compile / packageSrc).value, dir).map(f => f.getName -> f.length).foreach(println)
     }
   },
   scalaVersion := Scala212,
@@ -159,10 +159,10 @@ val sonatypeURL =
 val updateReadme: State => State = { state =>
   val extracted = Project.extract(state)
   val scalaV = "2.12"
-  val v = extracted get version
-  val org = extracted get organization
+  val v = extracted.get(version)
+  val org = extracted.get(organization)
   val n = "iarray"
-  val snapshotOrRelease = if (extracted get isSnapshot) "snapshots" else "releases"
+  val snapshotOrRelease = if (extracted.get(isSnapshot)) "snapshots" else "releases"
   val readme = "README.md"
   val readmeFile = file(readme)
   val newReadme = Predef
@@ -188,7 +188,7 @@ val updateReadme: State => State = { state =>
     }
     .mkString("", "\n", "\n")
   IO.write(readmeFile, newReadme)
-  val git = new Git(extracted get baseDirectory)
+  val git = new Git(extracted.get(baseDirectory))
   git.add(readme) ! state.log
   git.commit(message = "update " + readme, sign = false, signOff = false) ! state.log
   sys.process.Process("git diff HEAD^") ! state.log
