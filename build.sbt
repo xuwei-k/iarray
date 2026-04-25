@@ -134,8 +134,6 @@ val updateReadme: State => State = { state =>
   state
 }
 
-commands += Command.command("updateReadme")(updateReadme)
-
 val updateReadmeProcess: ReleaseStep = updateReadme
 
 val iarray = projectMatrix
@@ -194,6 +192,8 @@ val root = project
   )
   .settings(
     commonSettings,
+    commands += Command.command("updateReadme")(updateReadme),
+    autoScalaLibrary := false,
     TaskKey[Unit]("testSequential") := Def
       .sequential(
         iarray.projectRefs.map(_ / Test / test)
