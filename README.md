@@ -17,11 +17,11 @@ On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/s
 ### latest stable version
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.7.1"
+libraryDependencies += "com.github.xuwei-k" %% "iarray" % "0.8.1"
 ```
 
 for scala-js, scala-native
 
 ```scala
-libraryDependencies += "com.github.xuwei-k" %%% "iarray" % "0.7.1"
+libraryDependencies += "com.github.xuwei-k" %%% "iarray" % "0.8.1"
 ```
