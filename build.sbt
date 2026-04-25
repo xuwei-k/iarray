@@ -91,8 +91,18 @@ val commonSettings = Seq[SettingsDefinition](
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
-    "-language:existentials,higherKinds,implicitConversions"
+    "-language:existentials,implicitConversions"
   ),
+  scalacOptions ++= {
+    scalaBinaryVersion.value match {
+      case "2.12" =>
+        Seq(
+          "-language:higherKinds"
+        )
+      case _ =>
+        Nil
+    }
+  },
   scalacOptions ++= {
     if (isScala3.value) {
       Nil
