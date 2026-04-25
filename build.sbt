@@ -5,15 +5,6 @@ val isScala3 = Def.setting(
   CrossVersion.partialVersion(scalaVersion.value).exists(_._1 == 3)
 )
 
-def releaseStepCross[A](key: TaskKey[A]) =
-  ReleaseStep(
-    action = { state =>
-      val extracted = Project.extract(state)
-      extracted.runAggregated(extracted.get(thisProjectRef) / (Global / key), state)
-    },
-    enableCrossBuild = true
-  )
-
 val Scala212 = "2.12.21"
 
 def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
@@ -51,12 +42,11 @@ val commonSettings = Seq[SettingsDefinition](
     inquireVersions,
     runClean,
     releaseStepCommandAndRemaining(";scalafmtSbtCheck;scalafmtCheckAll"),
-    runTest,
     setReleaseVersion,
     commitReleaseVersion,
     updateReadmeProcess,
     tagRelease,
-    releaseStepCross(PgpKeys.publishSigned),
+    releaseStepCommandAndRemaining("publishSigned"),
     releaseStepCommandAndRemaining("sonaRelease"),
     setNextVersion,
     commitNextVersion,
