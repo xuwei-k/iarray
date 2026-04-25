@@ -3,7 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.xuwei-k/iarray_3)](https://central.sonatype.com/artifact/com.github.xuwei-k/iarray_3)
 [![scaladoc](https://javadoc.io/badge2/com.github.xuwei-k/iarray_2.13/javadoc.svg)](https://javadoc.io/doc/com.github.xuwei-k/iarray_2.13/latest/iarray/index.html)
 
-`IArray` is an Immutable Array wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala/blob/v2.12.13/src/library/scala/reflect/ClassTag.scala)
+`IArray` is an Immutable Array wrapper for Scala. This library does __NOT__ use [scala.reflect.ClassTag](https://github.com/scala/scala3/blob/3.8.3/library/src/scala/reflect/ClassTag.scala)
 
 [`scalaz.ImmutableArray`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/ImmutableArray.scala) and [`scala.Array`](https://github.com/scala/scala/blob/v2.12.13/src/library/scala/Array.scala) could __NOT__ be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Functor.scala).
 On the other hand `IArray` can be [`scalaz.Functor`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Functor.scala), [`scalaz.Monad`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Monad.scala), [`scalaz.Traverse`](https://github.com/scalaz/scalaz/blob/v7.3.8/core/src/main/scala/scalaz/Traverse.scala) etc.
