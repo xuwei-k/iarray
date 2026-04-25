@@ -57,15 +57,12 @@ val commonSettings = Seq[SettingsDefinition](
     updateReadmeProcess,
     tagRelease,
     releaseStepCross(PgpKeys.publishSigned),
-    releaseStepCommandAndRemaining("+ iarrayNative/publishSigned"),
     releaseStepCommandAndRemaining("sonaRelease"),
     setNextVersion,
     commitNextVersion,
     updateReadmeProcess,
     pushChanges
   ),
-  scalaVersion := Scala212,
-  name := "iarray",
   organization := "com.github.xuwei-k",
   startYear := Some(2014),
   description := "Immutable array wrapper. does not use ClassTag. scalaz friendly",
@@ -106,20 +103,6 @@ val commonSettings = Seq[SettingsDefinition](
       )
     }
   },
-  libraryDependencies ++= Seq(
-    "org.scalaz" %%% "scalaz-core" % scalazV
-  ),
-  buildInfoKeys := Seq[BuildInfoKey](
-    organization,
-    name,
-    version,
-    scalaVersion,
-    sbtVersion,
-    licenses,
-    "scalazVersion" -> scalazV
-  ),
-  buildInfoPackage := "iarray",
-  buildInfoObject := "BuildInfoIArray"
 ).flatMap(_.settings)
 
 val updateReadme: State => State = { state =>
@@ -162,6 +145,21 @@ val iarray = projectMatrix
   .defaultAxes()
   .settings(
     commonSettings,
+    name := "iarray",
+    libraryDependencies ++= Seq(
+      "org.scalaz" %%% "scalaz-core" % scalazV
+    ),
+    buildInfoKeys := Seq[BuildInfoKey](
+      organization,
+      name,
+      version,
+      scalaVersion,
+      sbtVersion,
+      licenses,
+      "scalazVersion" -> scalazV
+    ),
+    buildInfoPackage := "iarray",
+    buildInfoObject := "BuildInfoIArray",
     scalapropsCoreSettings,
     scalapropsVersion := "0.10.1",
     libraryDependencies ++= Seq(
