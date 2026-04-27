@@ -7,13 +7,13 @@ val isScala3 = Def.setting(
 
 val Scala212 = "2.12.21"
 
-def gitHash(): String = sys.process.Process("git rev-parse HEAD").lineStream_!.head
+def gitHash(): String = sys.process.Process("git rev-parse HEAD").lazyLines_!.head
 
 val scalazV = "7.3.8"
 
 lazy val gitTagOrHash = Def.setting {
   if (isSnapshot.value) {
-    sys.process.Process("git rev-parse HEAD").lineStream_!.head
+    sys.process.Process("git rev-parse HEAD").lazyLines_!.head
   } else {
     "v" + version.value
   }
@@ -144,7 +144,7 @@ val iarray = projectMatrix
     commonSettings,
     name := "iarray",
     libraryDependencies ++= Seq(
-      "org.scalaz" %%% "scalaz-core" % scalazV
+      "org.scalaz" %% "scalaz-core" % scalazV
     ),
     buildInfoKeys := Seq[BuildInfoKey](
       organization,
@@ -160,16 +160,16 @@ val iarray = projectMatrix
     scalapropsCoreSettings,
     scalapropsVersion := "0.10.1",
     libraryDependencies ++= Seq(
-      "org.scalacheck" %%% "scalacheck" % "1.19.0" % "test",
-      "com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test",
-      "com.github.scalaprops" %%% "scalaprops-scalaz" % scalapropsVersion.value % "test"
+      "org.scalacheck" %% "scalacheck" % "1.19.0" % "test",
+      "com.github.scalaprops" %% "scalaprops" % scalapropsVersion.value % "test",
+      "com.github.scalaprops" %% "scalaprops-scalaz" % scalapropsVersion.value % "test"
     )
   )
   .jvmPlatform(
     scalaVersions,
   )
   .jsPlatform(
-    scalaVersions,
+    Nil,
     scalacOptions ++= {
       val a = (LocalRootProject / baseDirectory).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/iarray/" + gitTagOrHash.value
@@ -188,25 +188,23 @@ val iarray = projectMatrix
     ),
   )
 
-val root = project
-  .in(file("."))
-  .aggregate(
-    iarray.projectRefs *
-  )
-  .settings(
-    commonSettings,
-    commands += Command.command("updateReadme")(updateReadme),
-    autoScalaLibrary := false,
-    TaskKey[Unit]("testSequential") := Def
+val root = rootProject.autoAggregate.settings(
+  commonSettings,
+  autoScalaLibrary := false,
+  scalaVersion := scalaVersion.value,
+  commands += Command.command("updateReadme")(updateReadme),
+  TaskKey[Unit]("testSequential") := Def.uncached(
+    Def
       .sequential(
-        iarray.projectRefs.map(_ / Test / test)
+        iarray.projectRefs.map(_ / Test / testFull)
       )
-      .value,
-    Compile / scalaSource := baseDirectory.value / "dummy",
-    Test / scalaSource := baseDirectory.value / "dummy",
-    publishArtifact := false,
-    publish := {},
-    publishLocal := {},
-    PgpKeys.publishSigned := {},
-    PgpKeys.publishLocalSigned := {}
-  )
+      .value
+  ),
+  Compile / scalaSource := baseDirectory.value / "dummy",
+  Test / scalaSource := baseDirectory.value / "dummy",
+  publishArtifact := false,
+  publish := {},
+  publishLocal := {},
+  PgpKeys.publishSigned := {},
+  PgpKeys.publishLocalSigned := {}
+)

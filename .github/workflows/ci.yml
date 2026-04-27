@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         java:
-          - 8
+          - 17
           - 25
     steps:
     - uses: actions/checkout@v6
@@ -22,6 +22,7 @@ jobs:
     - uses: coursier/cache-action@v8
     - uses: sbt/setup-sbt@v1
     - run: sbt -v
+           --server
            -J-Xmx6G
            "all scalafmtSbtCheck scalafmtCheckAll"
            Test/compile
