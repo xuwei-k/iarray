@@ -182,7 +182,10 @@ val iarray = projectMatrix
   )
   .nativePlatform(
     scalaVersions,
-    scalapropsNativeSettings,
+    Def.settings(
+      evictionErrorLevel := Level.Warn,
+      scalapropsNativeSettings,
+    ),
   )
 
 val root = project
