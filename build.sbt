@@ -167,6 +167,18 @@ val iarray = projectMatrix
   )
   .jvmPlatform(
     scalaVersions,
+    scalacOptions ++= {
+      if (scalaVersion.value.startsWith("3.3.")) {
+        Seq(
+          "-Yfuture-lazy-vals",
+          "-release:11",
+        )
+      } else {
+        Seq(
+          "-release:8",
+        )
+      }
+    },
   )
   .jsPlatform(
     scalaVersions,
