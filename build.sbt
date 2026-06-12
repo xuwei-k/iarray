@@ -158,7 +158,7 @@ val iarray = projectMatrix
     buildInfoPackage := "iarray",
     buildInfoObject := "BuildInfoIArray",
     scalapropsCoreSettings,
-    scalapropsVersion := "0.10.1",
+    scalapropsVersion := "0.11.0",
     libraryDependencies ++= Seq(
       "org.scalacheck" %%% "scalacheck" % "1.19.0" % "test",
       "com.github.scalaprops" %%% "scalaprops" % scalapropsVersion.value % "test",
