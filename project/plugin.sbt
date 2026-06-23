@@ -11,7 +11,7 @@ addSbtPlugin("com.github.sbt" % "sbt-release" % "1.5.0")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.1")
 
-addSbtPlugin("io.github.sbt-doctest" % "sbt-doctest" % "0.12.5")
+addSbtPlugin("io.github.sbt-doctest" % "sbt-doctest" % "0.13.0")
 
 addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.5.3")
 
