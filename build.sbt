@@ -160,7 +160,7 @@ val iarray = projectMatrix
     scalapropsCoreSettings,
     scalapropsVersion := "0.11.0",
     libraryDependencies ++= Seq(
-      "org.scalacheck" %% "scalacheck" % "1.19.0" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.20.0" % "test",
       "com.github.scalaprops" %% "scalaprops" % scalapropsVersion.value % "test",
       "com.github.scalaprops" %% "scalaprops-scalaz" % scalapropsVersion.value % "test"
     )
