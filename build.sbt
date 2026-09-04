@@ -19,7 +19,7 @@ lazy val gitTagOrHash = Def.setting {
   }
 }
 
-val scalaVersions = Scala212 :: "2.13.18" :: "3.3.8" :: Nil
+val scalaVersions = Scala212 :: "2.13.18" :: "3.9.0" :: Nil
 
 val commonSettings = Seq[SettingsDefinition](
   publishTo := (if (isSnapshot.value) None else localStaging.value),
