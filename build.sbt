@@ -77,7 +77,7 @@ val commonSettings = Seq[SettingsDefinition](
       <connection>scm:git:git@github.com:xuwei-k/iarray.git</connection>
       <tag>{gitTagOrHash.value}</tag>
     </scm>,
-  licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+  licenses := Seq("MIT" -> uri("https://opensource.org/license/MIT")),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
