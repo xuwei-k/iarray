@@ -195,7 +195,6 @@ val iarray = projectMatrix
   .nativePlatform(
     scalaVersions,
     Def.settings(
-      evictionErrorLevel := Level.Warn,
       scalapropsNativeSettings,
     ),
   )
