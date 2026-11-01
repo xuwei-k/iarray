@@ -158,7 +158,7 @@ val iarray = projectMatrix
     buildInfoPackage := "iarray",
     buildInfoObject := "BuildInfoIArray",
     scalapropsCoreSettings,
-    scalapropsVersion := "0.11.1",
+    scalapropsVersion := "0.12.0",
     libraryDependencies ++= Seq(
       "org.scalacheck" %% "scalacheck" % "1.20.0" % "test",
       "com.github.scalaprops" %% "scalaprops" % scalapropsVersion.value % "test",
@@ -195,7 +195,6 @@ val iarray = projectMatrix
   .nativePlatform(
     scalaVersions,
     Def.settings(
-      scalapropsNativeSettings,
     ),
   )
 
