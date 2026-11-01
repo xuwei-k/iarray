@@ -5,7 +5,7 @@ import scalaprops.ScalapropsScalaz._
 import scalaz.std.anyVal._
 
 object TypeclassLawTest extends TestCommon {
-  val laws = Properties.list(
+  property("laws") = Properties.list(
     scalazlaws.monadPlus.all[IArray],
     scalazlaws.isEmpty.all[IArray],
     scalazlaws.zip.all[IArray],
