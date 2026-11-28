@@ -517,7 +517,7 @@ object IArrayTest extends TestCommon {
     xs.intercalate(",") must_=== xs.intercalate1Opt(",").getOrElse(Monoid[String].zero)
   }
 
-  property(" toString") = forAll { (xs: IArray[Int]) => xs.toString must_=== xs.toList.mkString("IArray(", ", ", ")") }
+  property("toString") = forAll { (xs: IArray[Int]) => xs.toString must_=== xs.toList.mkString("IArray(", ", ", ")") }
 
   property("mkString") = forAll { (xs: IArray[Int], a: String, b: String, c: String) =>
     xs.mkString(a, b, c) must_=== xs.toArray.mkString(a, b, c)
